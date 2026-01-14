@@ -9,7 +9,7 @@ namespace MwcModApi.Caching
 	/// </summary>
 	public class CarH
 	{
-		private static GameObject _satsuma;
+		private static GameObject _car;
 		private static Drivetrain _drivetrain;
 		private static AxisCarController _axisController;
 		private static CarController _carController;
@@ -24,7 +24,7 @@ namespace MwcModApi.Caching
 		/// <summary>
 		/// Returns if the player is currently sitting in the car (drive mode).
 		/// </summary>
-		public static bool playerInCar => playerCurrentVehicle == "Satsuma";
+		public static bool playerInCar => playerCurrentVehicle == "Corris";
 
 		/// <summary>
 		/// Returns the current vehicle the player is in (drive mode).
@@ -48,7 +48,7 @@ namespace MwcModApi.Caching
 			get
 			{
 				if (_electricity != null) return _electricity;
-				_electricity = satsuma.FindChild("Electricity").gameObject;
+				_electricity = car.FindChild("Electricity").gameObject;
 
 				return _electricity;
 			}
@@ -69,58 +69,58 @@ namespace MwcModApi.Caching
 		}
 
 		/// <summary>
-		/// Returns the UnityCar CarController object of the satsuma.
+		/// Returns the UnityCar CarController object of the car.
 		/// </summary>
 		public static CarController carController
 		{
 			get
 			{
 				if (_carController != null) return _carController;
-				_carController = satsuma.GetComponent<CarController>();
+				_carController = car.GetComponent<CarController>();
 
 				return _carController;
 			}
 		}
 
 		/// <summary>
-		/// Returns the UnityCar AxisCarController object of the satsuma.
+		/// Returns the UnityCar AxisCarController object of the car.
 		/// </summary>
 		public static AxisCarController axisCarController
 		{
 			get
 			{
 				if (_axisController != null) return _axisController;
-				_axisController = satsuma.GetComponent<AxisCarController>();
+				_axisController = car.GetComponent<AxisCarController>();
 
 				return _axisController;
 			}
 		}
 
 		/// <summary>
-		/// Returns the UnityCar Drivetrain object of the satsuma.
+		/// Returns the UnityCar Drivetrain object of the car.
 		/// </summary>
 		public static Drivetrain drivetrain
 		{
 			get
 			{
 				if (_drivetrain != null) return _drivetrain;
-				_drivetrain = satsuma.GetComponent<Drivetrain>();
+				_drivetrain = car.GetComponent<Drivetrain>();
 
 				return _drivetrain;
 			}
 		}
 
 		/// <summary>
-		/// Returns the satsuma GameObject object.
+		/// Returns the car GameObject object.
 		/// </summary>
-		public static GameObject satsuma
+		public static GameObject car
 		{
 			get
 			{
-				if (_satsuma != null) return _satsuma;
-				_satsuma = Cache.Find("SATSUMA(557kg, 248)");
+				if (_car != null) return _car;
+				_car = Cache.Find("CORRIS");
 
-				return _satsuma;
+				return _car;
 			}
 		}
 
@@ -129,8 +129,7 @@ namespace MwcModApi.Caching
 		/// </summary>
 		public static void LoadCleanup()
 		{
-			_satsuma = null;
-			_satsuma = null;
+			_car = null;
 			_drivetrain = null;
 			_axisController = null;
 			_carController = null;

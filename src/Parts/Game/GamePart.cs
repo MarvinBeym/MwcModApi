@@ -150,7 +150,7 @@ namespace MwcModApi.Parts.Game
 
 		/// <summary>
 		/// Usable when wanting to extend from GamePart and implement everything yourself.
-		/// An Example for the usability of this is the Class "SatsumaGamePart" which is a wrapper to make the Satsuma
+		/// An Example for the usability of this is the Class "CarGamePart" which is a wrapper to make the car
 		/// (which has no part logic from the game) to allow using as a parent for "Part" objects
 		/// </summary>
 		protected GamePart()
@@ -423,7 +423,7 @@ namespace MwcModApi.Parts.Game
 		public override bool hasBolts => dataFsm.FsmVariables.FindFsmBool("Bolted") != null;
 
 		/// <inheritdoc />
-		public override bool installedOnCar => gameObject.transform.root == CarH.satsuma.transform;
+		public override bool installedOnCar => gameObject.transform.root == CarH.car.transform;
 
 		/// <inheritdoc />
 		public override bool active

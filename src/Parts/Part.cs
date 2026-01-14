@@ -287,7 +287,7 @@ namespace MwcModApi.Parts
 		/// <inheritdoc />
 		public override bool hasBolts => screws.Count > 0;
 
-	public override bool installedOnCar => installed && gameObject.transform.root == CarH.satsuma.transform;
+	public override bool installedOnCar => installed && gameObject.transform.root == CarH.car.transform;
 
 		protected void Setup(string id, string name, BasicPart parent, Vector3 installPosition,
 			Vector3 installRotation, PartBaseInfo partBaseInfo, bool uninstallWhenParentUninstalls,

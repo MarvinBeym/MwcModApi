@@ -8,15 +8,15 @@ using UnityEngine;
 namespace MwcModApi.Parts.Game
 {
 	/// <summary>
-	/// A wrapper class to allow using the Satsuma GameObject as if it was able to use GamePart logic
+	/// A wrapper class to allow using the car GameObject as if it was able to use GamePart logic
 	/// </summary>
-	public class SatsumaGamePart : GamePart
+	public class CarGamePart : GamePart
 	{
 		/// <summary>
 		/// Instance of this class
 		/// </summary>
-		protected static SatsumaGamePart instance;
-		private SatsumaGamePart()
+		protected static CarGamePart instance;
+		private CarGamePart()
 		{
 			tightness = new FsmFloat
 			{
@@ -42,7 +42,7 @@ namespace MwcModApi.Parts.Game
 				Value = true
 			};
 
-			gameObject = CarH.satsuma;
+			gameObject = CarH.car;
 		}
 
 		public new bool installBlocked => gameObject.activeSelf;
@@ -54,18 +54,18 @@ namespace MwcModApi.Parts.Game
 		public new Vector3 rotation => gameObject.transform.rotation.eulerAngles;
 
 		/// <summary>
-		/// Returns the instance to the SatsumaGamePart
-		/// The SatsumaGamePart can only ever exist once, so Singleton pattern is used to avoid multiple objects existing
+		/// Returns the instance to the CarGamePart
+		/// The CarGamePart can only ever exist once, so Singleton pattern is used to avoid multiple objects existing
 		/// </summary>
 		/// <returns></returns>
-		public static SatsumaGamePart GetInstance()
+		public static CarGamePart GetInstance()
 		{
 			if (instance != null)
 			{
 				return instance;
 			}
 
-			instance = new SatsumaGamePart();
+			instance = new CarGamePart();
 			return instance;
 		}
 

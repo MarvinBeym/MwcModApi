@@ -101,7 +101,7 @@
     <Compile Include="Parts\PartBox\PartBox.cs" />
     <Compile Include="Parts\PartSave.cs" />
     <Compile Include="Parts\Game\GamePart.cs" />
-    <Compile Include="Parts\Game\SatsumaGamePart.cs" />
+    <Compile Include="Parts\Game\CarGamePart.cs" />
     <Compile Include="Parts\Screw.cs" />
     <Compile Include="Parts\Trigger\Trigger.cs" />
     <Compile Include="Parts\Trigger\TriggerWrapper.cs" />

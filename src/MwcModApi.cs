@@ -373,7 +373,7 @@ namespace MwcModApi
 			ScrewPlacementAssist.LoadCleanup();
 			UserInteraction.LoadCleanup();
 			Tool.LoadCleanup();
-			SatsumaGamePart.LoadCleanup();
+			CarGamePart.LoadCleanup();
 			PartBox.LoadCleanup();
 			modSaveFileMapping = new Dictionary<string, string>();
 			modsParts = new Dictionary<string, Dictionary<string, Part>>();
