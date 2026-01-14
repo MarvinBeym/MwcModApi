@@ -7,6 +7,6 @@
 
 # Project specific files
 /project/versions/*
-/.idea
-/.vs
+/src/.idea
+/src/.vs
 *.log
