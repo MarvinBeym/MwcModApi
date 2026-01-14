@@ -44,6 +44,22 @@ namespace MwcModApi.Tools
 			return null;
 		}
 
+		public static AssetBundle LoadAssetBundle(string bundleName)
+		{
+			try
+			{
+				return LoadAssets.LoadBundle(bundleName);
+			}
+			catch
+			{
+				var message = $"AssetBundle bundle '{bundleName}' could not be loaded";
+				ModConsole.Error(message);
+				ModUI.ShowYesNoMessage($"{message}\n\nClose Game? - RECOMMENDED", ExitGame);
+			}
+
+			return null;
+		}
+
 		public static void ExitGame()
 		{
 			Application.Quit();

@@ -351,7 +351,7 @@ namespace MwcModApi
 
 		private void LoadAssets()
 		{
-			var assetBundle = Helper.LoadAssetBundle(this, assetsFile);
+			var assetBundle = Helper.LoadAssetBundle("MwcModApi.Assets.bundle.unity3d");
 			Screw.LoadAssets(assetBundle);
 			Part.LoadAssets(assetBundle);
 			Shop.LoadAssets(assetBundle);
