@@ -293,7 +293,8 @@ namespace MwcModApi.Tools
 		/// <summary>
 		/// Helper method for adding an Action to an fsmState as the first item in the actions list
 		/// </summary>
-		public static void AddActionAsFirst(this FsmState fsmState, Action action)
+		/// <param name="actionName">Optional name to give to the FsmAction created</paramref>
+		public static void AddActionAsFirst(this FsmState fsmState, Action action, string actionName = "")
 		{
 			if (fsmState == null)
 			{
@@ -301,21 +302,35 @@ namespace MwcModApi.Tools
 			}
 
 			var actions = new List<FsmStateAction>(fsmState.Actions);
-			actions.Insert(0, new FsmAction(action));
+
+			FsmAction fsmAction = new FsmAction(action);
+			if (actionName != "")
+			{
+				fsmAction.Name = actionName;
+			}
+
+			actions.Insert(0, fsmAction);
 			fsmState.Actions = actions.ToArray();
 		}
 
 		/// <summary>
 		/// Helper method for adding an Action to an fsmState as the last item in the actions list
 		/// </summary>
-		public static void AddActionAsLast(this FsmState fsmState, Action action)
+		/// <param name="actionName">Optional name to give to the FsmAction created</paramref>
+		public static void AddActionAsLast(this FsmState fsmState, Action action, string actionName = "")
 		{
 			if (fsmState == null)
 			{
 				return;
 			}
 
-			var actions = new List<FsmStateAction>(fsmState.Actions) { new FsmAction(action) };
+			FsmAction fsmAction = new FsmAction(action);
+			if (actionName != "")
+			{
+				fsmAction.Name = actionName;
+			}
+
+			var actions = new List<FsmStateAction>(fsmState.Actions) { fsmAction };
 			fsmState.Actions = actions.ToArray();
 		}
 
