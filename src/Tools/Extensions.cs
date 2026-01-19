@@ -318,5 +318,17 @@ namespace MwcModApi.Tools
 			var actions = new List<FsmStateAction>(fsmState.Actions) { new FsmAction(action) };
 			fsmState.Actions = actions.ToArray();
 		}
+
+		public static FsmStateAction GetAction(this FsmState fsmState, string actionName)
+		{
+			foreach (var action in fsmState.Actions)
+			{
+				if (action.Name == actionName)
+				{
+					return action;
+				}
+			}
+			return null;
+		}
 	}
 }
