@@ -7,6 +7,8 @@
 
 # Project specific files
 /project/versions/*
+/src/MwcModApi/.idea
+/src/MwcModApi/.vs
 /src/.idea
 /src/.vs
 *.log
