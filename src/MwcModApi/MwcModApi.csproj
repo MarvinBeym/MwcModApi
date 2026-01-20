@@ -32,27 +32,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="cInput">
-      <HintPath>..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\cInput.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\cInput.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PlayMaker">
-      <HintPath>..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\PlayMaker.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\PlayMaker.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -70,7 +70,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

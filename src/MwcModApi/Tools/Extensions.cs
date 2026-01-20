@@ -334,6 +334,26 @@ namespace MwcModApi.Tools
 			fsmState.Actions = actions.ToArray();
 		}
 
+		public static void RemoveActionByName(this FsmState fsmState, string actionName)
+		{
+			if (actionName == "")
+			{
+				return;
+			}
+
+			var actions = new List<FsmStateAction>();
+
+			foreach (var fsmStateAction in fsmState.Actions)
+			{
+				if (fsmStateAction.Name != actionName)
+				{
+					actions.Add(fsmStateAction);
+				}
+			}
+
+			fsmState.Actions = actions.ToArray();
+		}
+
 		public static FsmStateAction GetAction(this FsmState fsmState, string actionName)
 		{
 			foreach (var action in fsmState.Actions)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HutongGames.PlayMaker;
 using MSCLoader;
 using MwcModApi.Caching;
@@ -22,6 +23,12 @@ namespace MwcModApi.Parts.Game
 		/// </summary>
 		public readonly string id;
 
+
+		public readonly string partName;
+
+		protected GameObject _gameObject = null;
+
+
 		public GamePartSave saveData => new GamePartSave(installedOnCar, position, Quaternion.Euler(rotation));
 
 		/// <summary>
@@ -34,7 +41,7 @@ namespace MwcModApi.Parts.Game
 		/// Flag used to avoid calling the pre bolted event multiple times
 		/// </summary>
 		protected bool alreadyCalledPreBolted;
-
+		
 		/// <summary>
 		/// Flag used to avoid calling the post bolted event multiple times
 		/// </summary>
@@ -51,41 +58,30 @@ namespace MwcModApi.Parts.Game
 		protected bool alreadyCalledPostUnbolted = true;
 
 		/// <summary>
-		/// Flag that defines if the part should be setup with simple or advanced bolted state detection
-		/// </summary>
-		protected readonly bool simpleBoltedStateDetection;
-
-		/// <summary>
 		/// Creates a new GamePart wrapper object
 		/// </summary>
-		/// <param name="mainFsmPartName">The main GameObject name (capital letter name) Ex.: "Steel Headers"</param>
-		/// <param name="simpleBoltedStateDetection">Should the simple bolt detection be used (one bolt tightened a bit = whole part tightened)</param>
-		public GamePart(string mainFsmPartName, bool simpleBoltedStateDetection = true)
+		/// <param name="installPointFsmName">The main GameObject name (capital letter name) Ex.: "VINP_Carburettor"</param>
+		/// <param name="objectName">THe name of the actual part Ex.: "4 Barrell Racing Carb(VINXX)"</param>
+		public GamePart(string installPointFsmName, string partName)
 		{
 			InitEventStorage();
-			id = mainFsmPartName;
-			this.simpleBoltedStateDetection = simpleBoltedStateDetection;
-			mainFsmGameObject = Cache.Find(mainFsmPartName);
-			if (!mainFsmGameObject) {
-				throw new Exception($"Unable to find main fsm part GameObject using '{mainFsmPartName}'");
+			id = installPointFsmName + "-" + partName;
+			this.partName = partName;
+
+			installPointFsmGameObject = Cache.Find(installPointFsmName);
+			if (!installPointFsmGameObject) {
+				throw new Exception($"Unable to find main fsm part GameObject using '{installPointFsmName}'");
 			}
 
-			dataFsm = mainFsmGameObject.FindFsm("Data");
+			dataFsm = installPointFsmGameObject.FindFsm("Data");
 			if (!dataFsm) {
-				throw new Exception($"Unable to find data fsm on GameObject with name '{mainFsmGameObject.name}'");
+				throw new Exception($"Unable to find data fsm on GameObject with name '{installPointFsmGameObject.name}'");
 			}
 
-			triggerFsmGameObject = dataFsm.FsmVariables.FindFsmGameObject("Trigger").Value;
-			if (!triggerFsmGameObject) {
-				throw new Exception(
-					$"Unable to find trigger GameObject on GameObject with name '{mainFsmGameObject.name}'");
-			}
-			triggerFsmGameObjectCollider = triggerFsmGameObject.GetComponent<Collider>();
-
-			gameObject = dataFsm.FsmVariables.FindFsmGameObject("ThisPart").Value;
-			if (!gameObject) {
-				throw new Exception(
-					$"Unable to find part GameObject on GameObject with name '{mainFsmGameObject.name}'");
+			nearState = dataFsm.FindState("Near");
+			if (nearState == null)
+			{
+				throw new Exception($"Unable to find 'Near' state on GameObject with name '{installPointFsmGameObject.name}'");
 			}
 
 			boltedState = dataFsm.FsmVariables.FindFsmBool("Bolted");
@@ -93,59 +89,44 @@ namespace MwcModApi.Parts.Game
 			installedState = dataFsm.FsmVariables.FindFsmBool("Installed") ?? new FsmBool("Installed");
 			purchasedState = dataFsm.FsmVariables.FindFsmBool("Purchased") ?? new FsmBool("Purchased");
 
-			assemblyFsm = triggerFsmGameObject.FindFsm("Assembly");
-			removalFsm = gameObject.FindFsm("Removal");
-			boltCheckFsm = gameObject.FindFsm("BoltCheck");
-
-			if (!assemblyFsm.Fsm.Initialized) {
-				assemblyFsm.InitializeFSM();
-			}
-
-			if (!removalFsm.Fsm.Initialized) {
-				removalFsm.InitializeFSM();
-			}
-
-			if (!boltCheckFsm.Fsm.Initialized) {
-				boltCheckFsm.InitializeFSM();
-			}
-
-			tightness = boltCheckFsm.FsmVariables.FindFsmFloat("Tightness");
-
-			assemblyFsm.FindState("Assemble").AddActionAsFirst(() => { GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Install).InvokeAll(); });
-
-			assemblyFsm.FindState("End").AddActionAsLast(() =>
+			tightness = dataFsm.FsmVariables.FindFsmFloat("Tightness");
+			if (tightness == null)
 			{
+				throw new Exception($"Unable to find tightness on part '{installPointFsmGameObject.name}'");
+			}
+
+			dataFsm.FindState("Installed").AddActionAsFirst(
+				() => { GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Install).InvokeAll(); },
+				"MwcModApi-Install-Pre"
+			);
+
+			dataFsm.FindState("Installed").AddActionAsLast(() =>
+			{
+				gameObject = installPointFsmGameObject.FindChild(partName);
+
+				SetupBoltedStateDetection(gameObject);
+
 				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Install).InvokeAll();
 				if (installedOnCar) {
 					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar).InvokeAll();
 				}
-			});
+			}, "MwcModApi-Install-Post");
 
-			removalFsm.FindState("Remove part").AddActionAsFirst(() => { GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Uninstall).InvokeAll(); });
-			removalFsm.FindState("Remove part").AddActionAsLast(() =>
+			dataFsm.FindState("Remove part").AddActionAsFirst(
+				() => { GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Uninstall).InvokeAll(); },
+				"MwcModApi-Uninstall-Pre"
+			);
+			dataFsm.FindState("Remove part").AddActionAsLast(() =>
 			{
 				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Uninstall).InvokeAll();
 				if (!installedOnCar) {
 					//Check probably not needed, likely already not on car because part can't be connected to something else after being uninstalled
 					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar).InvokeAll();
 				}
-			});
 
-			if (tightness == null) {
-				throw new Exception($"Unable to find tightness on bolt check fsm of part '{gameObject.name}'");
-			}
-
-			if (boltedState != null) {
-				if (simpleBoltedStateDetection) {
-					SetupSimpleBoltedStateDetection();
-				}
-				else {
-					SetupAdvancedBoltedStateDetection();
-				}
-			}
-			else {
-				boltedState = new FsmBool(); //Avoiding null
-			}
+				RemoveBoltedStateDetection(gameObject);
+				gameObject = null;
+			}, "MwcModApi-Uninstall-Post");
 		}
 
 		/// <summary>
@@ -157,62 +138,31 @@ namespace MwcModApi.Parts.Game
 		{
 		}
 
-		/// <summary>
-		/// Setups the advanced bolted state detection requiring all bolts of the part to be tight before bolted events get called
-		/// </summary>
-		protected void SetupAdvancedBoltedStateDetection()
+		protected void RemoveBoltedStateDetection(GameObject activePart)
 		{
-			GameObject boltsGameObject = gameObject.FindChild("Bolts");
-			if (!boltsGameObject) {
-				ModConsole.Print(
-					$"GamePart: Unable to find 'Bolts' child of '{gameObject.name}'. Bolted event listening not possible");
-			}
+			PlayMakerFSM activePartDataFsm = activePart.FindFsm("Data");
 
-			for (int i = 0; i < boltsGameObject.transform.childCount; i++) {
-				GameObject boltGameObject;
-				try {
-					boltGameObject = boltsGameObject.transform.GetChild(i).gameObject;
-					if (!boltGameObject) {
-						throw new Exception("Null GameObject");
-					}
-				}
-				catch (Exception) {
-					continue;
-				}
+			FsmState boltedState = activePartDataFsm.FindState("Bolted");
+			FsmState unboltedState = activePartDataFsm.FindState("Unbolted");
 
-				PlayMakerFSM boltFsm = boltGameObject.FindFsm("Screw");
-				if (!boltFsm) {
-					continue;
-				}
-
-
-				FsmState tightState = boltFsm.FindState("8 2");
-				FsmState unscrewPreState = boltFsm.FindState("Unscrew 2");
-				FsmState unscrewPostState = boltFsm.FindState("Wait 4");
-				if (tightState == null || unscrewPreState == null || unscrewPostState == null) {
-					return;
-				}
-
-				if (!boltFsm.Fsm.Initialized) {
-					boltFsm.InitializeFSM();
-				}
-
-				tightState.AddActionAsFirst(() => OnTight(PartEvent.Time.Pre));
-				tightState.AddActionAsLast(() => OnTight(PartEvent.Time.Post));
-
-				unscrewPreState.AddActionAsFirst(() => OnUnscrew(PartEvent.Time.Pre));
-				unscrewPostState.AddActionAsLast(() => OnUnscrew(PartEvent.Time.Post));
-				maxTightness += 8;
-			}
+			boltedState.RemoveActionByName("MwcModApi-Bolted-Pre");
+			boltedState.RemoveActionByName("MwcModApi-Bolted-Post");
+			boltedState.RemoveActionByName("MwcModApi-Unbolted-Pre");
+			boltedState.RemoveActionByName("MwcModApi-Unbolted-Post");
 		}
 
 		/// <summary>
 		/// Setups the simple bolted state detection requiring just the "Bolted" state
 		/// of the part to change state to true/false for events to trigger
 		/// </summary>
-		protected void SetupSimpleBoltedStateDetection()
+		protected void SetupBoltedStateDetection(GameObject activePart)
 		{
-			boltCheckFsm.FindState("Bolts OFF").AddActionAsFirst(() =>
+			PlayMakerFSM activePartDataFsm = activePart.FindFsm("Data");
+
+			FsmState boltedState = activePartDataFsm.FindState("Bolted");
+			FsmState unboltedState = activePartDataFsm.FindState("Unbolted");
+
+			unboltedState.AddActionAsFirst(() =>
 			{
 				alreadyCalledPreBolted = false;
 
@@ -224,8 +174,10 @@ namespace MwcModApi.Parts.Game
 				if (installedOnCar) {
 					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UnboltedOnCar).InvokeAll();
 				}
-			});
-			boltCheckFsm.FindState("Bolts OFF").AddActionAsLast(() =>
+
+			}, "MwcModApi-Unbolted-Pre");
+
+			unboltedState.AddActionAsLast(() =>
 			{
 				alreadyCalledPostBolted = false;
 
@@ -238,10 +190,11 @@ namespace MwcModApi.Parts.Game
 				if (installedOnCar) {
 					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UnboltedOnCar).InvokeAll();
 				}
-			});
+
+			}, "MwcModApi-Unbolted-Post");
 
 
-			boltCheckFsm.FindState("Bolts ON").AddActionAsFirst(() =>
+			boltedState.AddActionAsFirst(() =>
 			{
 				alreadyCalledPreUnbolted = false;
 
@@ -253,8 +206,9 @@ namespace MwcModApi.Parts.Game
 				if (installedOnCar) {
 					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.BoltedOnCar).InvokeAll();
 				}
-			});
-			boltCheckFsm.FindState("Bolts ON").AddActionAsLast(() =>
+			}, "MwcModApi-Bolted-Pre");
+
+			boltedState.AddActionAsLast(() =>
 			{
 				alreadyCalledPostUnbolted = false;
 
@@ -267,7 +221,7 @@ namespace MwcModApi.Parts.Game
 				if (installedOnCar) {
 					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.BoltedOnCar).InvokeAll();
 				}
-			});
+			}, "MwcModApi-Bolted-Post");
 		}
 
 		/// <summary>
@@ -291,8 +245,17 @@ namespace MwcModApi.Parts.Game
 		/// </summary>
 		public override bool installBlocked
 		{
-			get => triggerFsmGameObjectCollider.enabled;
-			set => triggerFsmGameObjectCollider.enabled = !value;
+			get
+			{
+				return !nearState.Actions.Any(action => action.Enabled);
+			}
+			set
+			{
+				foreach (var action in nearState.Actions)
+				{
+					action.Enabled = !value;
+				}
+			}
 		}
 
 		/// <summary>
@@ -311,7 +274,7 @@ namespace MwcModApi.Parts.Game
 		/// <summary>
 		/// The main Fsm GameObject
 		/// </summary>
-		public GameObject mainFsmGameObject { get; protected set; }
+		public GameObject installPointFsmGameObject { get; protected set; }
 
 		/// <summary>
 		/// The data FSM object of the part
@@ -343,30 +306,12 @@ namespace MwcModApi.Parts.Game
 		public FsmBool boltedState { get; protected set; }
 
 		/// <summary>
-		/// The removal FSM dealing with removing an installed part
-		/// </summary>
-		public PlayMakerFSM removalFsm { get; protected set; }
-
-		/// <summary>
-		/// The assembly FSM dealing with installing a part
-		/// </summary>
-		public PlayMakerFSM assemblyFsm { get; protected set; }
-
-		/// <summary>
-		/// The bolt check FSM dealing with the bolted state of the part
-		/// </summary>
-		public PlayMakerFSM boltCheckFsm { get; protected set; }
-
-		/// <summary>
 		/// The part fsm gameObject (The one you can pickup)
 		/// </summary>
-		public override GameObject gameObject { get; protected set; }
+		public override GameObject gameObject { get => _gameObject; protected set => _gameObject = value; }
 
-		/// <summary>
-		/// The trigger fsm gameObject (deals with installing the part onto the car)
-		/// </summary>
-		public GameObject triggerFsmGameObject { get; protected set; }
-		protected Collider triggerFsmGameObjectCollider { get; set; }
+
+		FsmState nearState { get; }
 
 		/// <inheritdoc />
 		public override bool bought
@@ -407,17 +352,7 @@ namespace MwcModApi.Parts.Game
 		/// <summary>
 		/// Returns if the game part is bolted
 		/// </summary>
-		public override bool bolted
-		{
-			get
-			{
-				if (simpleBoltedStateDetection) {
-					return boltedState.Value;
-				}
-
-				return boltedState.Value && tightness.Value >= maxTightness;
-			}
-		}
+		public override bool bolted => boltedState?.Value ?? false;
 
 		/// <inheritdoc />
 		public override bool hasBolts => dataFsm.FsmVariables.FindFsmBool("Bolted") != null;
@@ -446,12 +381,7 @@ namespace MwcModApi.Parts.Game
 		/// </summary>
 		public override void Uninstall()
 		{
-			if (!removalFsm.enabled)
-			{
-				removalFsm.enabled = true;
-			}
-			removalFsm.SendEvent("REMOVE");
-
+			dataFsm.SendEvent("REMOVE");
 		}
 
 		public override void ResetToDefault(bool uninstall = false)
@@ -665,9 +595,15 @@ namespace MwcModApi.Parts.Game
 		/// <param name="partToBlock">The part to block when the "Type" is called on this part</param>
 		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, BasicPart partToBlock)
 		{
-			AddEventListener(PartEvent.Time.Post, Type, () => { partToBlock.installBlocked = true; });
+			AddEventListener(PartEvent.Time.Post, Type, () =>
+			{
+				partToBlock.installBlocked = true;
+			});
 			AddEventListener(PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type),
-				() => { partToBlock.installBlocked = false; });
+				() =>
+				{
+					partToBlock.installBlocked = false;
+				});
 		}
 	}
 }
