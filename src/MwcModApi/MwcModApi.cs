@@ -44,6 +44,7 @@ namespace MwcModApi
 #endif
 
 		private bool updateLocked = true;
+		private Shop shop;
 
 		internal static bool ShowScrewSize => (bool)showBoltSizeSetting.GetValue();
 
@@ -106,7 +107,7 @@ namespace MwcModApi
 		private void PreLoad()
 		{
 			PaintingSystem.PaintingSystem.Init();
-			Shop.Init();
+			shop = new Shop();
 
 			MwcModApiGameObject = new GameObject(ID);
 		}
@@ -167,7 +168,6 @@ namespace MwcModApi
 				return;
 			}
 
-			Shop.Handle();
 #if DEBUG
 			InstantInstallDebug();
 #endif
@@ -368,7 +368,6 @@ namespace MwcModApi
 			Caching.Game.LoadCleanup();
 			PaintingSystem.PaintingSystem.LoadCleanup();
 			Screw.LoadCleanup();
-			Shop.LoadCleanup();
 			Logger.LoadCleanup();
 			ScrewPlacementAssist.LoadCleanup();
 			UserInteraction.LoadCleanup();

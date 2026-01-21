@@ -107,11 +107,16 @@
     <Compile Include="Saving\GamePartSave.cs" />
     <Compile Include="Saving\SerializableQuaternion.cs" />
     <Compile Include="Saving\SerializableVector3.cs" />
+    <Compile Include="Shopping\CatalogData.cs" />
+    <Compile Include="Shopping\Location\Psk.cs" />
+    <Compile Include="Shopping\Location\Fleetari.cs" />
     <Compile Include="Shopping\ModItem.cs" />
     <Compile Include="Shopping\Shop.cs" />
     <Compile Include="Shopping\ShopBaseInfo.cs" />
+    <Compile Include="Shopping\ShopCatalogLogic.cs" />
     <Compile Include="Shopping\ShopInterface.cs" />
     <Compile Include="Shopping\ShopItem.cs" />
+    <Compile Include="Shopping\ShopLocationData.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\FsmAction.cs" />
     <Compile Include="Tools\Helper.cs" />
@@ -125,6 +130,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\bundle.unity3d" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <MSCMODSFOLDER>NONE</MSCMODSFOLDER>

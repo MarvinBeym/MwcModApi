@@ -10,14 +10,14 @@ namespace MwcModApi.Shopping
 {
 	internal class ModItem
 	{
-		private ShopLocation shopLocation;
+		private ShopLocationData shopLocation;
 		private ShopInterface shopInterface;
 		internal Mod mod;
 		private GameObject gameObject;
 		private Text partCountComp;
 		private List<ShopItem> items = new List<ShopItem>();
 
-		internal ModItem(ShopLocation shopLocation, ShopInterface shopInterface, Mod mod)
+		internal ModItem(ShopLocationData shopLocation, ShopInterface shopInterface, Mod mod)
 		{
 			this.shopLocation = shopLocation;
 			this.shopInterface = shopInterface;

@@ -60,7 +60,7 @@ namespace MwcModApi.Shopping
 			cartList = cartPanel.FindChild("cart_list/list/grid");
 		}
 
-		internal void Open(Shop.ShopLocation shopLocation)
+		internal void Open(ShopLocationData shopLocation)
 		{
 			open = true;
 			playerInMenu.Value = true;
@@ -73,13 +73,17 @@ namespace MwcModApi.Shopping
 
 			EmptyShoppingCart();
 
-			foreach (ModItem modItem in shopItems[shopLocation]) {
+			foreach (ModItem modItem in shopLocation.items) {
 				modItem.Show(true);
 			}
 
-			foreach (var shopLocationModItems in shopItems) {
-				if (shopLocationModItems.Key == shopLocation) continue;
-				foreach (ModItem modItem in shopLocationModItems.Value) {
+			foreach (var shopLocationModItems in Shop.GetInstance().shopLocations) {
+				if (shopLocationModItems.Value == shopLocation)
+				{
+					continue;
+				}
+
+				foreach (ModItem modItem in shopLocationModItems.Value.items) {
 					modItem.Show(false);
 				}
 			}
@@ -107,7 +111,7 @@ namespace MwcModApi.Shopping
 			partsPanel.SetActive(false);
 		}
 
-		internal void OnOpenShop(ShopLocation shopLocation, ModItem modItemToOpen)
+		internal void OnOpenShop(ShopLocationData shopLocation, ModItem modItemToOpen)
 		{
 			modsPanel.SetActive(false);
 			partsPanel.SetActive(true);
@@ -115,7 +119,7 @@ namespace MwcModApi.Shopping
 			modItemToOpen.Open();
 
 
-			foreach (ModItem modItem in shopItems[shopLocation].Where(modItem => modItem != modItemToOpen)) {
+			foreach (ModItem modItem in shopLocation.items.Where(modItem => modItem != modItemToOpen)) {
 				modItem.Close();
 			}
 		}
@@ -206,8 +210,8 @@ namespace MwcModApi.Shopping
 
 			shoppingCart.Clear();
 
-			foreach (var shopLocationItem in shopItems) {
-				foreach (ModItem modItem in shopLocationItem.Value) {
+			foreach (var shopLocationItem in Shop.GetInstance().shopLocations) {
+				foreach (ModItem modItem in shopLocationItem.Value.items) {
 					modItem.UpdatePartCount();
 				}
 			}
