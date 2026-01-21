@@ -60,7 +60,7 @@ namespace MwcModApi.Shopping
 			cartList = cartPanel.FindChild("cart_list/list/grid");
 		}
 
-		internal void Open(ShopLocationData shopLocation)
+		internal void Open(ShopLocation shopLocation)
 		{
 			open = true;
 			playerInMenu.Value = true;
@@ -111,7 +111,7 @@ namespace MwcModApi.Shopping
 			partsPanel.SetActive(false);
 		}
 
-		internal void OnOpenShop(ShopLocationData shopLocation, ModItem modItemToOpen)
+		internal void OnOpenShop(ShopLocation shopLocation, ModItem modItemToOpen)
 		{
 			modsPanel.SetActive(false);
 			partsPanel.SetActive(true);

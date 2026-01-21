@@ -15,13 +15,7 @@ namespace MwcModApi.Shopping
 
 		internal ShopInterface shopInterface;
 
-		public Dictionary<ShopLocation, ShopLocationData> shopLocations { get; protected set; }
-
-		public enum ShopLocation
-		{
-			Fleetari,
-			Psk
-		}
+		public Dictionary<ShopLocationOption, ShopLocation> shopLocations { get; protected set; }
 
 		public static class SpawnLocation
 		{
@@ -52,10 +46,10 @@ namespace MwcModApi.Shopping
 			instance = this;
 			shopInterface = new ShopInterface();
 
-			shopLocations = new Dictionary<ShopLocation, ShopLocationData>()
+			shopLocations = new Dictionary<ShopLocationOption, ShopLocation>()
 			{
-				{ ShopLocation.Fleetari, new Fleetari() },
-				{ ShopLocation.Psk, new Psk() },
+				{ ShopLocationOption.Fleetari, new Fleetari() },
+				{ ShopLocationOption.Psk, new Psk() },
 			};
 		}
 
@@ -64,24 +58,24 @@ namespace MwcModApi.Shopping
 			return instance;
 		}
 
-		public ShopLocationData GetShopLocation(ShopLocation shopLocation)
+		public ShopLocation GetShopLocation(ShopLocationOption shopLocation)
 		{
-			if (!shopLocations.TryGetValue(shopLocation, out ShopLocationData shopLocationData))
+			if (!shopLocations.TryGetValue(shopLocation, out ShopLocation shopLocationData))
 			{
-				throw new Exception($"Unsupported/Uninitialized ShopLocation enum received: {shopLocation}");
+				throw new Exception($"Unsupported/Uninitialized ShopLocationOption enum received: {shopLocation}");
 			}
 
 			return shopLocationData;
 		}
 
-		public void Add(ShopBaseInfo baseInfo, ShopLocationData shopLocation, ShopItem[] shopItems)
+		public void Add(ShopBaseInfo baseInfo, ShopLocation shopLocation, ShopItem[] shopItems)
 		{
 			foreach (var shopItem in shopItems) {
 				Add(baseInfo, shopLocation, shopItem);
 			}
 		}
 
-		public void Add(ShopBaseInfo baseInfo, ShopLocationData shopLocation, ShopItem shopItem)
+		public void Add(ShopBaseInfo baseInfo, ShopLocation shopLocation, ShopItem shopItem)
 		{
 			shopItem.SetBaseInfo(baseInfo);
 			ModItem modItem = shopLocation.items.FirstOrDefault(modItemCached => modItemCached.mod == baseInfo.mod);

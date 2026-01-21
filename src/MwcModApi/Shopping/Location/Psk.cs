@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace MwcModApi.Shopping.Location
 {
-	public class Psk : ShopLocationData
+	public class Psk : ShopLocation
 	{
-		public override Shop.ShopLocation shopLocation => Shop.ShopLocation.Psk;
+		public override ShopLocationOption shopLocation => ShopLocationOption.Psk;
 
 		public static class Spawn
 		{

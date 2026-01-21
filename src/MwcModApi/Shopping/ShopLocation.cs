@@ -8,16 +8,16 @@ using UnityEngine;
 namespace MwcModApi.Shopping
 {
 
-	public abstract class ShopLocationData
+	public abstract class ShopLocation
 	{
-		public abstract Shop.ShopLocation shopLocation { get; }
+		public abstract ShopLocationOption shopLocation { get; }
 		internal abstract CatalogData catalogData { get; }
 
 		internal List<ModItem> items = new List<ModItem>();
 		internal GameObject catalog;
 		protected ShopCatalogLogic logic;
 
-		protected ShopLocationData()
+		protected ShopLocation()
 		{
 			if (catalogData.parent == null)
 			{

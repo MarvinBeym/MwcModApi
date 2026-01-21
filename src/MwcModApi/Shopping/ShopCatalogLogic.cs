@@ -6,7 +6,7 @@ namespace MwcModApi.Shopping
 {
 	public class ShopCatalogLogic : MonoBehaviour
 	{
-		private ShopLocationData shopLocationData;
+		private ShopLocation shopLocationData;
 		private Shop shop;
 
 		void Update()
@@ -23,7 +23,7 @@ namespace MwcModApi.Shopping
 			}
 		}
 
-		public void Init(ShopLocationData shopLocationData)
+		public void Init(ShopLocation shopLocationData)
 		{
 			this.shopLocationData = shopLocationData;
 			shop = Shop.GetInstance();
