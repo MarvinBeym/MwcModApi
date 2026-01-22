@@ -11,7 +11,7 @@ namespace MwcModApi.Shopping
 
 		void Update()
 		{
-			if (!gameObject.IsLookingAt())
+			if (!gameObject.IsLookingAt() || shop.shopInterface.IsOpen())
 			{
 				return;
 			}

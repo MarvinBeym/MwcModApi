@@ -31,7 +31,7 @@ namespace MwcModApi.Shopping
 				public static Vector3 Outside { get; } = new Vector3(1552.154f, 5f, 732.755f);
 			}
 		}
-
+		
 		internal static class Prefabs
 		{
 			public static GameObject shopInterface;
