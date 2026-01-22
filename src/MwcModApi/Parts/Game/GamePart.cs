@@ -26,8 +26,7 @@ namespace MwcModApi.Parts.Game
 
 		public readonly string partName;
 
-		protected GameObject _gameObject = null;
-
+		protected GameObject currentPhysicalPart = null;
 
 		public GamePartSave saveData => new GamePartSave(installedOnCar, position, Quaternion.Euler(rotation));
 
@@ -84,6 +83,8 @@ namespace MwcModApi.Parts.Game
 				throw new Exception($"Unable to find 'Near' state on GameObject with name '{installPointFsmGameObject.name}'");
 			}
 
+			currentPhysicalPart = installPointFsmGameObject.FindChild(partName);
+
 			boltedState = dataFsm.FsmVariables.FindFsmBool("Bolted");
 			damagedState = dataFsm.FsmVariables.FindFsmBool("Damaged") ?? new FsmBool("Damaged");
 			installedState = dataFsm.FsmVariables.FindFsmBool("Installed") ?? new FsmBool("Installed");
@@ -102,9 +103,9 @@ namespace MwcModApi.Parts.Game
 
 			dataFsm.FindState("Installed").AddActionAsLast(() =>
 			{
-				gameObject = installPointFsmGameObject.FindChild(partName);
+				currentPhysicalPart = installPointFsmGameObject.FindChild(partName);
 
-				SetupBoltedStateDetection(gameObject);
+				SetupBoltedStateDetection(currentPhysicalPart);
 
 				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Install).InvokeAll();
 				if (installedOnCar) {
@@ -124,8 +125,8 @@ namespace MwcModApi.Parts.Game
 					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar).InvokeAll();
 				}
 
-				RemoveBoltedStateDetection(gameObject);
-				gameObject = null;
+				RemoveBoltedStateDetection(currentPhysicalPart);
+				currentPhysicalPart = null;
 			}, "MwcModApi-Uninstall-Post");
 		}
 
@@ -138,9 +139,9 @@ namespace MwcModApi.Parts.Game
 		{
 		}
 
-		protected void RemoveBoltedStateDetection(GameObject activePart)
+		protected void RemoveBoltedStateDetection(GameObject currentPhysicalPart)
 		{
-			PlayMakerFSM activePartDataFsm = activePart.FindFsm("Data");
+			PlayMakerFSM activePartDataFsm = currentPhysicalPart.FindFsm("Data");
 
 			FsmState boltedState = activePartDataFsm.FindState("Bolted");
 			FsmState unboltedState = activePartDataFsm.FindState("Unbolted");
@@ -155,9 +156,9 @@ namespace MwcModApi.Parts.Game
 		/// Setups the simple bolted state detection requiring just the "Bolted" state
 		/// of the part to change state to true/false for events to trigger
 		/// </summary>
-		protected void SetupBoltedStateDetection(GameObject activePart)
+		protected void SetupBoltedStateDetection(GameObject currentPhysicalPart)
 		{
-			PlayMakerFSM activePartDataFsm = activePart.FindFsm("Data");
+			PlayMakerFSM activePartDataFsm = currentPhysicalPart.FindFsm("Data");
 
 			FsmState boltedState = activePartDataFsm.FindState("Bolted");
 			FsmState unboltedState = activePartDataFsm.FindState("Unbolted");
@@ -306,9 +307,9 @@ namespace MwcModApi.Parts.Game
 		public FsmBool boltedState { get; protected set; }
 
 		/// <summary>
-		/// The part fsm gameObject (The one you can pickup)
+		/// The root GameObject which acts as the parent & install point of the actual physical object
 		/// </summary>
-		public override GameObject gameObject { get => _gameObject; protected set => _gameObject = value; }
+		public override GameObject gameObject { get => installPointFsmGameObject; protected set => installPointFsmGameObject = value; }
 
 
 		FsmState nearState { get; }
@@ -358,7 +359,7 @@ namespace MwcModApi.Parts.Game
 		public override bool hasBolts => dataFsm.FsmVariables.FindFsmBool("Bolted") != null;
 
 		/// <inheritdoc />
-		public override bool installedOnCar => gameObject.transform.root == CarH.car.transform;
+		public override bool installedOnCar => currentPhysicalPart.transform.root == CarH.car.transform;
 
 		/// <inheritdoc />
 		public override bool active
