@@ -48,7 +48,7 @@ namespace MwcModApi.Caching
 			get
 			{
 				if (_electricity != null) return _electricity;
-				_electricity = car.FindChild("Electricity").gameObject;
+				_electricity = car.FindChild("Simulation/Electricity").gameObject;
 
 				return _electricity;
 			}
@@ -65,20 +65,6 @@ namespace MwcModApi.Caching
 				var carElectricsPower = PlayMakerFSM.FindFsmOnGameObject(electricity, "Power");
 				_electricsOk = carElectricsPower.FsmVariables.FindFsmBool("ElectricsOK");
 				return _electricsOk.Value;
-			}
-		}
-
-		/// <summary>
-		/// Returns the UnityCar CarController object of the car.
-		/// </summary>
-		public static CarController carController
-		{
-			get
-			{
-				if (_carController != null) return _carController;
-				_carController = car.GetComponent<CarController>();
-
-				return _carController;
 			}
 		}
 
