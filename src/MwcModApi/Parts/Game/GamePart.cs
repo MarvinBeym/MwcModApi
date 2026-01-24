@@ -27,6 +27,7 @@ namespace MwcModApi.Parts.Game
 		public readonly string partName;
 
 		protected GameObject currentPhysicalPart = null;
+		protected string physicalPartId = "";
 
 		public GamePartSave saveData => new GamePartSave(installedOnCar, position, Quaternion.Euler(rotation));
 
@@ -60,12 +61,14 @@ namespace MwcModApi.Parts.Game
 		/// Creates a new GamePart wrapper object
 		/// </summary>
 		/// <param name="installPointFsmName">The main GameObject name (capital letter name) Ex.: "VINP_Carburettor"</param>
-		/// <param name="objectName">THe name of the actual part Ex.: "4 Barrell Racing Carb(VINXX)"</param>
-		public GamePart(string installPointFsmName, string partName)
+		/// <param name="partName">THe name of the actual part Ex.: "4 Barrell Racing Carb(VINXX)"</param>
+		/// <param name="physicalPartId">The ID of the physical part, some parts may have the same "partName" but are different physical parts, this ID can be found in the Data PlayMakerFSM component under FsmString</param>
+		public GamePart(string installPointFsmName, string partName, string physicalPartId = "")
 		{
 			InitEventStorage();
 			id = installPointFsmName + "-" + partName;
 			this.partName = partName;
+			this.physicalPartId = physicalPartId;
 
 			installPointFsmGameObject = Cache.Find(installPointFsmName);
 			if (!installPointFsmGameObject) {
@@ -83,7 +86,7 @@ namespace MwcModApi.Parts.Game
 				throw new Exception($"Unable to find 'Near' state on GameObject with name '{installPointFsmGameObject.name}'");
 			}
 
-			currentPhysicalPart = installPointFsmGameObject.FindChild(partName);
+			currentPhysicalPart = GetCurrentPhysicalPart();
 
 			boltedState = dataFsm.FsmVariables.FindFsmBool("Bolted");
 			damagedState = dataFsm.FsmVariables.FindFsmBool("Damaged") ?? new FsmBool("Damaged");
@@ -103,8 +106,9 @@ namespace MwcModApi.Parts.Game
 
 			dataFsm.FindState("Installed").AddActionAsLast(() =>
 			{
-				currentPhysicalPart = installPointFsmGameObject.FindChild(partName);
-				
+				currentPhysicalPart = GetCurrentPhysicalPart();
+
+
 				SetupBoltedStateDetection(currentPhysicalPart);
 
 				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Install).InvokeAll();
@@ -137,6 +141,35 @@ namespace MwcModApi.Parts.Game
 		/// </summary>
 		protected GamePart()
 		{
+		}
+		
+		protected GameObject GetCurrentPhysicalPart()
+		{
+			GameObject part = installPointFsmGameObject.FindChild(partName);
+			if (part == null)
+			{
+				return null;
+			}
+
+			if (physicalPartId == "")
+			{
+				return part;
+			}
+
+			PlayMakerFSM fsm = part.FindFsm("Data");
+			if (fsm == null)
+			{
+				return null;
+			}
+
+			FsmString id = fsm.FsmVariables.GetFsmString("ID");
+			if (id == null || id.Value != physicalPartId)
+			{
+				return null;
+			}
+
+			return part;
+
 		}
 
 		protected void RemoveBoltedStateDetection(GameObject currentPhysicalPart)
