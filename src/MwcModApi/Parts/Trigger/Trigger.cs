@@ -252,9 +252,19 @@ namespace MwcModApi.Parts.Trigger
 		/// <param name="collider"></param>
 		protected void OnTriggerStay(Collider collider)
 		{
-			if (!canBeInstalled || !UserInteraction.LeftMouseDown) return;
 
-			UserInteraction.GuiInteraction(UserInteraction.Type.None);
+			if (!canBeInstalled)
+			{
+				return;
+			}
+
+			UserInteraction.GuiInteraction(UserInteraction.Type.Assemble, $"Install {part.gameObject.name}");
+
+			if (!UserInteraction.LeftMouseDown)
+			{
+				return;
+			}
+
 			collider.gameObject.PlayAssemble();
 			canBeInstalled = false;
 			Install();
@@ -270,11 +280,11 @@ namespace MwcModApi.Parts.Trigger
 				!collider.gameObject.IsHolding()
 				|| collider.gameObject != part.gameObject
 				|| !part.installPossible
-			) {
+			)
+			{
 				return;
 			}
 
-			UserInteraction.GuiInteraction(UserInteraction.Type.Assemble, $"Install {part.gameObject.name}");
 			canBeInstalled = true;
 		}
 
@@ -284,8 +294,6 @@ namespace MwcModApi.Parts.Trigger
 		/// <param name="collider"></param>
 		protected void OnTriggerExit(Collider collider)
 		{
-			if (!canBeInstalled) return;
-
 			canBeInstalled = false;
 			UserInteraction.GuiInteraction(UserInteraction.Type.None);
 		}
