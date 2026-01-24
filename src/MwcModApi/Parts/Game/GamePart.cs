@@ -104,7 +104,7 @@ namespace MwcModApi.Parts.Game
 			dataFsm.FindState("Installed").AddActionAsLast(() =>
 			{
 				currentPhysicalPart = installPointFsmGameObject.FindChild(partName);
-
+				
 				SetupBoltedStateDetection(currentPhysicalPart);
 
 				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Install).InvokeAll();
@@ -348,12 +348,12 @@ namespace MwcModApi.Parts.Game
 		/// <summary>
 		/// Returns if the game part is installed
 		/// </summary>
-		public override bool installed => installedState.Value;
+		public override bool installed => installedState.Value && currentPhysicalPart != null && currentPhysicalPart.name == partName;
 
 		/// <summary>
 		/// Returns if the game part is bolted
 		/// </summary>
-		public override bool bolted => boltedState?.Value ?? false;
+		public override bool bolted => (boltedState?.Value ?? false) && currentPhysicalPart != null && currentPhysicalPart.name == partName;
 
 		/// <inheritdoc />
 		public override bool hasBolts => dataFsm.FsmVariables.FindFsmBool("Bolted") != null;
@@ -372,10 +372,10 @@ namespace MwcModApi.Parts.Game
 		public override string name => gameObject.name;
 
 		/// <inheritdoc />
-		public override bool isLookingAt => gameObject.IsLookingAt();
+		public override bool isLookingAt => currentPhysicalPart != null && currentPhysicalPart.IsLookingAt();
 
 		/// <inheritdoc />
-		public override bool isHolding => gameObject.IsHolding();
+		public override bool isHolding => currentPhysicalPart != null && currentPhysicalPart.IsHolding();
 
 		/// <summary>
 		/// Sends the REMOVE event to the Part
