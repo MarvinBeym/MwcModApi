@@ -53,6 +53,8 @@ namespace MwcModApi.Parts.Game
 
 		public new Vector3 rotation => gameObject.transform.rotation.eulerAngles;
 
+		public override bool installedOnCar => true;
+
 		/// <summary>
 		/// Returns the instance to the CarGamePart
 		/// The CarGamePart can only ever exist once, so Singleton pattern is used to avoid multiple objects existing
