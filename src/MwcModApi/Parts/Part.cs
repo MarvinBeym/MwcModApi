@@ -635,7 +635,7 @@ namespace MwcModApi.Parts
 		/// <param name="position">The relative position from the parts origin</param>
 		/// <param name="rotation">The rotation relative rotation from the parts origin</param>
 		/// <param name="scale">The scale relative to the parts scale</param>
-		public void AddClampModel(Vector3 position, Vector3 rotation, float scale)
+		public GameObject AddClampModel(Vector3 position, Vector3 rotation, float scale)
 		{
 			var clamp = GameObject.Instantiate(clampModel);
 			clamp.name = $"{gameObject.name}_clamp_{clampsAdded}";
@@ -644,6 +644,7 @@ namespace MwcModApi.Parts
 			clamp.transform.localPosition = position;
 			clamp.transform.localScale = new Vector3(scale, scale, scale);
 			clamp.transform.localRotation = new Quaternion { eulerAngles = rotation };
+			return clamp;
 		}
 
 		public virtual void CustomSaveLoading(Mod mod, string saveFileName)
