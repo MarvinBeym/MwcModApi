@@ -623,14 +623,14 @@ namespace MwcModApi.Parts
 			rotation = defaultRotation;
 		}
 
-		public void AddClampModel(Vector3 position, Vector3 rotation, Vector3 scale)
+		public void AddClampModel(Vector3 position, Vector3 rotation, float scale)
 		{
 			var clamp = GameObject.Instantiate(clampModel);
 			clamp.name = $"{gameObject.name}_clamp_{clampsAdded}";
 			clampsAdded++;
 			clamp.transform.SetParent(gameObject.transform);
 			clamp.transform.localPosition = position;
-			clamp.transform.localScale = scale;
+			clamp.transform.localScale = new Vector3(scale, scale, scale);
 			clamp.transform.localRotation = new Quaternion { eulerAngles = rotation };
 		}
 
