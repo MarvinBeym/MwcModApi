@@ -85,7 +85,12 @@ namespace MwcModApi.Parts
 
 		internal void CreateScrewModel(int index)
 		{
-			switch (type) {
+			CreateScrewModel(index, parentCollider.gameObject);
+		}
+		internal void CreateScrewModel(int index, GameObject parent)
+		{
+			switch (type)
+			{
 				case Type.Nut:
 					gameObject = GameObject.Instantiate(nutModel);
 					break;
@@ -102,7 +107,7 @@ namespace MwcModApi.Parts
 
 			gameObject.SetNameLayerTag($"{parentCollider.gameObject.name}_screw_{index}", "PART", "DontCollide");
 
-			gameObject.transform.SetParent(parentCollider.transform);
+			gameObject.transform.SetParent(parent.transform);
 			gameObject.transform.localPosition = position;
 			gameObject.transform.localRotation = new Quaternion { eulerAngles = rotation };
 			gameObject.transform.localScale = new Vector3(scale, scale, scale);

@@ -400,6 +400,12 @@ namespace MwcModApi.Parts
 
 		public void AddScrew(Screw screw)
 		{
+			var parentCollider = gameObject.GetComponent<Collider>();
+			AddScrew(screw, parentCollider.gameObject);
+		}
+
+		public void AddScrew(Screw screw, GameObject parent)
+		{
 			screw.Verify();
 			screw.SetPart(this);
 			screw.parentCollider = gameObject.GetComponent<Collider>();
@@ -408,7 +414,7 @@ namespace MwcModApi.Parts
 
 			var index = partSave.screws.IndexOf(screw);
 
-			screw.CreateScrewModel(index);
+			screw.CreateScrewModel(index, parent);
 
 			screw.LoadTightness(savedScrews.ElementAtOrDefault(index));
 			screw.InBy(screw.tightness, false, true);
