@@ -629,6 +629,12 @@ namespace MwcModApi.Parts
 			rotation = defaultRotation;
 		}
 
+		/// <summary>
+		/// Adds a clamp model to the part which can be used to make tubes boltable
+		/// </summary>
+		/// <param name="position">The relative position from the parts origin</param>
+		/// <param name="rotation">The rotation relative rotation from the parts origin</param>
+		/// <param name="scale">The scale relative to the parts scale</param>
 		public void AddClampModel(Vector3 position, Vector3 rotation, float scale)
 		{
 			var clamp = GameObject.Instantiate(clampModel);
