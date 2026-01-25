@@ -37,6 +37,12 @@ namespace MwcModApi.Parts
 
 	public class Part : BasicPart, SupportsPartEvents, SupportsPartBehaviourEvents
 	{
+		private const float ClampScrewHeightOffset = 0.039f;
+		private const float ClampScrewInOutOffset = 0.025f;
+		private const float ClampScrewLeftRightOffset = 0.0005f; //Clamp origin likely not centered
+		private const float ClampScrewRotationOffset = 90f;
+		private const float ClampScrewBaseScale = 0.5f;
+
 		protected static GameObject clampModel;
 		protected int clampsAdded;
 		internal PartSave partSave;
@@ -644,6 +650,30 @@ namespace MwcModApi.Parts
 			clamp.transform.localPosition = position;
 			clamp.transform.localScale = new Vector3(scale, scale, scale);
 			clamp.transform.localRotation = new Quaternion { eulerAngles = rotation };
+			return clamp;
+		}
+
+		/// <summary>
+		/// Adds a clamp model to the part which can be used to make tubes boltable
+		/// Also adds a screw positioned on the clamp properly aligned & scaled with the clamp's screw hole,
+		/// </summary>
+		/// <param name="position">Position relative to the part</param>
+		/// <param name="rotation">Rotation relative to the part</param>
+		/// <param name="scale">Scale relative to the part</param>
+		/// <param name="screwSize">The size of the screw (what spanner/wrench size is required for the screw added</param>
+		public GameObject AddClampModel(Vector3 position, Vector3 rotation, float scale, float screwSize)
+		{
+			var clamp = AddClampModel(position, rotation, scale);
+			AddScrew(new Screw(
+				new Vector3(ClampScrewInOutOffset, ClampScrewHeightOffset, ClampScrewLeftRightOffset),
+				new Vector3(0, ClampScrewRotationOffset, 0),
+				Screw.Type.Normal,
+				ClampScrewBaseScale,
+				screwSize,
+				true,
+				Screw.transformStep * scale
+			), clamp);
+
 			return clamp;
 		}
 
