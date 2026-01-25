@@ -404,12 +404,22 @@ namespace MwcModApi.Parts
 			rotation = tmpRotation.eulerAngles;
 		}
 
+		/// <summary>
+		/// Adds a screw to the part, allowing the part to be bolted down and fixed in place completely
+		/// </summary>
+		/// <param name="screw">The screw object</param>
 		public void AddScrew(Screw screw)
 		{
 			var parentCollider = gameObject.GetComponent<Collider>();
 			AddScrew(screw, parentCollider.gameObject);
 		}
 
+		/// <summary>
+		/// Adds a screw to the part, allowing the part to be bolted down and fixed in place completely
+		/// Also changes the screw parent GameObject to be a different GameObject than the part itself
+		/// </summary>
+		/// <param name="screw">The screw object</param>
+		/// <param name="parent">The parent on which the screw should be positioned</param>
 		public void AddScrew(Screw screw, GameObject parent)
 		{
 			screw.Verify();
