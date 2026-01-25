@@ -144,6 +144,7 @@ namespace MwcModApi.Tools
 		{
 			var vector = transform.localPosition;
 			var quaternion = Quaternion.Euler(transform.localRotation.eulerAngles);
+			//ToDo: Screw.transformStep needs to be changed, since can now be different for each Screw object.
 			vector += (quaternion * Vector3.forward) * (Screw.maxTightness * Screw.transformStep);
 			return vector;
 		}

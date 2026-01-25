@@ -32,6 +32,7 @@ namespace MwcModApi.Parts
 		internal float scale;
 		internal float size;
 		internal Type type;
+		internal float transformStepPerRevolution;
 		internal GameObject gameObject;
 		private MeshRenderer renderer;
 
@@ -50,13 +51,14 @@ namespace MwcModApi.Parts
 		internal static AudioClip soundClip;
 
 		public Screw(Vector3 position, Vector3 rotation, Type type = Type.Normal, float scale = 1, float size = 10,
-			bool allowShowSize = true)
+			bool allowShowSize = true, float transformStepPerRevolution = transformStep)
 		{
 			this.position = position;
 			this.rotation = rotation;
 			this.scale = scale;
 			this.size = size;
 			this.type = type;
+			this.transformStepPerRevolution = transformStepPerRevolution;
 
 			showSize = allowShowSize;
 
@@ -145,7 +147,7 @@ namespace MwcModApi.Parts
 			}
 
 			gameObject.transform.Rotate(0, 0, rotationStep);
-			gameObject.transform.Translate(0f, 0f, -transformStep);
+			gameObject.transform.Translate(0f, 0f, -transformStepPerRevolution);
 
 			bool changingToFixedState = false;
 			if (tightness + 1 == maxTightness) {
@@ -196,7 +198,7 @@ namespace MwcModApi.Parts
 			}
 
 			gameObject.transform.Rotate(0, 0, -rotationStep);
-			gameObject.transform.Translate(0f, 0f, transformStep);
+			gameObject.transform.Translate(0f, 0f, transformStepPerRevolution);
 
 			bool changingToUnfixed = part.bolted;
 
