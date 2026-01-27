@@ -56,7 +56,6 @@ namespace MwcModApi.Parts.PartBox
 			);
 		}
 
-
 		/// <summary>
 		/// Constructor for a new Box
 		/// </summary>

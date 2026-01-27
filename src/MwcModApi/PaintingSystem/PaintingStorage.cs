@@ -117,7 +117,6 @@ namespace MwcModApi.PaintingSystem
 						renderer.material.SetTexture("_MainTex", oldMainTexture);
 					}
 
-
 					pair.Value.Add(renderer.material);
 				}
 

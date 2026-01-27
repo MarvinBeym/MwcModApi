@@ -23,7 +23,6 @@ namespace MwcModApi.Parts.Game
 		/// </summary>
 		public readonly string id;
 
-
 		public readonly string partName;
 
 		protected GameObject currentPhysicalPart = null;
@@ -110,7 +109,6 @@ namespace MwcModApi.Parts.Game
 				() =>
 				{
 					currentPhysicalPart = GetCurrentPhysicalPart();
-
 
 					SetupBoltedStateDetection(currentPhysicalPart);
 
@@ -218,7 +216,6 @@ namespace MwcModApi.Parts.Game
 				{
 					alreadyCalledPostBolted = false;
 
-
 					if (alreadyCalledPostUnbolted) {
 						return;
 					}
@@ -229,7 +226,6 @@ namespace MwcModApi.Parts.Game
 					}
 				}, "MwcModApi-Unbolted-Post"
 			);
-
 
 			boltedState.AddActionAsFirst(
 				() =>
@@ -251,7 +247,6 @@ namespace MwcModApi.Parts.Game
 				() =>
 				{
 					alreadyCalledPostUnbolted = false;
-
 
 					if (alreadyCalledPostBolted) {
 						return;
@@ -351,7 +346,6 @@ namespace MwcModApi.Parts.Game
 			get => installPointFsmGameObject;
 			protected set => installPointFsmGameObject = value;
 		}
-
 
 		FsmState nearState { get; }
 
@@ -488,7 +482,6 @@ namespace MwcModApi.Parts.Game
 
 			alreadyCalledPreUnbolted = false;
 			alreadyCalledPostUnbolted = false;
-
 
 			switch (eventTime) {
 				case PartEvent.Time.Pre:

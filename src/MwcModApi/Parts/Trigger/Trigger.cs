@@ -101,7 +101,6 @@ namespace MwcModApi.Parts.Trigger
 
 			part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Install).InvokeAll();
 
-
 			if (part.installedOnCar) {
 				part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar).InvokeAll();
 

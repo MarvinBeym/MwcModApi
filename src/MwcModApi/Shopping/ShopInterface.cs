@@ -117,7 +117,6 @@ namespace MwcModApi.Shopping
 
 			modItemToOpen.Open();
 
-
 			foreach (ModItem modItem in shopLocation.items.Where(modItem => modItem != modItemToOpen)) {
 				modItem.Close();
 			}

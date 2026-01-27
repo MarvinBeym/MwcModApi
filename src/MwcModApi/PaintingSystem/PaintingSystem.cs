@@ -50,7 +50,6 @@ namespace MwcModApi.PaintingSystem
 				colorSave = modSave[mod];
 			}
 
-
 			PaintingSystemLogic logic = paintDetector.AddComponent<PaintingSystemLogic>();
 
 			Dictionary<GameObject, List<Material>> collectedPaintMaterialConfig =

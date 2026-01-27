@@ -19,7 +19,6 @@ namespace MwcModApi.Tools
 			return paths.Aggregate(Path.Combine);
 		}
 
-
 		public static string CombinePathsAndCreateIfNotExists(params string[] paths)
 		{
 			string path = CombinePaths(paths);

@@ -106,7 +106,6 @@ namespace MwcModApi.Shopping
 			part = partBox;
 		}
 
-
 		public ShopItem(string name, float prize, Vector3 spawnLocation, Part part, string imageAssetName = "")
 		{
 			Setup(name, prize, spawnLocation, imageAssetName);
@@ -121,7 +120,6 @@ namespace MwcModApi.Shopping
 
 			onPurchaseAction = delegate { OnPartPurchase(part); };
 		}
-
 
 		private void Setup(string name, float prize, Vector3 spawnLocation, string imageAssetName)
 		{

@@ -71,7 +71,6 @@ namespace MwcModApi
 				false
 			);
 
-
 #if DEBUG
 			Keybind.AddHeader("Developer Area");
 			instantInstallKeybind = Keybind.Add(
@@ -258,7 +257,6 @@ namespace MwcModApi
 				UserInteraction.GuiInteraction("Installation is blocked");
 				return;
 			}
-
 
 			if (!part.bolted || !part.hasBolts) {
 				if (part.installed && part.hasBolts) {

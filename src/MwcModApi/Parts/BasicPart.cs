@@ -52,7 +52,6 @@ namespace MwcModApi.Parts
 		/// </summary>
 		public abstract Vector3 rotation { get; set; }
 
-
 		/// <summary>
 		/// Is the part gameObject active
 		/// </summary>
@@ -93,7 +92,6 @@ namespace MwcModApi.Parts
 		/// </summary>
 		public abstract bool hasBolts { get; }
 
-
 		/// <summary>
 		/// Returns if the part is currently installed on the car
 		/// </summary>
@@ -112,7 +110,6 @@ namespace MwcModApi.Parts
 		{
 			_childs.Add(part);
 		}
-
 
 		/// <summary>
 		/// Adds multiple parts as a child

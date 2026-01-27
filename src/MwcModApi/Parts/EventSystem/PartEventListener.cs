@@ -14,7 +14,6 @@ namespace MwcModApi.Parts.EventSystem
 		/// </summary>
 		public PartEvent.Type type { get; protected set; }
 
-
 		/// <summary>
 		/// The action executed when the event triggers
 		/// </summary>
