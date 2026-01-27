@@ -132,10 +132,6 @@ namespace MwcModApi.Tools
 			return Tex2D.LoadImage(data) ? Tex2D : null;
 		}
 
-		public static void WorkAroundAction()
-		{
-		}
-
 		public static GameObject GetGameObjectFromFsm(GameObject fsmGameObject, string fsmToUse = "Data")
 		{
 			foreach (PlayMakerFSM fsm in fsmGameObject.GetComponents<PlayMakerFSM>()) {
