@@ -20,5 +20,4 @@ namespace MwcModApi.Parts
 		public SerializableVector3 position = new SerializableVector3();
 		public SerializableQuaternion rotation = new SerializableQuaternion();
 	}
-
 }

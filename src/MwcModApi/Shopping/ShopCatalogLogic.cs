@@ -11,14 +11,12 @@ namespace MwcModApi.Shopping
 
 		void Update()
 		{
-			if (!gameObject.IsLookingAt() || shop.shopInterface.IsOpen())
-			{
+			if (!gameObject.IsLookingAt() || shop.shopInterface.IsOpen()) {
 				return;
 			}
 
 			UserInteraction.GuiInteraction("Open catalog");
-			if (UserInteraction.LeftMouseDown)
-			{
+			if (UserInteraction.LeftMouseDown) {
 				shop.shopInterface.Open(shopLocationData);
 			}
 		}

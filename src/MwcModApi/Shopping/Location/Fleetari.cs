@@ -18,10 +18,11 @@ namespace MwcModApi.Shopping.Location
 			public static Vector3 Outside => new Vector3(1552.154f, 5f, 732.755f);
 		}
 
-		internal override CatalogData catalogData => new CatalogData(
-			Cache.Find("REPAIRSHOP/inspection_desk"),
-			new Vector3(-0.9f, -0.2f, 0.35f),
-			new Vector3(0, -90f, -90f)
-		);
+		internal override CatalogData catalogData =>
+			new CatalogData(
+				Cache.Find("REPAIRSHOP/inspection_desk"),
+				new Vector3(-0.9f, -0.2f, 0.35f),
+				new Vector3(0, -90f, -90f)
+			);
 	}
 }

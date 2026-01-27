@@ -175,8 +175,10 @@ namespace MwcModApi.Tools
 		{
 			return (
 				Camera.main != null
-				&& Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 1f,
-					1 << gameObject.layer)
+				&& Physics.Raycast(
+					Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 1f,
+					1 << gameObject.layer
+				)
 				&& hit.collider.gameObject == gameObject
 			);
 		}
@@ -192,8 +194,7 @@ namespace MwcModApi.Tools
 				if (itemPivot == null) {
 					itemPivot = PlayMakerGlobals.Instance.Variables.FindFsmGameObject("ItemPivot").Value;
 				}
-			}
-			catch (Exception) {
+			} catch (Exception) {
 				return false;
 			}
 

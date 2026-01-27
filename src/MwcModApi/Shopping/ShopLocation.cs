@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace MwcModApi.Shopping
 {
-
 	public abstract class ShopLocation
 	{
 		public abstract ShopLocationOption shopLocation { get; }
@@ -19,9 +18,10 @@ namespace MwcModApi.Shopping
 
 		protected ShopLocation()
 		{
-			if (catalogData.parent == null)
-			{
-				throw new Exception($"Could not find parent for ShopLocation {shopLocation}. Skipping shop location creation!");
+			if (catalogData.parent == null) {
+				throw new Exception(
+					$"Could not find parent for ShopLocation {shopLocation}. Skipping shop location creation!"
+				);
 			}
 
 			catalog = GameObject.Instantiate(Shop.Prefabs.shopCatalog);

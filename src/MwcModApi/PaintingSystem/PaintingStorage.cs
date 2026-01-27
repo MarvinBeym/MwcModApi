@@ -92,8 +92,11 @@ namespace MwcModApi.PaintingSystem
 			return ApplyMaterial(PaintingSystem.FindMaterial(materialName), withColor);
 		}
 
-		public PaintingStorage ApplyMaterial(Material materialToApply, bool withColor = false,
-			bool withMainTexture = false)
+		public PaintingStorage ApplyMaterial(
+			Material materialToApply,
+			bool withColor = false,
+			bool withMainTexture = false
+		)
 		{
 			if (materialToApply == null) {
 				return this;

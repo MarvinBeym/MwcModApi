@@ -26,8 +26,7 @@ namespace MwcModApi.Caching
 				if (gameObject != null) {
 					return gameObject;
 				}
-			}
-			catch {
+			} catch {
 				// ignored. Continues below
 			}
 
@@ -46,26 +45,20 @@ namespace MwcModApi.Caching
 		private static GameObject FindInGlobal(string name)
 		{
 			foreach (var gameObject in Resources.FindObjectsOfTypeAll<GameObject>()) {
-				try
-				{
+				try {
 					string nameToCompareTo = gameObject.name;
 
-					if (gameObject.name.Contains("OptionsMenu"))
-					{
+					if (gameObject.name.Contains("OptionsMenu")) {
 					}
 
-					if (name.Contains("/"))
-					{
+					if (name.Contains("/")) {
 						nameToCompareTo = GetObjectPath(gameObject);
 					}
 
-					if (nameToCompareTo == name)
-					{
+					if (nameToCompareTo == name) {
 						return gameObject;
 					}
-				}
-				catch
-				{
+				} catch {
 					continue;
 				}
 			}

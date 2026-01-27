@@ -124,15 +124,12 @@ namespace MwcModApi.Parts
 		/// <param name="trueEventType"></param>
 		protected void SetupFsmBoolVariableUpdate(FsmBool variable, PartEvent.Type trueEventType)
 		{
-			part.AddEventListener(PartEvent.Time.Post, trueEventType, () =>
-			{
-				variable.Value = true;
-			});
+			part.AddEventListener(PartEvent.Time.Post, trueEventType, () => { variable.Value = true; });
 
-			part.AddEventListener(PartEvent.Time.Post, PartEvent.GetOppositeEvent(trueEventType), () =>
-			{
-				variable.Value = false;
-			});
+			part.AddEventListener(
+				PartEvent.Time.Post, PartEvent.GetOppositeEvent(trueEventType),
+				() => { variable.Value = false; }
+			);
 		}
 
 		/// <summary>

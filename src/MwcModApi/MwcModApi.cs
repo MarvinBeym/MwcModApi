@@ -20,9 +20,12 @@ namespace MwcModApi
 		public override string Name => "MwcModApi";
 		public override string Author => "DonnerPlays";
 		public override string Version => "1.0";
-		public override string Description => "A general modding 'help' featuring things like installable/boltable parts, shop, part boxing, utility tools & more.";
+
+		public override string Description =>
+			"A general modding 'help' featuring things like installable/boltable parts, shop, part boxing, utility tools & more.";
+
 		public override MSCLoader.Game SupportedGames => MSCLoader.Game.MyWinterCar;
-		
+
 		private const string assetsFile = "msc-mod-api.unity3d";
 
 		private static SettingsCheckBox showBoltSizeSetting;
@@ -45,7 +48,7 @@ namespace MwcModApi
 		private bool updateLocked = true;
 		private Shop shop;
 
-		internal static bool ShowScrewSize => (bool)showBoltSizeSetting.GetValue();
+		internal static bool ShowScrewSize => (bool) showBoltSizeSetting.GetValue();
 
 		public override void ModSetup()
 		{
@@ -71,7 +74,10 @@ namespace MwcModApi
 
 #if DEBUG
 			Keybind.AddHeader("Developer Area");
-			instantInstallKeybind = Keybind.Add(this.ID + "_instant-install", "Instant install part looking at", KeyCode.UpArrow);
+			instantInstallKeybind = Keybind.Add(
+				this.ID + "_instant-install", "Instant install part looking at",
+				KeyCode.UpArrow
+			);
 			enableInstantInstall = Settings.AddCheckBox("enableInstantInstall", "Enable Instant Part install", false);
 #endif
 		}
@@ -79,14 +85,17 @@ namespace MwcModApi
 		public static void NewGameCleanUp(Mod mod, string saveFileName = "parts_saveFile.json")
 		{
 			SaveLoad.SerializeSaveFile(mod, new Dictionary<string, PartSave>(), saveFileName);
-			SaveLoad.SerializeSaveFile(mod, new Dictionary<string, SerializableColor>(),
-				"paintingSystem_saveFile.json");
+			SaveLoad.SerializeSaveFile(
+				mod, new Dictionary<string, SerializableColor>(),
+				"paintingSystem_saveFile.json"
+			);
 		}
 
 		private void MenuLoad()
 		{
 			ModConsole.Print(
-				$"<color=white>You are running <color=blue>{Name}</color> [<color=green>v{Version}</color>]</color>");
+				$"<color=white>You are running <color=blue>{Name}</color> [<color=green>v{Version}</color>]</color>"
+			);
 
 			//Do cleanup of static fields to avoid problems with reloading (going/getting to menu and then going back into game)
 			LoadCleanup();
@@ -114,28 +123,22 @@ namespace MwcModApi
 			PartBox.Save();
 			PaintingSystem.PaintingSystem.Save();
 
-			foreach (var modParts in modsParts)
-			{
+			foreach (var modParts in modsParts) {
 				var mod = Helper.GetMod(modParts.Key);
 
-				if (!modSaveFileMapping.TryGetValue(mod.ID, out var saveFileName))
-				{
+				if (!modSaveFileMapping.TryGetValue(mod.ID, out var saveFileName)) {
 					//save file for mod can't be found, skip the whole mod.
 					continue;
 				}
 
 				var modPartSaves = new Dictionary<string, PartSave>();
 
-				foreach (var partData in modParts.Value)
-				{
+				foreach (var partData in modParts.Value) {
 					var id = partData.Key;
 					var part = partData.Value;
-					try
-					{
+					try {
 						part.CustomSaveSaving(mod, $"{id}_saveFile.json");
-					}
-					catch (Exception eee)
-					{
+					} catch (Exception eee) {
 						// ignored
 					}
 
@@ -154,8 +157,7 @@ namespace MwcModApi
 
 		private void Update()
 		{
-			if (updateLocked)
-			{
+			if (updateLocked) {
 				return;
 			}
 
@@ -164,10 +166,8 @@ namespace MwcModApi
 #endif
 
 			var toolInHand = tool.GetToolInHand();
-			if (toolInHand == Tool.ToolType.None)
-			{
-				if (previousScrew != null)
-				{
+			if (toolInHand == Tool.ToolType.None) {
+				if (previousScrew != null) {
 					previousScrew.Highlight(false);
 					previousScrew = null;
 				}
@@ -179,13 +179,11 @@ namespace MwcModApi
 
 			if (screw == null) return;
 
-			if (screw.part.screwPlacementMode)
-			{
+			if (screw.part.screwPlacementMode) {
 				return;
 			}
 
-			if (ShowScrewSize && screw.showSize)
-			{
+			if (ShowScrewSize && screw.showSize) {
 				UserInteraction.GuiInteraction($"Screw size: {screw.size.ToString("#.#").Replace(".00", "")}mm");
 			}
 
@@ -195,10 +193,8 @@ namespace MwcModApi
 
 			if (!tool.CheckBoltingSpeed()) return;
 
-			if (UserInteraction.MouseScrollWheel.Up)
-			{
-				switch (toolInHand)
-				{
+			if (UserInteraction.MouseScrollWheel.Up) {
+				switch (toolInHand) {
 					case Tool.ToolType.RatchetTighten:
 						screw.In();
 						break;
@@ -209,11 +205,8 @@ namespace MwcModApi
 						screw.In();
 						break;
 				}
-			}
-			else if (UserInteraction.MouseScrollWheel.Down)
-			{
-				switch (toolInHand)
-				{
+			} else if (UserInteraction.MouseScrollWheel.Down) {
+				switch (toolInHand) {
 					case Tool.ToolType.RatchetTighten:
 						screw.In();
 						break;
@@ -234,23 +227,21 @@ namespace MwcModApi
 				|| Camera.main == null
 				|| !UserInteraction.EmptyHand()
 				|| CarH.playerInCar
-			)
-			{
+			) {
 				return;
 			}
 
-			Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 1f,
-				1 << LayerMask.NameToLayer("Parts"));
+			Physics.Raycast(
+				Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 1f,
+				1 << LayerMask.NameToLayer("Parts")
+			);
 			if (hit.collider == null) return;
 			var gameObject = hit.collider.gameObject;
 			Part part = null;
-			foreach (var modParts in modsParts)
-			{
-				foreach (var partData in modParts.Value)
-				{
+			foreach (var modParts in modsParts) {
+				foreach (var partData in modParts.Value) {
 					var partName = partData.Value.gameObject.name;
-					if (partName == gameObject.name)
-					{
+					if (partName == gameObject.name) {
 						part = partData.Value;
 						break;
 					}
@@ -259,47 +250,35 @@ namespace MwcModApi
 				if (part != null) break;
 			}
 
-			if (part == null || !part.hasParent || part.screwPlacementMode)
-			{
+			if (part == null || !part.hasParent || part.screwPlacementMode) {
 				return;
 			}
 
-			if (part.installBlocked)
-			{
+			if (part.installBlocked) {
 				UserInteraction.GuiInteraction("Installation is blocked");
 				return;
 			}
 
 
-			if (!part.bolted || !part.hasBolts)
-			{
-				if (part.installed && part.hasBolts)
-				{
+			if (!part.bolted || !part.hasBolts) {
+				if (part.installed && part.hasBolts) {
 					UserInteraction.GuiInteraction("Tighten all screws");
-					if (instantInstallKeybind.GetKeybindDown())
-					{
-						part.partSave.screws.ForEach(delegate (Screw screw)
-						{
-							screw.InBy(Screw.maxTightness - screw.tightness);
-						});
+					if (instantInstallKeybind.GetKeybindDown()) {
+						part.partSave.screws.ForEach(
+							delegate(Screw screw) { screw.InBy(Screw.maxTightness - screw.tightness); }
+						);
 					}
-				}
-				else if (!part.installed)
-				{
+				} else if (!part.installed) {
 					UserInteraction.GuiInteraction("Fully install part");
-					if (instantInstallKeybind.GetKeybindDown())
-					{
+					if (instantInstallKeybind.GetKeybindDown()) {
 						part.Install();
-						part.partSave.screws.ForEach(delegate (Screw screw) { screw.InBy(Screw.maxTightness); });
+						part.partSave.screws.ForEach(delegate(Screw screw) { screw.InBy(Screw.maxTightness); });
 					}
 				}
-			}
-			else if (part.screws.Count > 0)
-			{
+			} else if (part.screws.Count > 0) {
 				UserInteraction.GuiInteraction("Loosen all screws");
-				if (instantInstallKeybind.GetKeybindDown())
-				{
-					part.partSave.screws.ForEach(delegate (Screw screw) { screw.OutBy(Screw.maxTightness); });
+				if (instantInstallKeybind.GetKeybindDown()) {
+					part.partSave.screws.ForEach(delegate(Screw screw) { screw.OutBy(Screw.maxTightness); });
 				}
 			}
 		}
@@ -307,25 +286,23 @@ namespace MwcModApi
 
 		private Screw DetectScrew()
 		{
-			if (previousScrew != null)
-			{
+			if (previousScrew != null) {
 				previousScrew.Highlight(false);
 				previousScrew = null;
 			}
 
-			if (Camera.main == null)
-			{
+			if (Camera.main == null) {
 				return null;
 			}
 
-			if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit, 1f,
-					1 << LayerMask.NameToLayer("DontCollide")))
-			{
+			if (!Physics.Raycast(
+				    Camera.main.ScreenPointToRay(Input.mousePosition), out var hit, 1f,
+				    1 << LayerMask.NameToLayer("DontCollide")
+			    )) {
 				return null;
 			}
 
-			if (!hit.collider)
-			{
+			if (!hit.collider) {
 				return null;
 			}
 
@@ -369,5 +346,4 @@ namespace MwcModApi
 			screws = new Dictionary<string, Screw>();
 		}
 	}
-
 }

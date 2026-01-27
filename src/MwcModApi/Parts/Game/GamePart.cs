@@ -41,7 +41,7 @@ namespace MwcModApi.Parts.Game
 		/// Flag used to avoid calling the pre bolted event multiple times
 		/// </summary>
 		protected bool alreadyCalledPreBolted;
-		
+
 		/// <summary>
 		/// Flag used to avoid calling the post bolted event multiple times
 		/// </summary>
@@ -77,13 +77,16 @@ namespace MwcModApi.Parts.Game
 
 			dataFsm = installPointFsmGameObject.FindFsm("Data");
 			if (!dataFsm) {
-				throw new Exception($"Unable to find data fsm on GameObject with name '{installPointFsmGameObject.name}'");
+				throw new Exception(
+					$"Unable to find data fsm on GameObject with name '{installPointFsmGameObject.name}'"
+				);
 			}
 
 			nearState = dataFsm.FindState("Near");
-			if (nearState == null)
-			{
-				throw new Exception($"Unable to find 'Near' state on GameObject with name '{installPointFsmGameObject.name}'");
+			if (nearState == null) {
+				throw new Exception(
+					$"Unable to find 'Near' state on GameObject with name '{installPointFsmGameObject.name}'"
+				);
 			}
 
 			currentPhysicalPart = GetCurrentPhysicalPart();
@@ -94,8 +97,7 @@ namespace MwcModApi.Parts.Game
 			purchasedState = dataFsm.FsmVariables.FindFsmBool("Purchased") ?? new FsmBool("Purchased");
 
 			tightness = dataFsm.FsmVariables.FindFsmFloat("Tightness");
-			if (tightness == null)
-			{
+			if (tightness == null) {
 				throw new Exception($"Unable to find tightness on part '{installPointFsmGameObject.name}'");
 			}
 
@@ -104,34 +106,38 @@ namespace MwcModApi.Parts.Game
 				"MwcModApi-Install-Pre"
 			);
 
-			dataFsm.FindState("Installed").AddActionAsLast(() =>
-			{
-				currentPhysicalPart = GetCurrentPhysicalPart();
+			dataFsm.FindState("Installed").AddActionAsLast(
+				() =>
+				{
+					currentPhysicalPart = GetCurrentPhysicalPart();
 
 
-				SetupBoltedStateDetection(currentPhysicalPart);
+					SetupBoltedStateDetection(currentPhysicalPart);
 
-				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Install).InvokeAll();
-				if (installedOnCar) {
-					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar).InvokeAll();
-				}
-			}, "MwcModApi-Install-Post");
+					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Install).InvokeAll();
+					if (installedOnCar) {
+						GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar).InvokeAll();
+					}
+				}, "MwcModApi-Install-Post"
+			);
 
 			dataFsm.FindState("Remove part").AddActionAsFirst(
 				() => { GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Uninstall).InvokeAll(); },
 				"MwcModApi-Uninstall-Pre"
 			);
-			dataFsm.FindState("Remove part").AddActionAsLast(() =>
-			{
-				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Uninstall).InvokeAll();
-				if (!installedOnCar) {
-					//Check probably not needed, likely already not on car because part can't be connected to something else after being uninstalled
-					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar).InvokeAll();
-				}
+			dataFsm.FindState("Remove part").AddActionAsLast(
+				() =>
+				{
+					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Uninstall).InvokeAll();
+					if (!installedOnCar) {
+						//Check probably not needed, likely already not on car because part can't be connected to something else after being uninstalled
+						GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar).InvokeAll();
+					}
 
-				RemoveBoltedStateDetection(currentPhysicalPart);
-				currentPhysicalPart = null;
-			}, "MwcModApi-Uninstall-Post");
+					RemoveBoltedStateDetection(currentPhysicalPart);
+					currentPhysicalPart = null;
+				}, "MwcModApi-Uninstall-Post"
+			);
 		}
 
 		/// <summary>
@@ -142,34 +148,29 @@ namespace MwcModApi.Parts.Game
 		protected GamePart()
 		{
 		}
-		
+
 		protected GameObject GetCurrentPhysicalPart()
 		{
 			GameObject part = installPointFsmGameObject.FindChild(partName);
-			if (part == null)
-			{
+			if (part == null) {
 				return null;
 			}
 
-			if (physicalPartId == "")
-			{
+			if (physicalPartId == "") {
 				return part;
 			}
 
 			PlayMakerFSM fsm = part.FindFsm("Data");
-			if (fsm == null)
-			{
+			if (fsm == null) {
 				return null;
 			}
 
 			FsmString id = fsm.FsmVariables.GetFsmString("ID");
-			if (id == null || id.Value != physicalPartId)
-			{
+			if (id == null || id.Value != physicalPartId) {
 				return null;
 			}
 
 			return part;
-
 		}
 
 		protected void RemoveBoltedStateDetection(GameObject currentPhysicalPart)
@@ -196,66 +197,72 @@ namespace MwcModApi.Parts.Game
 			FsmState boltedState = activePartDataFsm.FindState("Bolted");
 			FsmState unboltedState = activePartDataFsm.FindState("Unbolted");
 
-			unboltedState.AddActionAsFirst(() =>
-			{
-				alreadyCalledPreBolted = false;
+			unboltedState.AddActionAsFirst(
+				() =>
+				{
+					alreadyCalledPreBolted = false;
 
-				if (alreadyCalledPreUnbolted) {
-					return;
-				}
+					if (alreadyCalledPreUnbolted) {
+						return;
+					}
 
-				GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Unbolted).InvokeAll();
-				if (installedOnCar) {
-					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UnboltedOnCar).InvokeAll();
-				}
+					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Unbolted).InvokeAll();
+					if (installedOnCar) {
+						GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UnboltedOnCar).InvokeAll();
+					}
+				}, "MwcModApi-Unbolted-Pre"
+			);
 
-			}, "MwcModApi-Unbolted-Pre");
-
-			unboltedState.AddActionAsLast(() =>
-			{
-				alreadyCalledPostBolted = false;
-
-
-				if (alreadyCalledPostUnbolted) {
-					return;
-				}
-
-				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Unbolted).InvokeAll();
-				if (installedOnCar) {
-					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UnboltedOnCar).InvokeAll();
-				}
-
-			}, "MwcModApi-Unbolted-Post");
+			unboltedState.AddActionAsLast(
+				() =>
+				{
+					alreadyCalledPostBolted = false;
 
 
-			boltedState.AddActionAsFirst(() =>
-			{
-				alreadyCalledPreUnbolted = false;
+					if (alreadyCalledPostUnbolted) {
+						return;
+					}
 
-				if (alreadyCalledPreBolted) {
-					return;
-				}
-
-				GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Bolted).InvokeAll();
-				if (installedOnCar) {
-					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.BoltedOnCar).InvokeAll();
-				}
-			}, "MwcModApi-Bolted-Pre");
-
-			boltedState.AddActionAsLast(() =>
-			{
-				alreadyCalledPostUnbolted = false;
+					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Unbolted).InvokeAll();
+					if (installedOnCar) {
+						GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UnboltedOnCar).InvokeAll();
+					}
+				}, "MwcModApi-Unbolted-Post"
+			);
 
 
-				if (alreadyCalledPostBolted) {
-					return;
-				}
+			boltedState.AddActionAsFirst(
+				() =>
+				{
+					alreadyCalledPreUnbolted = false;
 
-				GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Bolted).InvokeAll();
-				if (installedOnCar) {
-					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.BoltedOnCar).InvokeAll();
-				}
-			}, "MwcModApi-Bolted-Post");
+					if (alreadyCalledPreBolted) {
+						return;
+					}
+
+					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Bolted).InvokeAll();
+					if (installedOnCar) {
+						GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.BoltedOnCar).InvokeAll();
+					}
+				}, "MwcModApi-Bolted-Pre"
+			);
+
+			boltedState.AddActionAsLast(
+				() =>
+				{
+					alreadyCalledPostUnbolted = false;
+
+
+					if (alreadyCalledPostBolted) {
+						return;
+					}
+
+					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Bolted).InvokeAll();
+					if (installedOnCar) {
+						GetEventListeners(PartEvent.Time.Post, PartEvent.Type.BoltedOnCar).InvokeAll();
+					}
+				}, "MwcModApi-Bolted-Post"
+			);
 		}
 
 		/// <summary>
@@ -264,7 +271,8 @@ namespace MwcModApi.Parts.Game
 		protected void InitEventStorage()
 		{
 			foreach (PartEvent.Time eventTime in Enum.GetValues(typeof(PartEvent.Time))) {
-				Dictionary<PartEvent.Type, PartEventListenerCollection> TypeDict = new Dictionary<PartEvent.Type, PartEventListenerCollection>();
+				Dictionary<PartEvent.Type, PartEventListenerCollection> TypeDict =
+					new Dictionary<PartEvent.Type, PartEventListenerCollection>();
 
 				foreach (PartEvent.Type Type in Enum.GetValues(typeof(PartEvent.Type))) {
 					TypeDict.Add(Type, new PartEventListenerCollection());
@@ -279,14 +287,10 @@ namespace MwcModApi.Parts.Game
 		/// </summary>
 		public override bool installBlocked
 		{
-			get
-			{
-				return !nearState.Actions.Any(action => action.Enabled);
-			}
+			get { return !nearState.Actions.Any(action => action.Enabled); }
 			set
 			{
-				foreach (var action in nearState.Actions)
-				{
+				foreach (var action in nearState.Actions) {
 					action.Enabled = !value;
 				}
 			}
@@ -342,7 +346,11 @@ namespace MwcModApi.Parts.Game
 		/// <summary>
 		/// The root GameObject which acts as the parent & install point of the actual physical object
 		/// </summary>
-		public override GameObject gameObject { get => installPointFsmGameObject; protected set => installPointFsmGameObject = value; }
+		public override GameObject gameObject
+		{
+			get => installPointFsmGameObject;
+			protected set => installPointFsmGameObject = value;
+		}
 
 
 		FsmState nearState { get; }
@@ -381,12 +389,15 @@ namespace MwcModApi.Parts.Game
 		/// <summary>
 		/// Returns if the game part is installed
 		/// </summary>
-		public override bool installed => installedState.Value && currentPhysicalPart != null && currentPhysicalPart.name == partName;
+		public override bool installed =>
+			installedState.Value && currentPhysicalPart != null && currentPhysicalPart.name == partName;
 
 		/// <summary>
 		/// Returns if the game part is bolted
 		/// </summary>
-		public override bool bolted => (boltedState?.Value ?? false) && currentPhysicalPart != null && currentPhysicalPart.name == partName;
+		public override bool bolted =>
+			(boltedState?.Value ?? false) && currentPhysicalPart != null &&
+			currentPhysicalPart.name == partName;
 
 		/// <inheritdoc />
 		public override bool hasBolts => dataFsm.FsmVariables.FindFsmBool("Bolted") != null;
@@ -519,8 +530,12 @@ namespace MwcModApi.Parts.Game
 		}
 
 		/// <inheritdoc />
-		public PartEventListener AddEventListener(PartEvent.Time eventTime, PartEvent.Type Type, Action action,
-			bool invokeActionIfConditionMet = true)
+		public PartEventListener AddEventListener(
+			PartEvent.Time eventTime,
+			PartEvent.Type Type,
+			Action action,
+			bool invokeActionIfConditionMet = true
+		)
 		{
 			PartEventListener partEventListener = new PartEventListener(eventTime, Type, action);
 
@@ -607,18 +622,22 @@ namespace MwcModApi.Parts.Game
 		/// <param name="partsToBlock">The parts to block when the "Type" is called on this part</param>
 		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, IEnumerable<BasicPart> partsToBlock)
 		{
-			AddEventListener(PartEvent.Time.Post, Type, () =>
-			{
-				foreach (BasicPart partToBlock in partsToBlock) {
-					partToBlock.installBlocked = true;
+			AddEventListener(
+				PartEvent.Time.Post, Type, () =>
+				{
+					foreach (BasicPart partToBlock in partsToBlock) {
+						partToBlock.installBlocked = true;
+					}
 				}
-			});
-			AddEventListener(PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type), () =>
-			{
-				foreach (BasicPart partToBlock in partsToBlock) {
-					partToBlock.installBlocked = false;
+			);
+			AddEventListener(
+				PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type), () =>
+				{
+					foreach (BasicPart partToBlock in partsToBlock) {
+						partToBlock.installBlocked = false;
+					}
 				}
-			});
+			);
 		}
 
 		/// <summary>
@@ -629,15 +648,11 @@ namespace MwcModApi.Parts.Game
 		/// <param name="partToBlock">The part to block when the "Type" is called on this part</param>
 		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, BasicPart partToBlock)
 		{
-			AddEventListener(PartEvent.Time.Post, Type, () =>
-			{
-				partToBlock.installBlocked = true;
-			});
-			AddEventListener(PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type),
-				() =>
-				{
-					partToBlock.installBlocked = false;
-				});
+			AddEventListener(PartEvent.Time.Post, Type, () => { partToBlock.installBlocked = true; });
+			AddEventListener(
+				PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type),
+				() => { partToBlock.installBlocked = false; }
+			);
 		}
 	}
 }

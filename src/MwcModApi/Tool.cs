@@ -42,8 +42,10 @@ namespace MwcModApi
 			ratchetSwitch = ratchet.FindFsm("Switch").FsmVariables.FindFsmBool("Switch");
 
 			toolGameObjects.Add(ToolType.Spanner, spannerPickFsm.FsmVariables.FindFsmGameObject("HandSpanner").Value);
-			toolGameObjects.Add(ToolType.Screwdriver,
-				spannerPickFsm.FsmVariables.FindFsmGameObject("HandScrewdriver").Value);
+			toolGameObjects.Add(
+				ToolType.Screwdriver,
+				spannerPickFsm.FsmVariables.FindFsmGameObject("HandScrewdriver").Value
+			);
 			toolGameObjects.Add(ToolType.Ratchet, ratchet);
 
 			boltingSpeed = PlayMakerGlobals.Instance.Variables.GetFsmFloat("BoltingSpeed");

@@ -58,27 +58,23 @@ namespace MwcModApi.Parts.EventSystem
 		{
 			currentlyIterating = true;
 
-			try
-			{
-				_eventListeners.ForEach((partEventListener =>
-				{
-					if (!partEventListener.delete)
+			try {
+				_eventListeners.ForEach(
+					(partEventListener =>
 					{
-						partEventListener.action.Invoke();
-					}
-				}));
-			}
-			catch
-			{
+						if (!partEventListener.delete) {
+							partEventListener.action.Invoke();
+						}
+					})
+				);
+			} catch {
 				currentlyIterating = false;
 			}
 
 			currentlyIterating = false;
 
-			for (int i = _eventListeners.Count - 1; i >= 0; i--)
-			{
-				if (_eventListeners[i].delete)
-				{
+			for (int i = _eventListeners.Count - 1; i >= 0; i--) {
+				if (_eventListeners[i].delete) {
 					_eventListeners.RemoveAt(i);
 				}
 			}
@@ -102,13 +98,11 @@ namespace MwcModApi.Parts.EventSystem
 		/// <returns>True if the PartEventListener was removed (or will be removed)</returns>
 		public bool Remove(PartEventListener partEventListener)
 		{
-			if (!Contains(partEventListener))
-			{
+			if (!Contains(partEventListener)) {
 				return false;
 			}
 
-			if (!currentlyIterating)
-			{
+			if (!currentlyIterating) {
 				return _eventListeners.Remove(partEventListener);
 			}
 

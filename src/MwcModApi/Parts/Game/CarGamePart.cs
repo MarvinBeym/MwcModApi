@@ -16,6 +16,7 @@ namespace MwcModApi.Parts.Game
 		/// Instance of this class
 		/// </summary>
 		protected static CarGamePart instance;
+
 		private CarGamePart()
 		{
 			tightness = new FsmFloat
@@ -62,8 +63,7 @@ namespace MwcModApi.Parts.Game
 		/// <returns></returns>
 		public static CarGamePart GetInstance()
 		{
-			if (instance != null)
-			{
+			if (instance != null) {
 				return instance;
 			}
 

@@ -59,11 +59,12 @@ namespace MwcModApi.Parts.Trigger
 			while (part.installed) {
 				if ((!part.bolted || !part.hasBolts) && part.gameObject.IsLookingAt() && UserInteraction.EmptyHand() &&
 				    !Tool.HasToolInHand()) {
-					UserInteraction.GuiInteraction(UserInteraction.Type.Disassemble,
-						$"Uninstall {part.gameObject.name}");
+					UserInteraction.GuiInteraction(
+						UserInteraction.Type.Disassemble,
+						$"Uninstall {part.gameObject.name}"
+					);
 
-					if (UserInteraction.RightMouseDown)
-					{
+					if (UserInteraction.RightMouseDown) {
 						UserInteraction.GuiInteraction(UserInteraction.Type.None);
 						part.gameObject.PlayDisassemble();
 						Uninstall();
@@ -107,8 +108,9 @@ namespace MwcModApi.Parts.Trigger
 				foreach (BasicPart child in part.childs) {
 					//Part was installed on car so installed childs will as well.
 					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents)child;
-						partEventSupportingPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar).InvokeAll();
+						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
+						partEventSupportingPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar)
+							.InvokeAll();
 					}
 				}
 			}
@@ -126,6 +128,7 @@ namespace MwcModApi.Parts.Trigger
 					//May happen if a different component is adding a RigidBody itself (Like a HingeJoint)
 					rigidBody = existingRigidBody;
 				}
+
 				rigidBody = part.ResetRigidBody();
 
 				part.gameObject.transform.parent = null;
@@ -144,8 +147,9 @@ namespace MwcModApi.Parts.Trigger
 					//Part was uninstalled from car so installed childs are as well.
 					if (childsInstalledBeforeUninstall.Contains(child) || child.installed) {
 						if (child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-							SupportsPartEvents partEventSupportingPart = (SupportsPartEvents)child;
-							partEventSupportingPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar)
+							SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
+							partEventSupportingPart
+								.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar)
 								.InvokeAll();
 						}
 
@@ -173,8 +177,9 @@ namespace MwcModApi.Parts.Trigger
 				foreach (BasicPart child in part.childs) {
 					//Part will soon be installed on car so installed childs will as well.
 					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents)child;
-						partEventSupportingPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.InstallOnCar).InvokeAll();
+						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
+						partEventSupportingPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.InstallOnCar)
+							.InvokeAll();
 					}
 				}
 			}
@@ -213,7 +218,7 @@ namespace MwcModApi.Parts.Trigger
 				foreach (BasicPart child in part.childs) {
 					//Part will soon be uninstalled from car so installed childs will as well.
 					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents)child;
+						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
 						partEventSupportingPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UninstallFromCar)
 							.InvokeAll();
 					}
@@ -227,7 +232,7 @@ namespace MwcModApi.Parts.Trigger
 					childsInstalledBeforeUninstall.Add(child);
 				}
 
-				if (child.GetType() == typeof(Part) && ((Part)child).uninstallWhenParentUninstalls) {
+				if (child.GetType() == typeof(Part) && ((Part) child).uninstallWhenParentUninstalls) {
 					child.Uninstall();
 				}
 			}
@@ -248,16 +253,13 @@ namespace MwcModApi.Parts.Trigger
 		/// <param name="collider"></param>
 		protected void OnTriggerStay(Collider collider)
 		{
-
-			if (!canBeInstalled)
-			{
+			if (!canBeInstalled) {
 				return;
 			}
 
 			UserInteraction.GuiInteraction(UserInteraction.Type.Assemble, $"Install {part.gameObject.name}");
 
-			if (!UserInteraction.LeftMouseDown)
-			{
+			if (!UserInteraction.LeftMouseDown) {
 				return;
 			}
 
@@ -276,8 +278,7 @@ namespace MwcModApi.Parts.Trigger
 				!collider.gameObject.IsHolding()
 				|| collider.gameObject != part.gameObject
 				|| !part.installPossible
-			)
-			{
+			) {
 				return;
 			}
 

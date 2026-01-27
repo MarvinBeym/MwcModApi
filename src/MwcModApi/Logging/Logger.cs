@@ -140,34 +140,35 @@ namespace MwcModApi.Tools
 		}
 
 		private static void New(
-			string callingAssemblyName, 
-			LogMessageType logMessageType, 
+			string callingAssemblyName,
+			LogMessageType logMessageType,
 			string message,
-			string additionalInfo, 
+			string additionalInfo,
 			Exception ex
-			)
+		)
 		{
 			WriteLogEntry(callingAssemblyName, logMessageType, message, additionalInfo, ex);
 		}
 
 		private static void WriteLogEntry(
-			string callingAssemblyName, 
-			LogMessageType logMessageType, 
-			string message, 
+			string callingAssemblyName,
+			LogMessageType logMessageType,
+			string message,
 			string additionalInfo,
 			Exception ex
-			)
+		)
 		{
 			//If InitLogger wasn't called, warn once and default to printing message to ModConsole
 			if (!loggedModsMap.TryGetValue(callingAssemblyName, out LoggedMod loggedMod)) {
 				if (!initLoggerNotCalledByAssemblyCache.Contains(callingAssemblyName)) {
 					initLoggerNotCalledByAssemblyCache.Add(callingAssemblyName);
-					ModConsole.Error("Logger was not initialized by assembly with name '" + callingAssemblyName +
-					                 "'. Logging will default to printing limited info to ModConsole!");
+					ModConsole.Error(
+						"Logger was not initialized by assembly with name '" + callingAssemblyName +
+						"'. Logging will default to printing limited info to ModConsole!"
+					);
 				}
 
-				switch (logMessageType) 
-				{
+				switch (logMessageType) {
 					case LogMessageType.Info:
 						ModConsole.Log(message);
 						break;
@@ -177,8 +178,8 @@ namespace MwcModApi.Tools
 					case LogMessageType.Error:
 						ModConsole.Error(message);
 						break;
-
 				}
+
 				return;
 			}
 

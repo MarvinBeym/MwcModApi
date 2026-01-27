@@ -25,10 +25,19 @@ namespace MwcModApi.Parts.PartBox
 		/// <param name="defaultPosition">The default position for both the box and all parts (where to place after purchase or when reset)</param>
 		/// <param name="uninstallWhenParentUninstalls">Should the part uninstall from the parent if the parent is uninstalled</param>
 		/// <param name="disableCollisionWhenInstalled">Disables the collider of the part when installed to the parent (reduces lag, avoids problematic collisions)</param>
-		public Box(string boxName, string partId, string partName, GameObject partGameObject, int numberOfParts,
-			Part parent, Vector3[] installLocations, Vector3[] installRotations, Vector3 defaultPosition,
+		public Box(
+			string boxName,
+			string partId,
+			string partName,
+			GameObject partGameObject,
+			int numberOfParts,
+			Part parent,
+			Vector3[] installLocations,
+			Vector3[] installRotations,
+			Vector3 defaultPosition,
 			bool uninstallWhenParentUninstalls = false,
-			DisableCollision disableCollisionWhenInstalled = DisableCollision.InstalledOnCar)
+			DisableCollision disableCollisionWhenInstalled = DisableCollision.InstalledOnCar
+		)
 
 		{
 			Setup(
@@ -63,11 +72,20 @@ namespace MwcModApi.Parts.PartBox
 		/// <param name="defaultPosition">The default position for both the box and all parts (where to place after purchase or when reset)</param>
 		/// <param name="uninstallWhenParentUninstalls">Should the part uninstall from the parent if the parent is uninstalled</param>
 		/// <param name="disableCollisionWhenInstalled">Disables the collider of the part when installed to the parent (reduces lag, avoids problematic collisions)</param>
-		public Box(string boxName, string partId, string partName, GameObject customBoxModel, GameObject partGameObject,
+		public Box(
+			string boxName,
+			string partId,
+			string partName,
+			GameObject customBoxModel,
+			GameObject partGameObject,
 			int numberOfParts,
-			Part parent, Vector3[] installLocations, Vector3[] installRotations, Vector3 defaultPosition,
+			Part parent,
+			Vector3[] installLocations,
+			Vector3[] installRotations,
+			Vector3 defaultPosition,
 			bool uninstallWhenParentUninstalls = false,
-			DisableCollision disableCollisionWhenInstalled = DisableCollision.InstalledOnCar)
+			DisableCollision disableCollisionWhenInstalled = DisableCollision.InstalledOnCar
+		)
 		{
 			Setup(
 				boxName,
@@ -100,12 +118,20 @@ namespace MwcModApi.Parts.PartBox
 		/// <param name="defaultPosition">The default position for both the box and all parts (where to place after purchase or when reset)</param>
 		/// <param name="uninstallWhenParentUninstalls">Should the part uninstall from the parent if the parent is uninstalled</param>
 		/// <param name="disableCollisionWhenInstalled">Disables the collider of the part when installed to the parent (reduces lag, avoids problematic collisions)</param>
-		protected void Setup(string boxName, string partId, string partName, GameObject boxModel,
-			GameObject partGameObject, int numberOfParts,
+		protected void Setup(
+			string boxName,
+			string partId,
+			string partName,
+			GameObject boxModel,
+			GameObject partGameObject,
+			int numberOfParts,
 			Part parent,
-			Vector3[] installLocations, Vector3[] installRotations, Vector3 defaultPosition,
+			Vector3[] installLocations,
+			Vector3[] installRotations,
+			Vector3 defaultPosition,
 			bool uninstallWhenParentUninstalls,
-			DisableCollision disableCollisionWhenInstalled = DisableCollision.InstalledOnCar)
+			DisableCollision disableCollisionWhenInstalled = DisableCollision.InstalledOnCar
+		)
 		{
 			boxModel.SetNameLayerTag(boxName + "(Clone)");
 			gameObject = boxModel;
@@ -118,7 +144,8 @@ namespace MwcModApi.Parts.PartBox
 				Part part = new Part(
 					$"{partId}_{i}", partName + " " + iOffset, partGameObject,
 					parent, installLocations[i], installRotations[i], partBaseInfo, uninstallWhenParentUninstalls,
-					disableCollisionWhenInstalled);
+					disableCollisionWhenInstalled
+				);
 				part.defaultPosition = defaultPosition;
 				if (!part.bought) {
 					part.Uninstall();

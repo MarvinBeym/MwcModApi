@@ -181,8 +181,7 @@ namespace MwcModApi.Parts.PartBox
 
 		public static void Save()
 		{
-			foreach (var partBox in partBoxes)
-			{
+			foreach (var partBox in partBoxes) {
 				partBox.CheckUnpackedOnSave();
 			}
 		}

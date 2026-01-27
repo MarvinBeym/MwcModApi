@@ -50,8 +50,15 @@ namespace MwcModApi.Parts
 		private static int color1;
 		internal static AudioClip soundClip;
 
-		public Screw(Vector3 position, Vector3 rotation, Type type = Type.Normal, float scale = 1, float size = 10,
-			bool allowShowSize = true, float transformStepPerRevolution = transformStep)
+		public Screw(
+			Vector3 position,
+			Vector3 rotation,
+			Type type = Type.Normal,
+			float scale = 1,
+			float size = 10,
+			bool allowShowSize = true,
+			float transformStepPerRevolution = transformStep
+		)
 		{
 			this.position = position;
 			this.rotation = rotation;
@@ -87,10 +94,10 @@ namespace MwcModApi.Parts
 		{
 			CreateScrewModel(index, parentCollider.gameObject);
 		}
+
 		internal void CreateScrewModel(int index, GameObject parent)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case Type.Nut:
 					gameObject = GameObject.Instantiate(nutModel);
 					break;
@@ -263,8 +270,7 @@ namespace MwcModApi.Parts
 			if (highlight) {
 				renderer.material.shader = textShader;
 				renderer.material.SetColor(color1, Color.green);
-			}
-			else {
+			} else {
 				renderer.material = material;
 			}
 		}

@@ -78,8 +78,7 @@ namespace MwcModApi.Shopping
 			}
 
 			foreach (var shopLocationModItems in Shop.GetInstance().shopLocations) {
-				if (shopLocationModItems.Value == shopLocation)
-				{
+				if (shopLocationModItems.Value == shopLocation) {
 					continue;
 				}
 
@@ -151,8 +150,7 @@ namespace MwcModApi.Shopping
 				totalCostComp.color = textColor;
 				btnBuyTextComp.color = textColor;
 				btnBuyComp.enabled = true;
-			}
-			else {
+			} else {
 				totalCostComp.color = Color.red;
 				btnBuyTextComp.color = Color.red;
 				btnBuyComp.enabled = false;
@@ -177,13 +175,11 @@ namespace MwcModApi.Shopping
 			if (!shopItem.multiPurchase) {
 				GameObject.Destroy(shopItem.cartItemGameObject);
 				shoppingCart.Remove(shopItem);
-			}
-			else {
+			} else {
 				if (shopItem.itemCount <= 1) {
 					GameObject.Destroy(shopItem.cartItemGameObject);
 					shoppingCart.Remove(shopItem);
-				}
-				else {
+				} else {
 					shopItem.DecreaseCount();
 				}
 			}
@@ -199,8 +195,7 @@ namespace MwcModApi.Shopping
 					for (var i = 0; i < shopItem.itemCount; i++) {
 						shopItem.onPurchaseAction.Invoke();
 					}
-				}
-				else {
+				} else {
 					shopItem.onPurchaseAction.Invoke();
 					GameObject.Destroy(shopItem.partItemGameObject);
 				}

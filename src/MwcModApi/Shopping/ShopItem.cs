@@ -10,23 +10,11 @@ namespace MwcModApi.Shopping
 {
 	public class ShopItem
 	{
-		public BasicPart part
-		{
-			get;
-			protected set;
-		}
+		public BasicPart part { get; protected set; }
 
-		public string name
-		{
-			get;
-			protected set;
-		}
+		public string name { get; protected set; }
 
-		public float prize
-		{
-			get;
-			protected set;
-		}
+		public float prize { get; protected set; }
 		private Vector3 spawnLocation;
 		protected string imageAssetName;
 		private ShopInterface shopInterface;
@@ -37,11 +25,8 @@ namespace MwcModApi.Shopping
 		/// <summary>
 		/// If the item in the shop can be bought multiple times (won't be removed from the shop on purchase)
 		/// </summary>
-		public bool multiPurchase
-		{
-			get;
-			protected set;
-		}
+		public bool multiPurchase { get; protected set; }
+
 		private Text itemCountComp;
 		private Text itemPrizeComp;
 
@@ -59,18 +44,15 @@ namespace MwcModApi.Shopping
 		{
 			get
 			{
-				if (multiPurchase)
-				{
+				if (multiPurchase) {
 					return true;
 				}
 
-				if (isCustomOnBought && !multiPurchase)
-				{
+				if (isCustomOnBought && !multiPurchase) {
 					return !customOnPurchaseBought;
 				}
 
-				if (part == null && !isCustomOnBought)
-				{
+				if (part == null && !isCustomOnBought) {
 					return false;
 				}
 
@@ -78,8 +60,14 @@ namespace MwcModApi.Shopping
 			}
 		}
 
-		public ShopItem(string name, float prize, Vector3 spawnLocation, Action onPurchaseAction,
-			string imageAssetName = "", bool multiPurchase = true)
+		public ShopItem(
+			string name,
+			float prize,
+			Vector3 spawnLocation,
+			Action onPurchaseAction,
+			string imageAssetName = "",
+			bool multiPurchase = true
+		)
 		{
 			Setup(name, prize, spawnLocation, imageAssetName);
 			this.multiPurchase = multiPurchase;
@@ -95,8 +83,7 @@ namespace MwcModApi.Shopping
 		{
 			Setup(name, prize, spawnLocation, imageAssetName);
 			foreach (Part partBoxChild in partBox.childs) {
-				if (partBoxChild.partSave.bought == PartSave.BoughtState.NotConfigured)
-				{
+				if (partBoxChild.partSave.bought == PartSave.BoughtState.NotConfigured) {
 					partBoxChild.partSave.bought = PartSave.BoughtState.No;
 				}
 
@@ -124,8 +111,7 @@ namespace MwcModApi.Shopping
 		{
 			Setup(name, prize, spawnLocation, imageAssetName);
 
-			if (part.partSave.bought == PartSave.BoughtState.NotConfigured)
-			{
+			if (part.partSave.bought == PartSave.BoughtState.NotConfigured) {
 				part.partSave.bought = PartSave.BoughtState.No;
 			}
 
@@ -153,8 +139,7 @@ namespace MwcModApi.Shopping
 			var partImageComp = partItemGameObject.FindChild("panel/part_image").GetComponent<Image>();
 			if (imageAssetName == "") {
 				partImageComp.enabled = false;
-			}
-			else {
+			} else {
 				partImageComp.sprite = baseInfo.assetBundle.LoadAsset<Sprite>(imageAssetName) ?? partImageComp.sprite;
 			}
 
@@ -185,10 +170,8 @@ namespace MwcModApi.Shopping
 			itemPrizeComp = cartItemGameObject.FindChild("panel/item_prize_panel/item_prize").GetComponent<Text>();
 			itemPrizeComp.text = prize.ToString();
 
-			cartItemGameObject.FindChild("panel/btnRemoveFromCart").GetComponent<Button>().onClick.AddListener(delegate
-			{
-				shopInterface.OnRemoveFromCart(this);
-			});
+			cartItemGameObject.FindChild("panel/btnRemoveFromCart").GetComponent<Button>().onClick
+				.AddListener(delegate { shopInterface.OnRemoveFromCart(this); });
 
 			itemCountComp = cartItemGameObject.FindChild("panel/item_count_panel/item_count").GetComponent<Text>();
 			itemCountComp.text = itemCount.ToString();

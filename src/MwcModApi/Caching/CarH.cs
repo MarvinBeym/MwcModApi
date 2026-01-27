@@ -21,6 +21,7 @@ namespace MwcModApi.Caching
 		/// Returns if the car is currently running (rpm above 20).
 		/// </summary>
 		public static bool running => drivetrain.rpm > 20;
+
 		/// <summary>
 		/// Returns if the player is currently sitting in the car (drive mode).
 		/// </summary>

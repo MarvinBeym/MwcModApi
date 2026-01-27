@@ -21,7 +21,10 @@ namespace MwcModApi.Shopping
 			this.rotation = rotation;
 		}
 
-		public CatalogData(GameObject parent, Vector3 position, Vector3 rotation, Vector3 scale): this(parent, position, rotation)
+		public CatalogData(GameObject parent, Vector3 position, Vector3 rotation, Vector3 scale) : this(
+			parent,
+			position, rotation
+		)
 		{
 			this.scale = scale;
 		}

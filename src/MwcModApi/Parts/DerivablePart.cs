@@ -41,34 +41,44 @@ namespace MwcModApi.Parts
 		{
 			gameObjectUsedForInstantiation = part;
 
-			Setup(partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
-				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, null);
+			Setup(
+				partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
+				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, null
+			);
 		}
 
 		protected DerivablePart(GameObject part, GamePart parent, PartBaseInfo partBaseInfo)
 		{
 			gameObjectUsedForInstantiation = part;
 
-			Setup(partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
-				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, null);
+			Setup(
+				partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
+				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, null
+			);
 		}
 
 		protected DerivablePart(Part parent, PartBaseInfo partBaseInfo, string prefabName = null)
 		{
-			Setup(partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
-				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, prefabName);
+			Setup(
+				partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
+				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, prefabName
+			);
 		}
 
 		protected DerivablePart(GamePart parent, PartBaseInfo partBaseInfo, string prefabName = null)
 		{
-			Setup(partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
-				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, prefabName);
+			Setup(
+				partId, partName, parent, partInstallPosition, partInstallRotation, partBaseInfo,
+				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, prefabName
+			);
 		}
 
 		protected DerivablePart(PartBaseInfo partBaseInfo, string prefabName = null)
 		{
-			Setup(partId, partName, null, Vector3.zero, Vector3.zero, partBaseInfo,
-				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, prefabName);
+			Setup(
+				partId, partName, null, Vector3.zero, Vector3.zero, partBaseInfo,
+				uninstallWhenParentUninstalls, disableCollisionWhenInstalled, prefabName
+			);
 		}
 	}
 }

@@ -28,8 +28,12 @@ namespace MwcModApi.PaintingSystem
 
 		private static Dictionary<Mod, Dictionary<string, SerializableColor>> modSave;
 
-		public static PaintingStorage Setup(Mod mod, string id, GameObject paintDetector,
-			Dictionary<GameObject, List<string>> paintConfig)
+		public static PaintingStorage Setup(
+			Mod mod,
+			string id,
+			GameObject paintDetector,
+			Dictionary<GameObject, List<string>> paintConfig
+		)
 		{
 			if (!storage.ContainsKey(mod)) {
 				storage.Add(mod, new List<PaintingStorage>());
@@ -37,11 +41,12 @@ namespace MwcModApi.PaintingSystem
 
 			Dictionary<string, SerializableColor> colorSave = new Dictionary<string, SerializableColor>();
 			if (!modSave.ContainsKey(mod)) {
-				colorSave = Helper.LoadSaveOrReturnNew<Dictionary<string, SerializableColor>>(mod,
-					"paintingSystem_saveFile.json");
+				colorSave = Helper.LoadSaveOrReturnNew<Dictionary<string, SerializableColor>>(
+					mod,
+					"paintingSystem_saveFile.json"
+				);
 				modSave.Add(mod, colorSave);
-			}
-			else {
+			} else {
 				colorSave = modSave[mod];
 			}
 
@@ -92,14 +97,21 @@ namespace MwcModApi.PaintingSystem
 			return paintingStorage;
 		}
 
-		public static PaintingStorage Setup(Mod mod, Part paintDetector,
-			Dictionary<GameObject, List<string>> paintConfig)
+		public static PaintingStorage Setup(
+			Mod mod,
+			Part paintDetector,
+			Dictionary<GameObject, List<string>> paintConfig
+		)
 		{
 			return Setup(mod, paintDetector.id, paintDetector.gameObject, paintConfig);
 		}
 
-		public static PaintingStorage Setup(Mod mod, Part paintDetector, GameObject objectToPaint,
-			List<string> materialsToPaint)
+		public static PaintingStorage Setup(
+			Mod mod,
+			Part paintDetector,
+			GameObject objectToPaint,
+			List<string> materialsToPaint
+		)
 		{
 			Dictionary<GameObject, List<string>> paintConfig = new Dictionary<GameObject, List<string>>
 			{
@@ -109,8 +121,12 @@ namespace MwcModApi.PaintingSystem
 			return Setup(mod, paintDetector.id, paintDetector.gameObject, paintConfig);
 		}
 
-		public static PaintingStorage Setup(Mod mod, Part paintDetector, GameObject objectToPaint,
-			string materialToPaint)
+		public static PaintingStorage Setup(
+			Mod mod,
+			Part paintDetector,
+			GameObject objectToPaint,
+			string materialToPaint
+		)
 		{
 			Dictionary<GameObject, List<string>> paintConfig = new Dictionary<GameObject, List<string>>
 			{

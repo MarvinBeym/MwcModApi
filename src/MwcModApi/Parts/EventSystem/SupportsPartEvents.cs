@@ -15,8 +15,12 @@ namespace MwcModApi.Parts.EventSystem
 		/// <param name="action">The action to execute when the event occurs</param>
 		/// <param name="invokeActionIfConditionMet">When the condition for the Event type is already met when the event is added. The newly added event is immediately triggered</param>
 		/// <returns>Returns the action added (eg for later removal)</returns>
-		PartEventListener AddEventListener(PartEvent.Time eventTime, PartEvent.Type Type, Action action,
-			bool invokeActionIfConditionMet = true);
+		PartEventListener AddEventListener(
+			PartEvent.Time eventTime,
+			PartEvent.Type Type,
+			Action action,
+			bool invokeActionIfConditionMet = true
+		);
 
 		/// <summary>
 		/// Remove an action from the event system

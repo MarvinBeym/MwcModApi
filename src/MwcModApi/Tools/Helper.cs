@@ -34,8 +34,7 @@ namespace MwcModApi.Tools
 		{
 			try {
 				return LoadAssets.LoadBundle(mod, fileName);
-			}
-			catch {
+			} catch {
 				var message = $"AssetBundle file '{fileName}' could not be loaded";
 				ModConsole.Error(message);
 				ModUI.ShowYesNoMessage($"{message}\n\nClose Game? - RECOMMENDED", ExitGame);
@@ -46,12 +45,9 @@ namespace MwcModApi.Tools
 
 		public static AssetBundle LoadAssetBundle(string bundleName)
 		{
-			try
-			{
+			try {
 				return LoadAssets.LoadBundle(bundleName);
-			}
-			catch
-			{
+			} catch {
 				var message = $"AssetBundle bundle '{bundleName}' could not be loaded";
 				ModConsole.Error(message);
 				ModUI.ShowYesNoMessage($"{message}\n\nClose Game? - RECOMMENDED", ExitGame);
@@ -69,8 +65,7 @@ namespace MwcModApi.Tools
 		{
 			try {
 				return Vector3.Distance(positionToCheck, position) <= minimumDistance;
-			}
-			catch {
+			} catch {
 				return false;
 			}
 		}
@@ -83,8 +78,7 @@ namespace MwcModApi.Tools
 
 			if (!File.Exists(path)) {
 				save = new T();
-			}
-			else {
+			} else {
 				save = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
 
 				if (save == null) {
@@ -95,8 +89,12 @@ namespace MwcModApi.Tools
 			return save;
 		}
 
-		internal static GameObject LoadPartAndSetName(AssetBundle assetsBundle, string prefabName, string name,
-			bool addClone = true)
+		internal static GameObject LoadPartAndSetName(
+			AssetBundle assetsBundle,
+			string prefabName,
+			string name,
+			bool addClone = true
+		)
 		{
 			var gameObject = GameObject.Instantiate(assetsBundle.LoadAsset(prefabName) as GameObject);
 			gameObject.SetNameLayerTag(name + (addClone ? "(Clone)" : ""), "PART", "Parts");
@@ -104,20 +102,32 @@ namespace MwcModApi.Tools
 			return gameObject;
 		}
 
-		public static Sprite LoadNewSprite(Sprite current, byte[] data, float pivotX = 0.5f, float pivotY = 0.5f,
-			float pixelsPerUnit = 100.0f)
+		public static Sprite LoadNewSprite(
+			Sprite current,
+			byte[] data,
+			float pivotX = 0.5f,
+			float pivotY = 0.5f,
+			float pixelsPerUnit = 100.0f
+		)
 		{
 			var spriteTexture = LoadTexture(data);
 			if (!spriteTexture) {
 				return current;
 			}
 
-			return Sprite.Create(spriteTexture, new Rect(0, 0, spriteTexture.width, spriteTexture.height),
-				new Vector2(pivotX, pivotY), pixelsPerUnit);
+			return Sprite.Create(
+				spriteTexture, new Rect(0, 0, spriteTexture.width, spriteTexture.height),
+				new Vector2(pivotX, pivotY), pixelsPerUnit
+			);
 		}
 
-		public static Sprite LoadNewSprite(Sprite current, string filePath, float pivotX = 0.5f, float pivotY = 0.5f,
-			float pixelsPerUnit = 100.0f)
+		public static Sprite LoadNewSprite(
+			Sprite current,
+			string filePath,
+			float pivotX = 0.5f,
+			float pivotY = 0.5f,
+			float pixelsPerUnit = 100.0f
+		)
 		{
 			if (File.Exists(filePath) && Path.GetExtension(filePath) == ".png") {
 				return LoadNewSprite(current, File.ReadAllBytes(filePath), pivotX, pivotY, pixelsPerUnit);
@@ -140,8 +150,10 @@ namespace MwcModApi.Tools
 				}
 			}
 
-			Logger.Warning("Unable to find base gameobject on supplied fsm gameobject",
-				fsmGameObject.name + "fsmToUse: " + fsmToUse);
+			Logger.Warning(
+				"Unable to find base gameobject on supplied fsm gameobject",
+				fsmGameObject.name + "fsmToUse: " + fsmToUse
+			);
 			return null;
 		}
 
@@ -163,10 +175,10 @@ namespace MwcModApi.Tools
 		/// <returns>Mod or null</returns>
 		public static Mod GetMod(string modId, bool ignoreEnabled = false)
 		{
-			if (ModLoader.IsModPresent(modId))
-			{
+			if (ModLoader.IsModPresent(modId)) {
 				return ModLoader.LoadedMods.FirstOrDefault(mod => mod.ID.Equals(modId) && !mod.isDisabled);
 			}
+
 			return ignoreEnabled ? ModLoader.LoadedMods.FirstOrDefault(mod => mod.ID.Equals(modId)) : null;
 		}
 	}

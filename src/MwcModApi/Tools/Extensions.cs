@@ -32,8 +32,12 @@ namespace MwcModApi.Tools
 			return value ? trueText : falseText;
 		}
 
-		public static void SetNameLayerTag(this GameObject gameObject, string name, string tag = "PART",
-			string layer = "Parts")
+		public static void SetNameLayerTag(
+			this GameObject gameObject,
+			string name,
+			string tag = "PART",
+			string layer = "Parts"
+		)
 		{
 			gameObject.name = name;
 			gameObject.tag = tag;
@@ -118,8 +122,7 @@ namespace MwcModApi.Tools
 		/// <returns>True if all parts in the list fulfill the type</returns>
 		public static bool AllHaveState(this List<BasicPart> parts, PartEvent.Type type)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case PartEvent.Type.Install:
 					return parts.All(part => part.installed);
 				case PartEvent.Type.Uninstall:
@@ -137,6 +140,7 @@ namespace MwcModApi.Tools
 				case PartEvent.Type.UnboltedOnCar:
 					return parts.All(part => !part.bolted && part.installedOnCar);
 			}
+
 			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
 		}
 
@@ -148,8 +152,7 @@ namespace MwcModApi.Tools
 		/// <returns>True if all parts in the list fulfill the type</returns>
 		public static bool AllHaveState(this List<Part> parts, PartEvent.Type type)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case PartEvent.Type.Install:
 					return parts.All(part => part.installed);
 				case PartEvent.Type.Uninstall:
@@ -167,6 +170,7 @@ namespace MwcModApi.Tools
 				case PartEvent.Type.UnboltedOnCar:
 					return parts.All(part => !part.bolted && part.installedOnCar);
 			}
+
 			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
 		}
 
@@ -178,8 +182,7 @@ namespace MwcModApi.Tools
 		/// <returns>True if all parts in the list fulfill the type</returns>
 		public static bool AllHaveState(this IEnumerable<GamePart> parts, PartEvent.Type type)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case PartEvent.Type.Install:
 					return parts.All(part => part.installed);
 				case PartEvent.Type.Uninstall:
@@ -197,6 +200,7 @@ namespace MwcModApi.Tools
 				case PartEvent.Type.UnboltedOnCar:
 					return parts.All(part => !part.bolted && part.installedOnCar);
 			}
+
 			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
 		}
 
@@ -208,8 +212,7 @@ namespace MwcModApi.Tools
 		/// <returns>True if any part fulfills  the type</returns>
 		public static bool AnyHaveState(this IEnumerable<BasicPart> parts, PartEvent.Type type)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case PartEvent.Type.Install:
 					return parts.Any(part => part.installed);
 				case PartEvent.Type.Uninstall:
@@ -227,6 +230,7 @@ namespace MwcModApi.Tools
 				case PartEvent.Type.UnboltedOnCar:
 					return parts.Any(part => !part.bolted && part.installedOnCar);
 			}
+
 			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
 		}
 
@@ -238,8 +242,7 @@ namespace MwcModApi.Tools
 		/// <returns>True if any part fulfills  the type</returns>
 		public static bool AnyHaveState(this List<Part> parts, PartEvent.Type type)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case PartEvent.Type.Install:
 					return parts.Any(part => part.installed);
 				case PartEvent.Type.Uninstall:
@@ -257,6 +260,7 @@ namespace MwcModApi.Tools
 				case PartEvent.Type.UnboltedOnCar:
 					return parts.Any(part => !part.bolted && part.installedOnCar);
 			}
+
 			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
 		}
 
@@ -268,8 +272,7 @@ namespace MwcModApi.Tools
 		/// <returns>True if any part fulfills  the type</returns>
 		public static bool AnyHaveState(this List<GamePart> parts, PartEvent.Type type)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case PartEvent.Type.Install:
 					return parts.Any(part => part.installed);
 				case PartEvent.Type.Uninstall:
@@ -287,6 +290,7 @@ namespace MwcModApi.Tools
 				case PartEvent.Type.UnboltedOnCar:
 					return parts.Any(part => !part.bolted && part.installedOnCar);
 			}
+
 			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
 		}
 
@@ -296,16 +300,14 @@ namespace MwcModApi.Tools
 		/// <param name="actionName">Optional name to give to the FsmAction created</paramref>
 		public static void AddActionAsFirst(this FsmState fsmState, Action action, string actionName = "")
 		{
-			if (fsmState == null)
-			{
+			if (fsmState == null) {
 				return;
 			}
 
 			var actions = new List<FsmStateAction>(fsmState.Actions);
 
 			FsmAction fsmAction = new FsmAction(action);
-			if (actionName != "")
-			{
+			if (actionName != "") {
 				fsmAction.Name = actionName;
 			}
 
@@ -319,14 +321,12 @@ namespace MwcModApi.Tools
 		/// <param name="actionName">Optional name to give to the FsmAction created</paramref>
 		public static void AddActionAsLast(this FsmState fsmState, Action action, string actionName = "")
 		{
-			if (fsmState == null)
-			{
+			if (fsmState == null) {
 				return;
 			}
 
 			FsmAction fsmAction = new FsmAction(action);
-			if (actionName != "")
-			{
+			if (actionName != "") {
 				fsmAction.Name = actionName;
 			}
 
@@ -336,17 +336,14 @@ namespace MwcModApi.Tools
 
 		public static void RemoveActionByName(this FsmState fsmState, string actionName)
 		{
-			if (actionName == "")
-			{
+			if (actionName == "") {
 				return;
 			}
 
 			var actions = new List<FsmStateAction>();
 
-			foreach (var fsmStateAction in fsmState.Actions)
-			{
-				if (fsmStateAction.Name != actionName)
-				{
+			foreach (var fsmStateAction in fsmState.Actions) {
+				if (fsmStateAction.Name != actionName) {
 					actions.Add(fsmStateAction);
 				}
 			}
@@ -356,13 +353,12 @@ namespace MwcModApi.Tools
 
 		public static FsmStateAction GetAction(this FsmState fsmState, string actionName)
 		{
-			foreach (var action in fsmState.Actions)
-			{
-				if (action.Name == actionName)
-				{
+			foreach (var action in fsmState.Actions) {
+				if (action.Name == actionName) {
 					return action;
 				}
 			}
+
 			return null;
 		}
 	}
