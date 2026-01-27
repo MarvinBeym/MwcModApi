@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logging\LogMessageType.cs" />
     <Compile Include="Parts\PartBox\Box.cs" />
     <Compile Include="Parts\PartBox\BoxLogic.cs" />
     <Compile Include="Parts\EventSystem\PartEvent.cs" />
@@ -120,8 +121,8 @@
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\FsmAction.cs" />
     <Compile Include="Tools\Helper.cs" />
-    <Compile Include="Tools\LoggedMod.cs" />
-    <Compile Include="Tools\Logger.cs" />
+    <Compile Include="Logging\LoggedMod.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="MwcModApi.cs" />
     <Compile Include="Tool.cs" />
     <Compile Include="Tools\UserInteraction.cs" />

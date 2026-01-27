@@ -43,32 +43,48 @@ namespace MwcModApi.Tools
 			InitFile(loggedMod);
 		}
 
-		public static void New(string message)
+		public static void New(LogMessageType logMessageType, string message)
 		{
 			Assembly callingAssembly = Assembly.GetCallingAssembly();
-			WriteLogEntry(callingAssembly.GetName().Name, message, "", null);
+			New(callingAssembly.GetName().Name, logMessageType, message, "", null);
 		}
 
-		public static void New(string message, string additionalInfo)
+		public static void New(LogMessageType logMessageType, string message, string additionalInfo)
 		{
 			Assembly callingAssembly = Assembly.GetCallingAssembly();
-			WriteLogEntry(callingAssembly.GetName().Name, message, additionalInfo, null);
+			New(callingAssembly.GetName().Name, logMessageType, message, additionalInfo, null);
 		}
 
-		public static void New(string message, Exception ex)
+		public static void New(LogMessageType logMessageType, string message, Exception ex)
 		{
 			Assembly callingAssembly = Assembly.GetCallingAssembly();
-			WriteLogEntry(callingAssembly.GetName().Name, message, "", ex);
+			New(callingAssembly.GetName().Name, logMessageType, message, "", ex);
 		}
 
-		public static void New(string message, string additionalInfo, Exception ex)
+		public static void New(LogMessageType logMessageType, string message, string additionalInfo, Exception ex)
 		{
 			Assembly callingAssembly = Assembly.GetCallingAssembly();
-			WriteLogEntry(callingAssembly.GetName().Name, message, additionalInfo, ex);
+			New(callingAssembly.GetName().Name, logMessageType, message, additionalInfo, ex);
 		}
 
-		private static void WriteLogEntry(string callingAssemblyName, string message, string additionalInfo,
-			Exception ex)
+		private static void New(
+			string callingAssemblyName, 
+			LogMessageType logMessageType, 
+			string message,
+			string additionalInfo, 
+			Exception ex
+			)
+		{
+			WriteLogEntry(callingAssemblyName, logMessageType, message, additionalInfo, ex);
+		}
+
+		private static void WriteLogEntry(
+			string callingAssemblyName, 
+			LogMessageType logMessageType, 
+			string message, 
+			string additionalInfo,
+			Exception ex
+			)
 		{
 			//If InitLogger wasn't called, warn once and default to printing message to ModConsole
 			if (!loggedModsMap.TryGetValue(callingAssemblyName, out LoggedMod loggedMod)) {
@@ -78,12 +94,24 @@ namespace MwcModApi.Tools
 					                 "'. Logging will default to printing limited info to ModConsole!");
 				}
 
-				ModConsole.Error(message);
+				switch (logMessageType) 
+				{
+					case LogMessageType.Info:
+						ModConsole.Log(message);
+						break;
+					case LogMessageType.Warning:
+						ModConsole.Warning(message);
+						break;
+					case LogMessageType.Error:
+						ModConsole.Error(message);
+						break;
+
+				}
 				return;
 			}
 
 			using (var sw = new StreamWriter(loggedMod.FilePath, true)) {
-				var errorLogLine = AddBaseLogLine(message);
+				var errorLogLine = AddBaseLogLine(message, logMessageType);
 				if (additionalInfo != "") {
 					errorLogLine = AddAdditionalInfoLine(errorLogLine, additionalInfo);
 				}
@@ -164,11 +192,11 @@ namespace MwcModApi.Tools
 			return modsInstalled;
 		}
 
-		private static string AddBaseLogLine(string message)
+		private static string AddBaseLogLine(string message, LogMessageType logMessageType)
 		{
 			DateTime dateTime = DateTime.Now;
 			string formattedDateTime = dateTime.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
-			return $"[{formattedDateTime}] {message}";
+			return $"[{formattedDateTime}] [{logMessageType}] {message}";
 		}
 
 		private static string AddAdditionalInfoLine(string errorLogLine, string info)
