@@ -221,10 +221,6 @@ namespace MwcModApi.Parts
 					screw.tightness = 0;
 				}
 
-				if (!value && ScrewPlacementAssist.selectedPart == this) {
-					ScrewPlacementAssist.HidePartInteraction();
-				}
-
 				_screwPlacementMode = value;
 			}
 		}

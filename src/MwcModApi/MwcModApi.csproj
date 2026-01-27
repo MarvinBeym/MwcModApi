@@ -100,7 +100,6 @@
     <Compile Include="Parts\Trigger\Trigger.cs" />
     <Compile Include="Parts\Trigger\TriggerWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\ScrewPlacementModCommand.cs" />
     <Compile Include="Parts\Screw.cs" />
     <Compile Include="Parts\EventSystem\SupportsPartBehaviourEvents.cs" />
     <Compile Include="Parts\EventSystem\SupportsPartEvents.cs" />
@@ -124,7 +123,6 @@
     <Compile Include="Tools\LoggedMod.cs" />
     <Compile Include="Tools\Logger.cs" />
     <Compile Include="MwcModApi.cs" />
-    <Compile Include="Tools\ScrewPlacementAssist.cs" />
     <Compile Include="Tool.cs" />
     <Compile Include="Tools\UserInteraction.cs" />
   </ItemGroup>

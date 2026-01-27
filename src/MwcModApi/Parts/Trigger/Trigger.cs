@@ -59,18 +59,14 @@ namespace MwcModApi.Parts.Trigger
 			while (part.installed) {
 				if ((!part.bolted || !part.hasBolts) && part.gameObject.IsLookingAt() && UserInteraction.EmptyHand() &&
 				    !Tool.HasToolInHand()) {
-					if (part.screwPlacementMode) {
-						ScrewPlacementAssist.HandlePartInteraction(part);
-					}
-					else {
-						UserInteraction.GuiInteraction(UserInteraction.Type.Disassemble,
-							$"Uninstall {part.gameObject.name}");
+					UserInteraction.GuiInteraction(UserInteraction.Type.Disassemble,
+						$"Uninstall {part.gameObject.name}");
 
-						if (UserInteraction.RightMouseDown) {
-							UserInteraction.GuiInteraction(UserInteraction.Type.None);
-							part.gameObject.PlayDisassemble();
-							Uninstall();
-						}
+					if (UserInteraction.RightMouseDown)
+					{
+						UserInteraction.GuiInteraction(UserInteraction.Type.None);
+						part.gameObject.PlayDisassemble();
+						Uninstall();
 					}
 				}
 

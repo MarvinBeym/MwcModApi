@@ -5,7 +5,6 @@ using MwcModApi.Shopping;
 using MwcModApi.Tools;
 using System.Collections.Generic;
 using MwcModApi.Caching;
-using MwcModApi.Commands;
 using MwcModApi.PaintingSystem;
 using MwcModApi.Parts.EventSystem;
 using MwcModApi.Parts.PartBox;
@@ -52,7 +51,6 @@ namespace MwcModApi
 		{
 			SetupFunction(Setup.ModSettings, ModSettings);
 
-			SetupFunction(Setup.OnGUI, OnGui);
 			SetupFunction(Setup.PreLoad, PreLoad);
 			SetupFunction(Setup.OnLoad, Load);
 
@@ -76,12 +74,6 @@ namespace MwcModApi
 			instantInstallKeybind = Keybind.Add(this.ID + "_instant-install", "Instant install part looking at", KeyCode.UpArrow);
 			enableInstantInstall = Settings.AddCheckBox("enableInstantInstall", "Enable Instant Part install", false);
 #endif
-			ScrewPlacementAssist.ModSettings(this);
-		}
-
-		public void OnGui()
-		{
-			ScrewPlacementAssist.OnGui();
 		}
 
 		public static void NewGameCleanUp(Mod mod, string saveFileName = "parts_saveFile.json")
@@ -101,7 +93,6 @@ namespace MwcModApi
 
 			Logger.InitLogger(this);
 			LoadAssets();
-			ConsoleCommand.Add(new ScrewPlacementModCommand(this, modsParts));
 		}
 
 		private void PreLoad()
@@ -369,7 +360,6 @@ namespace MwcModApi
 			PaintingSystem.PaintingSystem.LoadCleanup();
 			Screw.LoadCleanup();
 			Logger.LoadCleanup();
-			ScrewPlacementAssist.LoadCleanup();
 			UserInteraction.LoadCleanup();
 			Tool.LoadCleanup();
 			CarGamePart.LoadCleanup();
