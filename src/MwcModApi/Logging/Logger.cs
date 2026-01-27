@@ -43,6 +43,78 @@ namespace MwcModApi.Tools
 			InitFile(loggedMod);
 		}
 
+		public static void Info(string message)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Info, message, "", null);
+		}
+
+		public static void Info(string message, string additionalInfo)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Info, message, additionalInfo, null);
+		}
+
+		public static void Info(string message, Exception ex)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Info, message, "", ex);
+		}
+
+		public static void Info(string message, string additionalInfo, Exception ex)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Info, message, additionalInfo, ex);
+		}
+
+		public static void Warning(string message)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, "", null);
+		}
+
+		public static void Warning(string message, string additionalInfo)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, additionalInfo, null);
+		}
+
+		public static void Warning(string message, Exception ex)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, "", ex);
+		}
+
+		public static void Warning(string message, string additionalInfo, Exception ex)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, additionalInfo, ex);
+		}
+
+		public static void Error(string message)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, "", null);
+		}
+
+		public static void Error(string message, string additionalInfo)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, additionalInfo, null);
+		}
+
+		public static void Error(string message, Exception ex)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, "", ex);
+		}
+
+		public static void Error(string message, string additionalInfo, Exception ex)
+		{
+			Assembly callingAssembly = Assembly.GetCallingAssembly();
+			New(callingAssembly.GetName().Name, LogMessageType.Warning, message, additionalInfo, ex);
+		}
+
 		public static void New(LogMessageType logMessageType, string message)
 		{
 			Assembly callingAssembly = Assembly.GetCallingAssembly();
