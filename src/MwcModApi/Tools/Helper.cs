@@ -140,7 +140,7 @@ namespace MwcModApi.Tools
 				}
 			}
 
-			Logger.New("Unable to find base gameobject on supplied fsm gameobject",
+			Logger.Warning("Unable to find base gameobject on supplied fsm gameobject",
 				fsmGameObject.name + "fsmToUse: " + fsmToUse);
 			return null;
 		}
