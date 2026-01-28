@@ -60,6 +60,7 @@ namespace MwcModApi.Parts
 			Setup(position, rotation, 1, 10, type, transformStep, allowShowSize);
 		}
 
+		[JsonConstructor]
 		public Screw(
 			Vector3 position,
 			Vector3 rotation,
