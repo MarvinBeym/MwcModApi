@@ -53,12 +53,35 @@ namespace MwcModApi.Parts
 		public Screw(
 			Vector3 position,
 			Vector3 rotation,
+			Type type = Type.Normal,
+			bool allowShowSize = true
+		)
+		{
+			Setup(position, rotation, 1, 10, type, transformStep, allowShowSize);
+		}
+
+		public Screw(
+			Vector3 position,
+			Vector3 rotation,
 			float scale = 1,
 			float size = 10,
 			Type type = Type.Normal,
 			float transformStepPerRevolution = transformStep,
 			bool allowShowSize = true
 		)
+		{
+			Setup(position, rotation, scale, size, type, transformStepPerRevolution, allowShowSize);
+		}
+
+		protected void Setup(
+			Vector3 position,
+			Vector3 rotation,
+			float scale = 1,
+			float size = 10,
+			Type type = Type.Normal,
+			float transformStepPerRevolution = transformStep,
+			bool allowShowSize = true
+		) 
 		{
 			this.position = position;
 			this.rotation = rotation;
@@ -69,22 +92,26 @@ namespace MwcModApi.Parts
 
 			showSize = allowShowSize;
 
-			if (textShader == null) {
+			if (textShader == null)
+			{
 				textShader = Shader.Find("GUI/Text Shader");
 			}
 		}
 
 		internal void LoadTightness(Screw savedScrew)
 		{
-			if (savedScrew != null) {
+			if (savedScrew != null)
+			{
 				tightness = savedScrew.tightness;
 			}
 
-			if (tightness >= 8) {
+			if (tightness >= 8)
+			{
 				tightness = 8;
 			}
 
-			if (tightness <= 0) {
+			if (tightness <= 0)
+			{
 				tightness = 0;
 			}
 		}
@@ -96,7 +123,8 @@ namespace MwcModApi.Parts
 
 		internal void CreateScrewModel(int index, GameObject parent)
 		{
-			switch (type) {
+			switch (type)
+			{
 				case Type.Nut:
 					gameObject = GameObject.Instantiate(nutModel);
 					break;
@@ -127,19 +155,23 @@ namespace MwcModApi.Parts
 
 		internal void Verify()
 		{
-			if (tightness >= maxTightness) {
+			if (tightness >= maxTightness)
+			{
 				tightness = maxTightness;
 			}
 
-			if (tightness <= 0) {
+			if (tightness <= 0)
+			{
 				tightness = 0;
 			}
 
-			if (size >= maxSize) {
+			if (size >= maxSize)
+			{
 				size = maxSize;
 			}
 
-			if (size <= minSize) {
+			if (size <= minSize)
+			{
 				size = minSize;
 			}
 		}
@@ -153,7 +185,8 @@ namespace MwcModApi.Parts
 		{
 			if (tightness >= maxTightness || !part.installed) return;
 
-			if (useAudio) {
+			if (useAudio)
+			{
 				AudioSource.PlayClipAtPoint(soundClip, gameObject.transform.position);
 			}
 
@@ -161,23 +194,29 @@ namespace MwcModApi.Parts
 			gameObject.transform.Translate(0f, 0f, -transformStepPerRevolution);
 
 			bool changingToFixedState = false;
-			if (tightness + 1 == maxTightness) {
+			if (tightness + 1 == maxTightness)
+			{
 				int screwCount = part.screws.Count;
 				int totalTightness = 0;
 				part.screws.ForEach((Screw screw) => { totalTightness += screw.tightness; });
 
-				if (totalTightness + 1 == screwCount * maxTightness) {
+				if (totalTightness + 1 == screwCount * maxTightness)
+				{
 					changingToFixedState = true;
 				}
 			}
 
-			if (changingToFixedState) {
+			if (changingToFixedState)
+			{
 				part.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Bolted).InvokeAll();
-				if (part.installedOnCar) {
+				if (part.installedOnCar)
+				{
 					part.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.BoltedOnCar).InvokeAll();
 
-					foreach (Part childPart in part.childs) {
-						if (childPart.bolted && childPart.installedOnCar) {
+					foreach (Part childPart in part.childs)
+					{
+						if (childPart.bolted && childPart.installedOnCar)
+						{
 							childPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.BoltedOnCar).InvokeAll();
 						}
 					}
@@ -186,13 +225,17 @@ namespace MwcModApi.Parts
 
 			tightness++;
 
-			if (changingToFixedState) {
+			if (changingToFixedState)
+			{
 				part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Bolted).InvokeAll();
-				if (part.installedOnCar) {
+				if (part.installedOnCar)
+				{
 					part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.BoltedOnCar).InvokeAll();
 
-					foreach (Part childPart in part.childs) {
-						if (childPart.bolted && childPart.installedOnCar) {
+					foreach (Part childPart in part.childs)
+					{
+						if (childPart.bolted && childPart.installedOnCar)
+						{
 							childPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.BoltedOnCar).InvokeAll();
 						}
 					}
@@ -204,7 +247,8 @@ namespace MwcModApi.Parts
 		{
 			if (!part.installed || tightness == 0) return;
 
-			if (useAudio) {
+			if (useAudio)
+			{
 				AudioSource.PlayClipAtPoint(soundClip, gameObject.transform.position);
 			}
 
@@ -213,13 +257,17 @@ namespace MwcModApi.Parts
 
 			bool changingToUnfixed = part.bolted;
 
-			if (changingToUnfixed) {
+			if (changingToUnfixed)
+			{
 				part.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Unbolted).InvokeAll();
-				if (part.installedOnCar) {
+				if (part.installedOnCar)
+				{
 					part.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UnboltedOnCar).InvokeAll();
 
-					foreach (Part childPart in part.childs) {
-						if (!childPart.bolted && childPart.installedOnCar) {
+					foreach (Part childPart in part.childs)
+					{
+						if (!childPart.bolted && childPart.installedOnCar)
+						{
 							childPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UnboltedOnCar).InvokeAll();
 						}
 					}
@@ -228,13 +276,17 @@ namespace MwcModApi.Parts
 
 			tightness--;
 
-			if (changingToUnfixed) {
+			if (changingToUnfixed)
+			{
 				part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Unbolted).InvokeAll();
-				if (part.installedOnCar) {
+				if (part.installedOnCar)
+				{
 					part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UnboltedOnCar).InvokeAll();
 
-					foreach (Part childPart in part.childs) {
-						if (!childPart.bolted && childPart.installedOnCar) {
+					foreach (Part childPart in part.childs)
+					{
+						if (!childPart.bolted && childPart.installedOnCar)
+						{
 							childPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UnboltedOnCar).InvokeAll();
 						}
 					}
@@ -244,32 +296,39 @@ namespace MwcModApi.Parts
 
 		public void InBy(int by, bool useAudio = false, bool setTightnessToZero = false)
 		{
-			if (setTightnessToZero) {
+			if (setTightnessToZero)
+			{
 				tightness = 0;
 			}
 
-			for (var i = 0; i < by; i++) {
+			for (var i = 0; i < by; i++)
+			{
 				In(useAudio);
 			}
 		}
 
 		public void OutBy(int by, bool useAudio = false, bool setTightnessToZero = false)
 		{
-			if (setTightnessToZero) {
+			if (setTightnessToZero)
+			{
 				tightness = 0;
 			}
 
-			for (var i = 0; i < by; i++) {
+			for (var i = 0; i < by; i++)
+			{
 				Out(useAudio);
 			}
 		}
 
 		internal void Highlight(bool highlight)
 		{
-			if (highlight) {
+			if (highlight)
+			{
 				renderer.material.shader = textShader;
 				renderer.material.SetColor(color1, Color.green);
-			} else {
+			}
+			else
+			{
 				renderer.material = material;
 			}
 		}
