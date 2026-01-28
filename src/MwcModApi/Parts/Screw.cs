@@ -10,11 +10,11 @@ namespace MwcModApi.Parts
 	[JsonObject(MemberSerialization.OptIn)]
 	public class Screw
 	{
-		internal const float minSize = 5;
-		internal const float maxSize = 15;
-		internal const int maxTightness = 8;
-		internal const int rotationStep = 360 / maxTightness;
-		internal const float transformStep = 0.0025f;
+		public const float minSize = 5;
+		public const float maxSize = 15;
+		public const int maxTightness = 8;
+		public const int rotationStep = 360 / maxTightness;
+		public const float transformStep = 0.0025f;
 
 		public enum Type
 		{
