@@ -515,7 +515,7 @@ namespace MwcModApi.Parts
 			clampModel = assetBundle.LoadAsset<GameObject>("clamp.prefab");
 		}
 
-		public void AddScrews(Screw[] screws, float overrideScale = 0f, float overrideSize = 0f)
+		public void AddScrews(Screw[] screws, float overrideScale = 0f, float overrideSize = 0, float overrideTransformStepPerRevolution = 0)
 		{
 			foreach (var screw in screws) {
 				if (overrideScale != 0f) {
@@ -524,6 +524,10 @@ namespace MwcModApi.Parts
 
 				if (overrideSize != 0f) {
 					screw.size = overrideSize;
+				}
+
+				if (overrideTransformStepPerRevolution != 0f) {
+					screw.transformStepPerRevolution = overrideTransformStepPerRevolution;
 				}
 
 				AddScrew(screw);
