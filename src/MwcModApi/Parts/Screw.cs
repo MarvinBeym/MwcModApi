@@ -53,11 +53,11 @@ namespace MwcModApi.Parts
 		public Screw(
 			Vector3 position,
 			Vector3 rotation,
-			Type type = Type.Normal,
 			float scale = 1,
 			float size = 10,
-			bool allowShowSize = true,
-			float transformStepPerRevolution = transformStep
+			Type type = Type.Normal,
+			float transformStepPerRevolution = transformStep,
+			bool allowShowSize = true
 		)
 		{
 			this.position = position;

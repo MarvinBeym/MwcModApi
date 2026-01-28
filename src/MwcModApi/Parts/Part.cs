@@ -756,11 +756,11 @@ namespace MwcModApi.Parts
 				new Screw(
 					new Vector3(ClampScrewInOutOffset, ClampScrewHeightOffset, ClampScrewLeftRightOffset),
 					new Vector3(0, ClampScrewRotationOffset, 0),
-					Screw.Type.Normal,
 					ClampScrewBaseScale,
 					screwSize,
-					true,
-					Screw.transformStep * scale
+					Screw.Type.Normal,
+					Screw.transformStep * scale,
+					true
 				), clamp
 			);
 

@@ -78,7 +78,7 @@ namespace MwcModApi.Tools
 
 		public static Screw CloneToNew(this Screw screw)
 		{
-			return new Screw(screw.position, screw.rotation, screw.type, screw.scale, screw.size, screw.showSize);
+			return new Screw(screw.position, screw.rotation, screw.scale, screw.size, screw.type, screw.transformStepPerRevolution, screw.showSize);
 		}
 
 		public static Screw[] CloneToNew(this Screw[] screws)
