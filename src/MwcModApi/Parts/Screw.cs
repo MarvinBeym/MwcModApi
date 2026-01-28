@@ -43,7 +43,7 @@ namespace MwcModApi.Parts
 		internal Part part;
 
 		private static Shader textShader;
-		public static GameObject nutModel;
+		internal static GameObject nutModel;
 		internal static GameObject screwModel;
 		internal static GameObject normalModel;
 		internal static GameObject longModel;
