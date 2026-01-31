@@ -116,6 +116,11 @@ namespace MwcModApi.Caching
 		public static void LoadCleanup()
 		{
 			_money = null;
+			_player = null;
+			_money = null;
+			_hand = null;
+			_handPickUp = null; 
+			_currentObjectInHand = null;
 		}
 	}
 }
