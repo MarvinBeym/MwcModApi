@@ -39,7 +39,7 @@ namespace MwcModApi.Parts
 	{
 		private const float ClampScrewHeightOffset = 0.039f;
 		private const float ClampScrewInOutOffset = 0.025f;
-		private const float ClampScrewLeftRightOffset = 0.0005f; //Clamp origin likely not centered
+		private const float ClampScrewLeftRightOffset = -0.0005f; //Clamp origin likely not centered
 		private const float ClampScrewRotationOffset = 90f;
 		private const float ClampScrewBaseScale = 0.5f;
 
