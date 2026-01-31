@@ -282,7 +282,7 @@ namespace MwcModApi.Parts.Game
 		/// </summary>
 		public override bool installBlocked
 		{
-			get { return !nearState.Actions.Any(action => action.Enabled); }
+			get { return nearState.Actions.Any(action => !action.Enabled); }
 			set
 			{
 				foreach (var action in nearState.Actions) {
