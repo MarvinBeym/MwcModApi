@@ -29,6 +29,16 @@ namespace MwcModApi.Caching
 		}
 
 		/// <summary>
+		/// Returns if the player is holding the passed GameObject in their hands
+		/// </summary>
+		/// <param name="gameObject">The GameObject to check</param>
+		/// <returns>True if player is currently holding part in hands, otherwise false</returns>
+		public static bool IsHolding(GameObject gameObject)
+		{
+			return gameObject.transform.root == player.transform;
+		}
+
+		/// <summary>
 		/// Returns the current amount of money the player has.
 		/// </summary>
 		public static float money

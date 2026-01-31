@@ -185,7 +185,7 @@ namespace MwcModApi.Tools
 
 		public static bool IsHolding(this GameObject gameObject)
 		{
-			return gameObject.layer == LayerMask.NameToLayer("Wheel");
+			return Player.IsHolding(gameObject);
 		}
 
 		public static bool EmptyHand()
