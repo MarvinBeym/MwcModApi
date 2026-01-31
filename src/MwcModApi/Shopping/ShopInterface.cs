@@ -68,7 +68,7 @@ namespace MwcModApi.Shopping
 
 			modsPanel.SetActive(true);
 			partsPanel.SetActive(false);
-			moneyComp.text = Caching.Game.money.ToString();
+			moneyComp.text = Player.money.ToString();
 			gameObject.SetActive(true);
 
 			EmptyShoppingCart();
@@ -140,7 +140,7 @@ namespace MwcModApi.Shopping
 			totalCost += shopItem.baseItemPrize;
 			totalCostComp.text = totalCost.ToString();
 
-			SetBuyPossible(totalCost < Caching.Game.money);
+			SetBuyPossible(totalCost < Player.money);
 		}
 
 		internal void SetBuyPossible(bool possible)
@@ -186,7 +186,7 @@ namespace MwcModApi.Shopping
 
 		internal void OnCheckout()
 		{
-			Caching.Game.money -= totalCost;
+			Player.money -= totalCost;
 			totalCost = 0;
 			totalCostComp.text = totalCost.ToString();
 			foreach (var shopItem in shoppingCart) {

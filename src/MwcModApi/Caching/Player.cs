@@ -5,9 +5,9 @@ using HutongGames.PlayMaker;
 namespace MwcModApi.Caching
 {
 	/// <summary>
-	/// Utility class for everything related to the game.
+	/// Utility class for everything related to the player.
 	/// </summary>
-	public class Game
+	public class Player
 	{
 		private static FsmFloat _money;
 

@@ -331,7 +331,7 @@ namespace MwcModApi
 		{
 			Cache.LoadCleanup();
 			CarH.LoadCleanup();
-			Caching.Game.LoadCleanup();
+			Player.LoadCleanup();
 			PaintingSystem.PaintingSystem.LoadCleanup();
 			Screw.LoadCleanup();
 			Logger.LoadCleanup();

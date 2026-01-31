@@ -86,7 +86,7 @@
     <Compile Include="Parts\BasicPart.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\CarH.cs" />
-    <Compile Include="Caching\Game.cs" />
+    <Compile Include="Caching\Player.cs" />
     <Compile Include="Parts\DerivablePart.cs" />
     <Compile Include="Parts\FsmPartData.cs" />
     <Compile Include="PaintingSystem\PaintingStorage.cs" />
