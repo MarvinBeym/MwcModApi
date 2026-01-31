@@ -101,14 +101,27 @@ namespace MwcModApi.Parts.Game
 			}
 
 			dataFsm.FindState("Installed").AddActionAsFirst(
-				() => { GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Install).InvokeAll(); },
+				() =>
+				{
+					if (GetCurrentPhysicalPart() == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
+					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Install).InvokeAll();
+				},
 				"MwcModApi-Install-Pre"
 			);
 
 			dataFsm.FindState("Installed").AddActionAsLast(
 				() =>
 				{
-					currentPhysicalPart = GetCurrentPhysicalPart();
+					GameObject physicalPart = GetCurrentPhysicalPart();
+					if (physicalPart == null) {
+						return; //Not the correct part, don't continue
+					}
+
+					currentPhysicalPart = physicalPart;
 
 					SetupBoltedStateDetection(currentPhysicalPart);
 
@@ -120,12 +133,23 @@ namespace MwcModApi.Parts.Game
 			);
 
 			dataFsm.FindState("Remove part").AddActionAsFirst(
-				() => { GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Uninstall).InvokeAll(); },
+				() =>
+				{
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
+					GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.Uninstall).InvokeAll();
+				},
 				"MwcModApi-Uninstall-Pre"
 			);
 			dataFsm.FindState("Remove part").AddActionAsLast(
 				() =>
 				{
+					if (currentPhysicalPart == null) {
+						return; //Not the correct part, don't continue
+					}
 					GetEventListeners(PartEvent.Time.Post, PartEvent.Type.Uninstall).InvokeAll();
 					if (!installedOnCar) {
 						//Check probably not needed, likely already not on car because part can't be connected to something else after being uninstalled
@@ -397,7 +421,7 @@ namespace MwcModApi.Parts.Game
 		public override bool hasBolts => dataFsm.FsmVariables.FindFsmBool("Bolted") != null;
 
 		/// <inheritdoc />
-		public override bool installedOnCar => currentPhysicalPart.transform.root == CarH.car.transform;
+		public override bool installedOnCar => currentPhysicalPart?.transform.root == CarH.car.transform;
 
 		/// <inheritdoc />
 		public override bool active
