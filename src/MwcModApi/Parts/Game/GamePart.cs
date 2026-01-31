@@ -641,10 +641,16 @@ namespace MwcModApi.Parts.Game
 		/// <param name="partToBlock">The part to block when the "Type" is called on this part</param>
 		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, BasicPart partToBlock)
 		{
-			AddEventListener(PartEvent.Time.Post, Type, () => { partToBlock.installBlocked = true; });
+			AddEventListener(PartEvent.Time.Post, Type, () =>
+			{
+				partToBlock.installBlocked = true;
+			});
 			AddEventListener(
 				PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type),
-				() => { partToBlock.installBlocked = false; }
+				() =>
+				{
+					partToBlock.installBlocked = false;
+				}
 			);
 		}
 	}

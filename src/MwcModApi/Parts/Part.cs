@@ -624,10 +624,16 @@ namespace MwcModApi.Parts
 		/// <param name="partToBlock">The part to block when the "Type" is called on this part</param>
 		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, BasicPart partToBlock)
 		{
-			AddEventListener(PartEvent.Time.Post, Type, () => { partToBlock.installBlocked = true; });
+			AddEventListener(PartEvent.Time.Post, Type, () =>
+			{
+				partToBlock.installBlocked = true;
+			});
 			AddEventListener(
 				PartEvent.Time.Post, GetOppositeEvent(Type),
-				() => { partToBlock.installBlocked = false; }
+				() =>
+				{
+					partToBlock.installBlocked = false;
+				}
 			);
 		}
 
