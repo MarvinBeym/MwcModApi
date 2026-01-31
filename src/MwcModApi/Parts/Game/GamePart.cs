@@ -413,7 +413,7 @@ namespace MwcModApi.Parts.Game
 		public override bool isLookingAt => currentPhysicalPart != null && currentPhysicalPart.IsLookingAt();
 
 		/// <inheritdoc />
-		public override bool isHolding => currentPhysicalPart != null && currentPhysicalPart.IsHolding();
+		public override bool isHolding => partName == Player.currentObjectInHand.name;
 
 		/// <summary>
 		/// Sends the REMOVE event to the Part
