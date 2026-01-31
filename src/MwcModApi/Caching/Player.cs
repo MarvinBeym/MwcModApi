@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlTypes;
 using HutongGames.PlayMaker;
+using UnityEngine;
 
 namespace MwcModApi.Caching
 {
@@ -9,7 +10,23 @@ namespace MwcModApi.Caching
 	/// </summary>
 	public class Player
 	{
+		private static GameObject _player;
 		private static FsmFloat _money;
+
+		/// <summary>
+		/// Returns the player GameObject
+		/// </summary>
+		public static GameObject player
+		{
+			get
+			{
+				if (_player == null) {
+					_player = Cache.Find("PLAYER");
+				}
+
+				return _player;
+			}
+		}
 
 		/// <summary>
 		/// Returns the current amount of money the player has.
