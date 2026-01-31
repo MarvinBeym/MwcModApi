@@ -410,7 +410,15 @@ namespace MwcModApi.Parts.Game
 		public override string name => gameObject.name;
 
 		/// <inheritdoc />
-		public override bool isLookingAt => currentPhysicalPart != null && currentPhysicalPart.IsLookingAt();
+		public override bool isLookingAt =>
+		(
+			Camera.main != null
+			&& Physics.Raycast(
+				Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 1f,
+				1 << gameObject.layer
+			)
+			&& hit.collider.gameObject.name == partName
+		);
 
 		/// <inheritdoc />
 		public override bool isHolding => partName == Player.currentObjectInHand.name;
