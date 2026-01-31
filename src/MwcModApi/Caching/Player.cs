@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlTypes;
 using HutongGames.PlayMaker;
+using MwcModApi.Tools;
 using UnityEngine;
 
 namespace MwcModApi.Caching
@@ -12,6 +13,10 @@ namespace MwcModApi.Caching
 	{
 		private static GameObject _player;
 		private static FsmFloat _money;
+		private static GameObject _hand;
+		private static PlayMakerFSM _handPickUp;
+		private static FsmGameObject _currentObjectInHand;
+
 
 		/// <summary>
 		/// Returns the player GameObject
@@ -25,6 +30,54 @@ namespace MwcModApi.Caching
 				}
 
 				return _player;
+			}
+		}
+
+		/// <summary>
+		/// Returns the hand GameObject. This GameObject contains the FSM that handles object pickup
+		/// </summary>
+		public static GameObject hand
+		{
+			get
+			{
+				if (_hand == null)
+				{
+					_hand = Cache.Find("PLAYER/Pivot/AnimPivot/Camera/FPSCamera/1Hand_Assemble/Hand");
+				}
+
+				return _hand;
+			}
+		}
+
+		/// <summary>
+		/// Returns the FSM that handles object pickup
+		/// </summary>
+		public static PlayMakerFSM handPickUp
+		{
+			get
+			{
+				if (_handPickUp == null)
+				{
+					_handPickUp = hand.FindFsm("PickUp");
+				}
+
+				return _handPickUp;
+			}
+		}
+
+		/// <summary>
+		/// Returns the current GameObject the player is holding in their hand
+		/// </summary>
+		public static GameObject currentObjectInHand
+		{
+			get
+			{
+				if (_currentObjectInHand == null)
+				{
+					_currentObjectInHand = handPickUp.FsmVariables.FindFsmGameObject("PickedObject");
+				}
+
+				return _currentObjectInHand.Value;
 			}
 		}
 
