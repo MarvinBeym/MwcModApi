@@ -12,3 +12,4 @@
 /src/.idea
 /src/.vs
 *.log
+*.DotSettings.user
