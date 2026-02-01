@@ -28,13 +28,9 @@ namespace MwcModApi.Parts.Game
 		protected GameObject currentPhysicalPart = null;
 		protected string physicalPartId = "";
 
-		public GamePartSave saveData => new GamePartSave(installedOnCar, position, Quaternion.Euler(rotation));
+		private SupportsPartEvents supportsPartEvents = new SupportsPartEvents();
 
-		/// <summary>
-		/// Stores all events that a developer may have added to this GamePart object
-		/// </summary>
-		protected Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>> events =
-			new Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>>();
+		public GamePartSave saveData => new GamePartSave(installedOnCar, position, Quaternion.Euler(rotation));
 
 		/// <summary>
 		/// Flag used to avoid calling the pre bolted event multiple times
@@ -64,7 +60,6 @@ namespace MwcModApi.Parts.Game
 		/// <param name="physicalPartId">The ID of the physical part, some parts may have the same "partName" but are different physical parts, this ID can be found in the Data PlayMakerFSM component under FsmString</param>
 		public GamePart(string installPointFsmName, string partName, string physicalPartId = "")
 		{
-			InitEventStorage();
 			id = installPointFsmName + "-" + partName;
 			this.partName = partName;
 			this.physicalPartId = physicalPartId;
@@ -304,23 +299,6 @@ namespace MwcModApi.Parts.Game
 					}
 				}, "MwcModApi-Bolted-Post"
 			);
-		}
-
-		/// <summary>
-		/// Initializes the event dictionary
-		/// </summary>
-		protected void InitEventStorage()
-		{
-			foreach (PartEvent.Time eventTime in Enum.GetValues(typeof(PartEvent.Time))) {
-				Dictionary<PartEvent.Type, PartEventListenerCollection> TypeDict =
-					new Dictionary<PartEvent.Type, PartEventListenerCollection>();
-
-				foreach (PartEvent.Type Type in Enum.GetValues(typeof(PartEvent.Type))) {
-					TypeDict.Add(Type, new PartEventListenerCollection());
-				}
-
-				events.Add(eventTime, TypeDict);
-			}
 		}
 
 		/// <summary>
@@ -596,7 +574,7 @@ namespace MwcModApi.Parts.Game
 		/// <returns></returns>
 		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type)
 		{
-			return events[eventTime][Type];
+			return supportsPartEvents.GetEventListeners(eventTime, Type);
 		}
 
 		/// <inheritdoc />
@@ -607,8 +585,6 @@ namespace MwcModApi.Parts.Game
 			bool invokeActionIfConditionMet = true
 		)
 		{
-			PartEventListener partEventListener = new PartEventListener(eventTime, Type, action);
-
 			if (
 				eventTime == PartEvent.Time.Pre
 				&& (Type == PartEvent.Type.InstallOnCar || Type == PartEvent.Type.UninstallFromCar)
@@ -616,7 +592,7 @@ namespace MwcModApi.Parts.Game
 				throw new Exception($"Event {Type} can't be detected at '{eventTime}'. Unsupported!");
 			}
 
-			events[eventTime][Type].Add(partEventListener);
+			PartEventListener partEventListener = supportsPartEvents.AddEventListener(eventTime, Type, action, invokeActionIfConditionMet);
 
 			if (invokeActionIfConditionMet && eventTime == PartEvent.Time.Post) {
 				switch (Type) {
