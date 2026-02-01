@@ -88,6 +88,8 @@ namespace MwcModApi.Parts.Game
 				);
 			}
 
+			nearState.AddActionAsFirst(InstallBlockAction, "MwcModApi-InstallBlock");
+
 			currentPhysicalPart = GetCurrentPhysicalPart();
 
 			boltedState = dataFsm.FsmVariables.FindFsmBool("Bolted");
@@ -322,18 +324,21 @@ namespace MwcModApi.Parts.Game
 		}
 
 		/// <summary>
-		/// Block installation of the part by disabling the trigger object
+		/// This action is injected into the parts installPoint "Near" state as the first action.
+		/// If installation of the part is blocked and the player is currently holding the part, as soon as the "Near" state becomes active.
+		/// This action will send an event, making the FSM change state, preventing installation
 		/// </summary>
-		public override bool installBlocked
+		protected void InstallBlockAction()
 		{
-			get { return nearState.Actions.Any(action => !action.Enabled); }
-			set
-			{
-				foreach (var action in nearState.Actions) {
-					action.Enabled = !value;
-				}
+			if (installBlocked && isHolding) {
+				dataFsm.SendEvent("BACK");
 			}
 		}
+
+		/// <summary>
+		/// Block installation of the part by disabling the trigger object
+		/// </summary>
+		public override bool installBlocked { get; set; } = false;
 
 		/// <summary>
 		/// The parts tightness (sum of all screw tightness (8 x screw count = all bolted))
