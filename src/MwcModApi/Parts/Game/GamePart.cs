@@ -222,6 +222,11 @@ namespace MwcModApi.Parts.Game
 			unboltedState.AddActionAsFirst(
 				() =>
 				{
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					alreadyCalledPreBolted = false;
 
 					if (alreadyCalledPreUnbolted) {
@@ -238,6 +243,11 @@ namespace MwcModApi.Parts.Game
 			unboltedState.AddActionAsLast(
 				() =>
 				{
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					alreadyCalledPostBolted = false;
 
 					if (alreadyCalledPostUnbolted) {
@@ -254,6 +264,11 @@ namespace MwcModApi.Parts.Game
 			boltedState.AddActionAsFirst(
 				() =>
 				{
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					alreadyCalledPreUnbolted = false;
 
 					if (alreadyCalledPreBolted) {
@@ -270,6 +285,11 @@ namespace MwcModApi.Parts.Game
 			boltedState.AddActionAsLast(
 				() =>
 				{
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					alreadyCalledPostUnbolted = false;
 
 					if (alreadyCalledPostBolted) {
@@ -476,6 +496,11 @@ namespace MwcModApi.Parts.Game
 
 			switch (eventTime) {
 				case PartEvent.Time.Pre:
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					if (alreadyCalledPreUnbolted) {
 						return;
 					}
@@ -488,6 +513,11 @@ namespace MwcModApi.Parts.Game
 
 					break;
 				case PartEvent.Time.Post:
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					if (alreadyCalledPostUnbolted) {
 						return;
 					}
@@ -517,6 +547,11 @@ namespace MwcModApi.Parts.Game
 
 			switch (eventTime) {
 				case PartEvent.Time.Pre:
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					if (alreadyCalledPreBolted) {
 						return;
 					}
@@ -529,6 +564,11 @@ namespace MwcModApi.Parts.Game
 
 					break;
 				case PartEvent.Time.Post:
+					if (currentPhysicalPart == null)
+					{
+						return; //Not the correct part, don't continue
+					}
+
 					if (alreadyCalledPostBolted) {
 						return;
 					}
