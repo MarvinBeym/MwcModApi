@@ -91,12 +91,12 @@ namespace MwcModApi.Parts.Game
 			//Not possible on car
 		}
 
-		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type)
+		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type type)
 		{
 			return new PartEventListenerCollection();
 		}
 
-		public new void AddEventListener(PartEvent.Time eventTime, PartEvent.Type Type, Action action)
+		public new void AddEventListener(PartEvent.Time eventTime, PartEvent.Type type, Action action)
 		{
 			//Not possible on car
 		}

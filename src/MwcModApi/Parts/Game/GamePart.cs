@@ -570,32 +570,32 @@ namespace MwcModApi.Parts.Game
 		/// Not implemented for the 
 		/// </summary>
 		/// <param name="eventTime"></param>
-		/// <param name="Type"></param>
+		/// <param name="type"></param>
 		/// <returns></returns>
-		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type)
+		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type type)
 		{
-			return supportsPartEvents.GetEventListeners(eventTime, Type);
+			return supportsPartEvents.GetEventListeners(eventTime, type);
 		}
 
 		/// <inheritdoc />
 		public PartEventListener AddEventListener(
 			PartEvent.Time eventTime,
-			PartEvent.Type Type,
+			PartEvent.Type type,
 			Action action,
 			bool invokeActionIfConditionMet = true
 		)
 		{
 			if (
 				eventTime == PartEvent.Time.Pre
-				&& (Type == PartEvent.Type.InstallOnCar || Type == PartEvent.Type.UninstallFromCar)
+				&& (type == PartEvent.Type.InstallOnCar || type == PartEvent.Type.UninstallFromCar)
 			) {
-				throw new Exception($"Event {Type} can't be detected at '{eventTime}'. Unsupported!");
+				throw new Exception($"Event {type} can't be detected at '{eventTime}'. Unsupported!");
 			}
 
-			PartEventListener partEventListener = supportsPartEvents.AddEventListener(eventTime, Type, action, invokeActionIfConditionMet);
+			PartEventListener partEventListener = supportsPartEvents.AddEventListener(eventTime, type, action, invokeActionIfConditionMet);
 
 			if (invokeActionIfConditionMet && eventTime == PartEvent.Time.Post) {
-				switch (Type) {
+				switch (type) {
 					//ToDo: check if invoking just the newly added action is enough of if all have to be invoked
 					case PartEvent.Type.Install:
 						if (installed) {
@@ -662,14 +662,14 @@ namespace MwcModApi.Parts.Game
 
 		/// <summary>
 		/// When this part installs, the "partsToBlock" parts will be blocked from being installed (installBlocked = true)
-		/// When this part uninstalls (opposite of "Type") the "partsToBlock" parts will be unblocked from being installed (installBlocked = false)
+		/// When this part uninstalls (opposite of "type") the "partsToBlock" parts will be unblocked from being installed (installBlocked = false)
 		/// </summary>
-		/// <param name="Type">The event of this part after which installation of the "partsToBlock" will be blocked/unblocked</param>
-		/// <param name="partsToBlock">The parts to block when the "Type" is called on this part</param>
-		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, IEnumerable<BasicPart> partsToBlock)
+		/// <param name="type">The event of this part after which installation of the "partsToBlock" will be blocked/unblocked</param>
+		/// <param name="partsToBlock">The parts to block when the "type" is called on this part</param>
+		public void BlockOtherPartInstallOnEvent(PartEvent.Type type, IEnumerable<BasicPart> partsToBlock)
 		{
 			AddEventListener(
-				PartEvent.Time.Post, Type, () =>
+				PartEvent.Time.Post, type, () =>
 				{
 					foreach (BasicPart partToBlock in partsToBlock) {
 						partToBlock.installBlocked = true;
@@ -677,7 +677,7 @@ namespace MwcModApi.Parts.Game
 				}
 			);
 			AddEventListener(
-				PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type), () =>
+				PartEvent.Time.Post, PartEvent.GetOppositeEvent(type), () =>
 				{
 					foreach (BasicPart partToBlock in partsToBlock) {
 						partToBlock.installBlocked = false;
@@ -688,18 +688,18 @@ namespace MwcModApi.Parts.Game
 
 		/// <summary>
 		/// When this part installs, the "partToBlock" part will be blocked from being installed (installBlocked = true)
-		/// When this part uninstalls (opposite of "Type") the "partToBlock" part will be unblocked from being installed (installBlocked = false)
+		/// When this part uninstalls (opposite of "type") the "partToBlock" part will be unblocked from being installed (installBlocked = false)
 		/// </summary>
-		/// <param name="Type">The event of this part after which installation of the "partToBlock" will be blocked/unblocked</param>
-		/// <param name="partToBlock">The part to block when the "Type" is called on this part</param>
-		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, BasicPart partToBlock)
+		/// <param name="type">The event of this part after which installation of the "partToBlock" will be blocked/unblocked</param>
+		/// <param name="partToBlock">The part to block when the "type" is called on this part</param>
+		public void BlockOtherPartInstallOnEvent(PartEvent.Type type, BasicPart partToBlock)
 		{
-			AddEventListener(PartEvent.Time.Post, Type, () =>
+			AddEventListener(PartEvent.Time.Post, type, () =>
 			{
 				partToBlock.installBlocked = true;
 			});
 			AddEventListener(
-				PartEvent.Time.Post, PartEvent.GetOppositeEvent(Type),
+				PartEvent.Time.Post, PartEvent.GetOppositeEvent(type),
 				() =>
 				{
 					partToBlock.installBlocked = false;

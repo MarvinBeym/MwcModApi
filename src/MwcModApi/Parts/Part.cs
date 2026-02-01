@@ -470,23 +470,23 @@ namespace MwcModApi.Parts
 		}
 
 		/// <inheritdoc />
-		public T AddEventBehaviour<T>(PartEvent.Type Type) where T : Behaviour
+		public T AddEventBehaviour<T>(PartEvent.Type type) where T : Behaviour
 		{
 			var behaviour = AddComponent<T>();
-			switch (Type) {
+			switch (type) {
 				case PartEvent.Type.Install:
 					behaviour.enabled = installed;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(PartEvent.Time.Post, PartEvent.Type.Uninstall, () => behaviour.enabled = false);
 					break;
 				case PartEvent.Type.Uninstall:
 					behaviour.enabled = !installed;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(PartEvent.Time.Post, PartEvent.Type.Install, () => behaviour.enabled = false);
 					break;
 				case PartEvent.Type.InstallOnCar:
 					behaviour.enabled = installedOnCar;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(
 						PartEvent.Time.Post, PartEvent.Type.UninstallFromCar,
 						() => behaviour.enabled = false
@@ -494,22 +494,22 @@ namespace MwcModApi.Parts
 					break;
 				case PartEvent.Type.UninstallFromCar:
 					behaviour.enabled = !installedOnCar;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(PartEvent.Time.Post, PartEvent.Type.InstallOnCar, () => behaviour.enabled = false);
 					break;
 				case PartEvent.Type.Bolted:
 					behaviour.enabled = bolted;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(PartEvent.Time.Post, PartEvent.Type.Unbolted, () => behaviour.enabled = false);
 					break;
 				case PartEvent.Type.Unbolted:
 					behaviour.enabled = !bolted;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(PartEvent.Time.Post, PartEvent.Type.Bolted, () => behaviour.enabled = false);
 					break;
 				case PartEvent.Type.BoltedOnCar:
 					behaviour.enabled = bolted && installedOnCar;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(
 						PartEvent.Time.Post, PartEvent.Type.UnboltedOnCar,
 						() => behaviour.enabled = false
@@ -517,7 +517,7 @@ namespace MwcModApi.Parts
 					break;
 				case PartEvent.Type.UnboltedOnCar:
 					behaviour.enabled = !bolted && installedOnCar;
-					AddEventListener(PartEvent.Time.Post, Type, () => behaviour.enabled = true);
+					AddEventListener(PartEvent.Time.Post, type, () => behaviour.enabled = true);
 					AddEventListener(PartEvent.Time.Post, PartEvent.Type.BoltedOnCar, () => behaviour.enabled = false);
 					break;
 			}
@@ -527,14 +527,14 @@ namespace MwcModApi.Parts
 
 		/// <summary>
 		/// When this part installs, the "partsToBlock" parts will be blocked from being installed (installBlocked = true)
-		/// When this part uninstalls (opposite of "Type") the "partsToBlock" parts will be unblocked from being installed (installBlocked = false)
+		/// When this part uninstalls (opposite of "type") the "partsToBlock" parts will be unblocked from being installed (installBlocked = false)
 		/// </summary>
-		/// <param name="Type">The event of this part after which installation of the "partsToBlock" will be blocked/unblocked</param>
-		/// <param name="partsToBlock">The parts to block when the "Type" is called on this part</param>
-		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, IEnumerable<BasicPart> partsToBlock)
+		/// <param name="type">The event of this part after which installation of the "partsToBlock" will be blocked/unblocked</param>
+		/// <param name="partsToBlock">The parts to block when the "type" is called on this part</param>
+		public void BlockOtherPartInstallOnEvent(PartEvent.Type type, IEnumerable<BasicPart> partsToBlock)
 		{
 			AddEventListener(
-				PartEvent.Time.Post, Type, () =>
+				PartEvent.Time.Post, type, () =>
 				{
 					foreach (BasicPart partToBlock in partsToBlock) {
 						partToBlock.installBlocked = true;
@@ -542,7 +542,7 @@ namespace MwcModApi.Parts
 				}
 			);
 			AddEventListener(
-				PartEvent.Time.Post, GetOppositeEvent(Type), () =>
+				PartEvent.Time.Post, GetOppositeEvent(type), () =>
 				{
 					foreach (BasicPart partToBlock in partsToBlock) {
 						partToBlock.installBlocked = false;
@@ -553,18 +553,18 @@ namespace MwcModApi.Parts
 
 		/// <summary>
 		/// When this part installs, the "partToBlock" part will be blocked from being installed (installBlocked = true)
-		/// When this part uninstalls (opposite of "Type") the "partToBlock" part will be unblocked from being installed (installBlocked = false)
+		/// When this part uninstalls (opposite of "type") the "partToBlock" part will be unblocked from being installed (installBlocked = false)
 		/// </summary>
-		/// <param name="Type">The event of this part after which installation of the "partToBlock" will be blocked/unblocked</param>
-		/// <param name="partToBlock">The part to block when the "Type" is called on this part</param>
-		public void BlockOtherPartInstallOnEvent(PartEvent.Type Type, BasicPart partToBlock)
+		/// <param name="type">The event of this part after which installation of the "partToBlock" will be blocked/unblocked</param>
+		/// <param name="partToBlock">The part to block when the "type" is called on this part</param>
+		public void BlockOtherPartInstallOnEvent(PartEvent.Type type, BasicPart partToBlock)
 		{
-			AddEventListener(PartEvent.Time.Post, Type, () =>
+			AddEventListener(PartEvent.Time.Post, type, () =>
 			{
 				partToBlock.installBlocked = true;
 			});
 			AddEventListener(
-				PartEvent.Time.Post, GetOppositeEvent(Type),
+				PartEvent.Time.Post, GetOppositeEvent(type),
 				() =>
 				{
 					partToBlock.installBlocked = false;
@@ -575,15 +575,15 @@ namespace MwcModApi.Parts
 		/// <inheritdoc />
 		public PartEventListener AddEventListener(
 			PartEvent.Time eventTime,
-			PartEvent.Type Type,
+			PartEvent.Type type,
 			Action action,
 			bool invokeActionIfConditionMet = true
 		)
 		{
-			PartEventListener partEventListener = supportsPartEvents.AddEventListener(eventTime, Type, action, invokeActionIfConditionMet);
+			PartEventListener partEventListener = supportsPartEvents.AddEventListener(eventTime, type, action, invokeActionIfConditionMet);
 
 			if (invokeActionIfConditionMet && eventTime == PartEvent.Time.Post) {
-				switch (Type) {
+				switch (type) {
 					//ToDo: check if invoking just the newly added action is enough of if all have to be invoked
 					case PartEvent.Type.Install:
 						if (installed) {
@@ -646,9 +646,9 @@ namespace MwcModApi.Parts
 		}
 
 		/// <inheritdoc />
-		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type)
+		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type type)
 		{
-			return supportsPartEvents.GetEventListeners(eventTime, Type);
+			return supportsPartEvents.GetEventListeners(eventTime, type);
 		}
 
 		public T AddComponent<T>() where T : Component => gameObject.AddComponent(typeof(T)) as T;

@@ -21,9 +21,9 @@ namespace MwcModApi.Parts.EventSystem
 				Dictionary<PartEvent.Type, PartEventListenerCollection> TypeDict =
 					new Dictionary<PartEvent.Type, PartEventListenerCollection>();
 
-				foreach (PartEvent.Type Type in Enum.GetValues(typeof(PartEvent.Type)))
+				foreach (PartEvent.Type type in Enum.GetValues(typeof(PartEvent.Type)))
 				{
-					TypeDict.Add(Type, new PartEventListenerCollection());
+					TypeDict.Add(type, new PartEventListenerCollection());
 				}
 
 				events.Add(eventTime, TypeDict);
@@ -33,13 +33,13 @@ namespace MwcModApi.Parts.EventSystem
 		/// <inheritdoc />
 		public PartEventListener AddEventListener(
 			PartEvent.Time eventTime,
-			PartEvent.Type Type,
+			PartEvent.Type type,
 			Action action,
 			bool invokeActionIfConditionMet = true
 		)
 		{
-			PartEventListener partEventListener = new PartEventListener(eventTime, Type, action);
-			events[eventTime][Type].Add(partEventListener);
+			PartEventListener partEventListener = new PartEventListener(eventTime, type, action);
+			events[eventTime][type].Add(partEventListener);
 			return partEventListener;
 		}
 
@@ -51,9 +51,9 @@ namespace MwcModApi.Parts.EventSystem
 		}
 
 		/// <inheritdoc />
-		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type)
+		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type type)
 		{
-			return events[eventTime][Type];
+			return events[eventTime][type];
 		}
 	}
 }

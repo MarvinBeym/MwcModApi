@@ -63,12 +63,12 @@ namespace MwcModApi.Parts.EventSystem
 		/// <summary>
 		/// Returns the opposite event to the one passed
 		/// </summary>
-		/// <param name="Type">The event you want to get the opposite of</param>
+		/// <param name="type">The event you want to get the opposite of</param>
 		/// <returns>The opposite event</returns>
 		/// <exception cref="Exception">When passed event is not supported by this method</exception>
-		public static PartEvent.Type GetOppositeEvent(PartEvent.Type Type)
+		public static PartEvent.Type GetOppositeEvent(PartEvent.Type type)
 		{
-			switch (Type) {
+			switch (type) {
 				case PartEvent.Type.Install:
 					return PartEvent.Type.Uninstall;
 				case PartEvent.Type.Uninstall:
@@ -87,7 +87,7 @@ namespace MwcModApi.Parts.EventSystem
 					return PartEvent.Type.BoltedOnCar;
 			}
 
-			throw new Exception($"Unsupported PartEvent.Type '{Type}' used");
+			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
 		}
 	}
 }
