@@ -651,6 +651,11 @@ namespace MwcModApi.Parts
 			return supportsPartEvents.GetEventListeners(eventTime, type);
 		}
 
+		public List<BasicPart> GetChildsSupportingPartEventsRecursively()
+		{
+			return supportsPartEvents.GetChildsSupportingPartEventsRecursively(childs.ToList());
+		}
+
 		public T AddComponent<T>() where T : Component => gameObject.AddComponent(typeof(T)) as T;
 
 		public T GetComponent<T>() => gameObject.GetComponent<T>();

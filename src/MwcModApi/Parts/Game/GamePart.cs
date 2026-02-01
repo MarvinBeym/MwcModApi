@@ -577,6 +577,11 @@ namespace MwcModApi.Parts.Game
 			return supportsPartEvents.GetEventListeners(eventTime, type);
 		}
 
+		public List<BasicPart> GetChildsSupportingPartEventsRecursively()
+		{
+			return supportsPartEvents.GetChildsSupportingPartEventsRecursively(childs.ToList());
+		}
+
 		/// <inheritdoc />
 		public PartEventListener AddEventListener(
 			PartEvent.Time eventTime,

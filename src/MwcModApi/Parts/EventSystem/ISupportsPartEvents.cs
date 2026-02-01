@@ -37,5 +37,7 @@ namespace MwcModApi.Parts.EventSystem
 		/// <param name="type">The type of event</param>
 		/// <returns>A PartEventListener collection (in order of added)</returns>
 		PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type type);
+
+		List<BasicPart> GetChildsSupportingPartEventsRecursively();
 	}
 }
