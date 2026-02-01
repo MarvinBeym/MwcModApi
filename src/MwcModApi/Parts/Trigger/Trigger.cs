@@ -18,12 +18,6 @@ namespace MwcModApi.Parts.Trigger
 		protected Part part;
 
 		/// <summary>
-		/// Stores a list of childs installed on this part before this part uninstalls
-		/// (otherwise if child uninstalls with parent, the childs events may not get called)
-		/// </summary>
-		protected List<BasicPart> childsInstalledBeforeUninstall = new List<BasicPart>();
-
-		/// <summary>
 		/// The parent gameObject of the part
 		/// </summary>
 		protected BasicPart parent;
@@ -104,12 +98,11 @@ namespace MwcModApi.Parts.Trigger
 			if (part.installedOnCar) {
 				part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar).InvokeAll();
 
-				foreach (BasicPart child in part.childs) {
+				foreach (var child in part.GetChildsSupportingPartEventsRecursively()) {
 					//Part was installed on car so installed childs will as well.
-					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
-						ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
-						partEventSupportingPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar)
-							.InvokeAll();
+					if (child.installed)
+					{
+						((ISupportsPartEvents) child).GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar).InvokeAll();
 					}
 				}
 			}
@@ -142,17 +135,12 @@ namespace MwcModApi.Parts.Trigger
 				//Probably called always because installedOnCar is likely already false at this point (can't be still installed on car)
 				part.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar).InvokeAll();
 
-				foreach (BasicPart child in part.childs) {
+				foreach (var child in part.GetChildsSupportingPartEventsRecursively())
+				{
 					//Part was uninstalled from car so installed childs are as well.
-					if (childsInstalledBeforeUninstall.Contains(child) || child.installed) {
-						if (child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
-							ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
-							partEventSupportingPart
-								.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar)
-								.InvokeAll();
-						}
-
-						childsInstalledBeforeUninstall.Remove(child);
+					if (child.installed)
+					{
+						((ISupportsPartEvents)child).GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar).InvokeAll();
 					}
 				}
 			}
@@ -173,12 +161,12 @@ namespace MwcModApi.Parts.Trigger
 				//Parent is installed on car so part is also gonna be installed on the car soon
 				part.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.InstallOnCar).InvokeAll();
 
-				foreach (BasicPart child in part.childs) {
+				foreach (var child in part.GetChildsSupportingPartEventsRecursively())
+				{
 					//Part will soon be installed on car so installed childs will as well.
-					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
-						ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
-						partEventSupportingPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.InstallOnCar)
-							.InvokeAll();
+					if (child.installed)
+					{
+						((ISupportsPartEvents)child).GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.InstallOnCar).InvokeAll();
 					}
 				}
 			}
@@ -214,12 +202,12 @@ namespace MwcModApi.Parts.Trigger
 				//Parent is installed on car so part is also gonna be uninstalled from the car soon
 				part.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UninstallFromCar).InvokeAll();
 
-				foreach (BasicPart child in part.childs) {
+				foreach (var child in part.GetChildsSupportingPartEventsRecursively())
+				{
 					//Part will soon be uninstalled from car so installed childs will as well.
-					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
-						ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
-						partEventSupportingPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UninstallFromCar)
-							.InvokeAll();
+					if (child.installed)
+					{
+						((ISupportsPartEvents)child).GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UninstallFromCar).InvokeAll();
 					}
 				}
 			}
@@ -227,10 +215,6 @@ namespace MwcModApi.Parts.Trigger
 			part.ResetScrews();
 
 			foreach (BasicPart child in part.childs) {
-				if (child.installed) {
-					childsInstalledBeforeUninstall.Add(child);
-				}
-
 				if (child.GetType() == typeof(Part) && ((Part) child).uninstallWhenParentUninstalls) {
 					child.Uninstall();
 				}
