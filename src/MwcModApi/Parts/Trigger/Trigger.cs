@@ -106,7 +106,7 @@ namespace MwcModApi.Parts.Trigger
 
 				foreach (BasicPart child in part.childs) {
 					//Part was installed on car so installed childs will as well.
-					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
+					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
 						ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
 						partEventSupportingPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar)
 							.InvokeAll();
