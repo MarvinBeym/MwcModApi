@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logging\LogMessageType.cs" />
+    <Compile Include="Parts\EventSystem\SupportsPartEvents.cs" />
     <Compile Include="Parts\PartBox\Box.cs" />
     <Compile Include="Parts\PartBox\BoxLogic.cs" />
     <Compile Include="Parts\EventSystem\PartEvent.cs" />

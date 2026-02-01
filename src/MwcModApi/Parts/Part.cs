@@ -43,15 +43,11 @@ namespace MwcModApi.Parts
 		private const float ClampScrewRotationOffset = 90f;
 		private const float ClampScrewBaseScale = 0.5f;
 
+		private SupportsPartEvents supportsPartEvents = new SupportsPartEvents();
+
 		protected static GameObject clampModel;
 		protected int clampsAdded;
 		internal PartSave partSave;
-
-		/// <summary>
-		/// Stores all events that a developer may have added to this part object
-		/// </summary>
-		protected Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>> events =
-			new Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>>();
 
 		/// <inheritdoc />
 		protected Part()
@@ -323,7 +319,6 @@ namespace MwcModApi.Parts
 			string prefabName
 		)
 		{
-			InitEventStorage();
 			this.id = id;
 			this.partBaseInfo = partBaseInfo;
 			this.installPosition = installPosition;
@@ -383,20 +378,6 @@ namespace MwcModApi.Parts
 
 			partBaseInfo.AddToPartsList(this);
 			fsmPartData = new FsmPartData(this);
-		}
-
-		protected void InitEventStorage()
-		{
-			foreach (PartEvent.Time eventTime in Enum.GetValues(typeof(PartEvent.Time))) {
-				Dictionary<PartEvent.Type, PartEventListenerCollection> TypeDict =
-					new Dictionary<PartEvent.Type, PartEventListenerCollection>();
-
-				foreach (PartEvent.Type Type in Enum.GetValues(typeof(PartEvent.Type))) {
-					TypeDict.Add(Type, new PartEventListenerCollection());
-				}
-
-				events.Add(eventTime, TypeDict);
-			}
 		}
 
 		internal void ResetScrews()
@@ -599,8 +580,7 @@ namespace MwcModApi.Parts
 			bool invokeActionIfConditionMet = true
 		)
 		{
-			PartEventListener partEventListener = new PartEventListener(eventTime, Type, action);
-			events[eventTime][Type].Add(partEventListener);
+			PartEventListener partEventListener = supportsPartEvents.AddEventListener(eventTime, Type, action, invokeActionIfConditionMet);
 
 			if (invokeActionIfConditionMet && eventTime == PartEvent.Time.Post) {
 				switch (Type) {
@@ -662,14 +642,13 @@ namespace MwcModApi.Parts
 		/// <inheritdoc />
 		public bool RemoveEventListener(PartEventListener partEventListener)
 		{
-			var collection = GetEventListeners(partEventListener.eventTime, partEventListener.type);
-			return collection.Contains(partEventListener) && collection.Remove(partEventListener);
+			return supportsPartEvents.RemoveEventListener(partEventListener);
 		}
 
 		/// <inheritdoc />
 		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type)
 		{
-			return events[eventTime][Type];
+			return supportsPartEvents.GetEventListeners(eventTime, Type);
 		}
 
 		public T AddComponent<T>() where T : Component => gameObject.AddComponent(typeof(T)) as T;

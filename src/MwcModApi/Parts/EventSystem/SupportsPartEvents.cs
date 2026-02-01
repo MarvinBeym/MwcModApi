@@ -1,40 +1,59 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MwcModApi.Parts.EventSystem
 {
 	/// <summary>
-	/// Classes implementing this interface support handling events on a part.
+	/// Proxy class for interface.
 	/// </summary>
-	public interface SupportsPartEvents
+	public class SupportsPartEvents : ISupportsPartEvents
 	{
 		/// <summary>
-		/// Adds an action to the part that get's triggered on different events (eg when part is installed or bolted).
+		/// Stores all events that a developer may have added to this part object
 		/// </summary>
-		/// <param name="eventTime">When the event occurs</param>
-		/// <param name="Type">The type of event to listen to</param>
-		/// <param name="action">The action to execute when the event occurs</param>
-		/// <param name="invokeActionIfConditionMet">When the condition for the Event type is already met when the event is added. The newly added event is immediately triggered</param>
-		/// <returns>Returns the action added (eg for later removal)</returns>
-		PartEventListener AddEventListener(
+		protected Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>> events =
+			new Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>>();
+
+		public SupportsPartEvents()
+		{
+			foreach (PartEvent.Time eventTime in Enum.GetValues(typeof(PartEvent.Time)))
+			{
+				Dictionary<PartEvent.Type, PartEventListenerCollection> TypeDict =
+					new Dictionary<PartEvent.Type, PartEventListenerCollection>();
+
+				foreach (PartEvent.Type Type in Enum.GetValues(typeof(PartEvent.Type)))
+				{
+					TypeDict.Add(Type, new PartEventListenerCollection());
+				}
+
+				events.Add(eventTime, TypeDict);
+			}
+		}
+
+		/// <inheritdoc />
+		public PartEventListener AddEventListener(
 			PartEvent.Time eventTime,
 			PartEvent.Type Type,
 			Action action,
 			bool invokeActionIfConditionMet = true
-		);
+		)
+		{
+			PartEventListener partEventListener = new PartEventListener(eventTime, Type, action);
+			events[eventTime][Type].Add(partEventListener);
+			return partEventListener;
+		}
 
-		/// <summary>
-		/// Remove an action from the event system
-		/// </summary>
-		/// <param name="partEventListener">The reference of the part event listener</param>
-		/// <returns>Returns true if event was found and removed. Otherwise false</returns>
-		bool RemoveEventListener(PartEventListener partEventListener);
+		/// <inheritdoc />
+		public bool RemoveEventListener(PartEventListener partEventListener)
+		{
+			var collection = GetEventListeners(partEventListener.eventTime, partEventListener.type);
+			return collection.Contains(partEventListener) && collection.Remove(partEventListener);
+		}
 
-		/// <summary>
-		/// Returns a collection containing all the actions
-		/// </summary>
-		/// <param name="eventTime">When the event occurs</param>
-		/// <param name="Type">The type of event</param>
-		/// <returns>A PartEventListener collection (in order of added)</returns>
-		PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type);
+		/// <inheritdoc />
+		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type Type)
+		{
+			return events[eventTime][Type];
+		}
 	}
 }
