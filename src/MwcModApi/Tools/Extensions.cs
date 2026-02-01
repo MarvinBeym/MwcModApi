@@ -64,9 +64,26 @@ namespace MwcModApi.Tools
 			return gameObject.GetComponents<PlayMakerFSM>().FirstOrDefault(fsm => fsm.FsmName == fsmName);
 		}
 
-		public static GameObject FindChild(this GameObject gameObject, string childName)
+		public static GameObject FindChild(this GameObject gameObject, string childName, bool recursive = false)
 		{
-			return gameObject.transform.FindChild(childName)?.gameObject;
+			if (!recursive) {
+				return gameObject.transform.FindChild(childName)?.gameObject;
+			}
+
+			foreach (Transform child in gameObject.transform)
+			{
+				if (child.name == childName)
+				{
+					return child.gameObject;
+				}
+
+				GameObject found = child.gameObject.FindChild(childName, true);
+				if (found != null)
+				{
+					return found;
+				}
+			}
+			return null;
 		}
 
 		public static void InvokeAll(this List<Action> actions)
