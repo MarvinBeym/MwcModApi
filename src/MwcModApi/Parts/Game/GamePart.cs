@@ -16,7 +16,7 @@ namespace MwcModApi.Parts.Game
 	/// A wrapper for parts made/added by the game itself
 	/// In the future, this may become a replacement for the 'OldPart' class used for the 'ReplacementPart' as a more generic Wrapper
 	/// </summary>
-	public class GamePart : BasicPart, SupportsPartEvents
+	public class GamePart : BasicPart, ISupportsPartEvents
 	{
 		/// <summary>
 		/// ID of the GamePart used for saving, the mainFsmPartName string from constructor is used to define this id.

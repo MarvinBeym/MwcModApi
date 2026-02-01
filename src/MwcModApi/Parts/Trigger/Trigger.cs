@@ -107,7 +107,7 @@ namespace MwcModApi.Parts.Trigger
 				foreach (BasicPart child in part.childs) {
 					//Part was installed on car so installed childs will as well.
 					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
+						ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
 						partEventSupportingPart.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.InstallOnCar)
 							.InvokeAll();
 					}
@@ -145,8 +145,8 @@ namespace MwcModApi.Parts.Trigger
 				foreach (BasicPart child in part.childs) {
 					//Part was uninstalled from car so installed childs are as well.
 					if (childsInstalledBeforeUninstall.Contains(child) || child.installed) {
-						if (child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-							SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
+						if (child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
+							ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
 							partEventSupportingPart
 								.GetEventListeners(PartEvent.Time.Post, PartEvent.Type.UninstallFromCar)
 								.InvokeAll();
@@ -175,8 +175,8 @@ namespace MwcModApi.Parts.Trigger
 
 				foreach (BasicPart child in part.childs) {
 					//Part will soon be installed on car so installed childs will as well.
-					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
+					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
+						ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
 						partEventSupportingPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.InstallOnCar)
 							.InvokeAll();
 					}
@@ -216,8 +216,8 @@ namespace MwcModApi.Parts.Trigger
 
 				foreach (BasicPart child in part.childs) {
 					//Part will soon be uninstalled from car so installed childs will as well.
-					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(SupportsPartEvents))) {
-						SupportsPartEvents partEventSupportingPart = (SupportsPartEvents) child;
+					if (child.installed && child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
+						ISupportsPartEvents partEventSupportingPart = (ISupportsPartEvents) child;
 						partEventSupportingPart.GetEventListeners(PartEvent.Time.Pre, PartEvent.Type.UninstallFromCar)
 							.InvokeAll();
 					}

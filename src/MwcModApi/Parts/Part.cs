@@ -35,7 +35,7 @@ namespace MwcModApi.Parts
 		Never
 	}
 
-	public class Part : BasicPart, SupportsPartEvents, SupportsPartBehaviourEvents
+	public class Part : BasicPart, ISupportsPartEvents, SupportsPartBehaviourEvents
 	{
 		private const float ClampScrewHeightOffset = 0.039f;
 		private const float ClampScrewInOutOffset = 0.025f;
