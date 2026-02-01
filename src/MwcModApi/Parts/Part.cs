@@ -46,9 +46,6 @@ namespace MwcModApi.Parts
 		protected static GameObject clampModel;
 		protected int clampsAdded;
 		internal PartSave partSave;
-		protected Dictionary<Screw, int> preScrewPlacementModeEnableTightnessMap = new Dictionary<Screw, int>();
-		private bool _screwPlacementMode;
-		protected bool injectedScrewPlacementDisablePreUninstall;
 
 		/// <summary>
 		/// Stores all events that a developer may have added to this part object
@@ -250,49 +247,6 @@ namespace MwcModApi.Parts
 		public List<Screw> screws => partSave.screws;
 
 		public override bool installed => partSave.installed;
-
-		public bool screwPlacementMode
-		{
-			get => _screwPlacementMode;
-			set
-			{
-				if (!installed) {
-					return;
-				}
-
-				if (!injectedScrewPlacementDisablePreUninstall) {
-					injectedScrewPlacementDisablePreUninstall = true;
-					AddEventListener(
-						PartEvent.Time.Pre, PartEvent.Type.Uninstall,
-						() => { screwPlacementMode = false; }
-					);
-				}
-
-				foreach (Screw screw in screws) {
-					if (!value) {
-						if (!preScrewPlacementModeEnableTightnessMap.TryGetValue(screw, out int preEnableTightness)) {
-							continue;
-						}
-
-						screw.tightness = Screw.maxTightness;
-						screw.OutBy(Screw.maxTightness);
-						screw.InBy(preEnableTightness);
-						preScrewPlacementModeEnableTightnessMap.Remove(screw);
-						continue;
-					}
-
-					if (preScrewPlacementModeEnableTightnessMap.ContainsKey(screw)) {
-						continue;
-					}
-
-					preScrewPlacementModeEnableTightnessMap.Add(screw, screw.tightness);
-					screw.InBy(Screw.maxTightness);
-					screw.tightness = 0;
-				}
-
-				_screwPlacementMode = value;
-			}
-		}
 
 		/// <inheritdoc />
 		public override string name => gameObject.name;

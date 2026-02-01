@@ -178,10 +178,6 @@ namespace MwcModApi
 
 			if (screw == null) return;
 
-			if (screw.part.screwPlacementMode) {
-				return;
-			}
-
 			if (ShowScrewSize && screw.showSize) {
 				UserInteraction.GuiInteraction($"Screw size: {screw.size.ToString("#.#").Replace(".00", "")}mm");
 			}
@@ -249,7 +245,7 @@ namespace MwcModApi
 				if (part != null) break;
 			}
 
-			if (part == null || !part.hasParent || part.screwPlacementMode) {
+			if (part == null || !part.hasParent) {
 				return;
 			}
 
