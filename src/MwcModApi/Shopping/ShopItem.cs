@@ -139,6 +139,9 @@ namespace MwcModApi.Shopping
 				partImageComp.enabled = false;
 			} else {
 				partImageComp.sprite = baseInfo.assetBundle.LoadAsset<Sprite>(imageAssetName) ?? partImageComp.sprite;
+				if (partImageComp.sprite == null) {
+					Logger.Warning($"Could not load ShopItem part image '{imageAssetName}'");
+				}
 			}
 
 			var btnAddToCart = partItemGameObject.FindChild("panel/part_add_to_cart").GetComponent<Button>();
