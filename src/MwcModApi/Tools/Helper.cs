@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -45,7 +46,14 @@ namespace MwcModApi.Tools
 		public static AssetBundle LoadAssetBundle(string bundleName)
 		{
 			try {
-				return LoadAssets.LoadBundle(bundleName);
+				using (Stream manifestResourceStream = Assembly.GetCallingAssembly().GetManifestResourceStream(bundleName))
+				{
+					byte[] data = manifestResourceStream != null 
+						? new byte[manifestResourceStream.Length] 
+						: throw new Exception($"<b>LoadAssetBundle() Error:</b> Resource {bundleName} doesn't exist." + Environment.NewLine);
+					manifestResourceStream.Read(data, 0, data.Length);
+					return AssetBundle.CreateFromMemoryImmediate(data);
+				}
 			} catch {
 				var message = $"AssetBundle bundle '{bundleName}' could not be loaded";
 				ModConsole.Error(message);
