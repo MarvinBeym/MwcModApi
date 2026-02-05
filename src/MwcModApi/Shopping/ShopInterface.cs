@@ -13,6 +13,8 @@ namespace MwcModApi.Shopping
 {
 	internal class ShopInterface
 	{
+		private const int SCROLL_SENSITIVITY = 50;
+
 		private GameObject gameObject;
 		internal GameObject partsPanel;
 		internal GameObject modsPanel;
@@ -55,9 +57,18 @@ namespace MwcModApi.Shopping
 			btnBuyComp.onClick.AddListener(OnCheckout);
 			btnBuyTextComp = btnBuyComp.gameObject.FindChild("Text").GetComponent<Text>();
 
-			partsList = partsPanel.FindChild("parts_list/list/grid");
-			modsList = modsPanel.FindChild("mod_list/list/grid");
-			cartList = cartPanel.FindChild("cart_list/list/grid");
+			GameObject partsListContainer = partsPanel.FindChild("parts_list/list");
+			partsListContainer.GetComponent<ScrollRect>().scrollSensitivity = SCROLL_SENSITIVITY;
+			
+			GameObject modsListContainer = modsPanel.FindChild("mod_list/list");
+			partsListContainer.GetComponent<ScrollRect>().scrollSensitivity = SCROLL_SENSITIVITY;
+
+			GameObject cartListContainer = cartPanel.FindChild("cart_list/list");
+			partsListContainer.GetComponent<ScrollRect>().scrollSensitivity = SCROLL_SENSITIVITY;
+
+			partsList = partsListContainer.FindChild("grid");
+			modsList = modsListContainer.FindChild("grid");
+			cartList = cartListContainer.FindChild("grid");
 		}
 
 		internal void Open(ShopLocation shopLocation)
