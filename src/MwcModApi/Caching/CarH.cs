@@ -1,4 +1,5 @@
 ﻿using HutongGames.PlayMaker;
+using MSCLoader;
 using MwcModApi.Tools;
 using UnityEngine;
 
@@ -12,15 +13,26 @@ namespace MwcModApi.Caching
 		private static GameObject _car;
 		private static Drivetrain _drivetrain;
 		private static AxisCarController _axisController;
-		private static CarController _carController;
 		private static FsmBool _electricsOk;
 		private static GameObject _electricity;
 		private static FsmString _playerCurrentVehicle;
 
+		private static PlayMakerFSM starterFsm;
+
 		/// <summary>
 		/// Returns if the car is currently running (rpm above 20).
 		/// </summary>
-		public static bool running => drivetrain.rpm > 20;
+		public static bool running
+		{
+			get
+			{
+				if (starterFsm == null) {
+					starterFsm = Cache.Find("CORRIS/Simulation/STARTERxCorris").FindFsm("Starter");
+				}
+
+				return starterFsm?.ActiveStateName == "Running";
+			}
+		}
 
 		/// <summary>
 		/// Returns if the player is currently sitting in the car (drive mode).
@@ -119,10 +131,10 @@ namespace MwcModApi.Caching
 			_car = null;
 			_drivetrain = null;
 			_axisController = null;
-			_carController = null;
 			_electricsOk = null;
 			_electricity = null;
 			_playerCurrentVehicle = null;
+			starterFsm = null;
 		}
 	}
 }
