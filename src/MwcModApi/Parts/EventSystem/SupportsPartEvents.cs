@@ -1,0 +1,83 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace MwcModApi.Parts.EventSystem
+{
+	/// <summary>
+	/// Proxy class for interface.
+	/// </summary>
+	public class SupportsPartEvents : ISupportsPartEvents
+	{
+		/// <summary>
+		/// Stores all events that a developer may have added to this part object
+		/// </summary>
+		protected Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>> events =
+			new Dictionary<PartEvent.Time, Dictionary<PartEvent.Type, PartEventListenerCollection>>();
+
+		public SupportsPartEvents()
+		{
+			foreach (PartEvent.Time eventTime in Enum.GetValues(typeof(PartEvent.Time)))
+			{
+				Dictionary<PartEvent.Type, PartEventListenerCollection> TypeDict =
+					new Dictionary<PartEvent.Type, PartEventListenerCollection>();
+
+				foreach (PartEvent.Type type in Enum.GetValues(typeof(PartEvent.Type)))
+				{
+					TypeDict.Add(type, new PartEventListenerCollection());
+				}
+
+				events.Add(eventTime, TypeDict);
+			}
+		}
+
+		/// <inheritdoc />
+		public PartEventListener AddEventListener(
+			PartEvent.Time eventTime,
+			PartEvent.Type type,
+			Action action,
+			bool invokeActionIfConditionMet = true
+		)
+		{
+			PartEventListener partEventListener = new PartEventListener(eventTime, type, action);
+			events[eventTime][type].Add(partEventListener);
+			return partEventListener;
+		}
+
+		/// <inheritdoc />
+		public bool RemoveEventListener(PartEventListener partEventListener)
+		{
+			var collection = GetEventListeners(partEventListener.eventTime, partEventListener.type);
+			return collection.Contains(partEventListener) && collection.Remove(partEventListener);
+		}
+
+		/// <inheritdoc />
+		public PartEventListenerCollection GetEventListeners(PartEvent.Time eventTime, PartEvent.Type type)
+		{
+			return events[eventTime][type];
+		}
+
+		public List<BasicPart> GetChildsSupportingPartEventsRecursively(List<BasicPart> childs)
+		{
+			List<BasicPart> parts = new List<BasicPart>();
+
+			foreach (BasicPart child in childs) {
+				if (!child.GetType().GetInterfaces().Contains(typeof(ISupportsPartEvents))) {
+					continue;
+				}
+
+				ISupportsPartEvents childSupportingPartEvents = (ISupportsPartEvents) child;
+				parts.Add(child);
+				parts.AddRange(childSupportingPartEvents.GetChildsSupportingPartEventsRecursively());
+			}
+
+			return parts;
+		}
+
+		[ObsoleteAttribute("Use method with additional parameter instead.", true)]
+		public List<BasicPart> GetChildsSupportingPartEventsRecursively()
+		{
+			throw new NotImplementedException("Use method with additional parameter instead");
+		}
+	}
+}

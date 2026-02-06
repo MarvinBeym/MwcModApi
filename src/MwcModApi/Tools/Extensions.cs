@@ -1,0 +1,426 @@
+﻿using MwcModApi.Parts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using HutongGames.PlayMaker;
+using MwcModApi.Parts.EventSystem;
+using UnityEngine;
+using MwcModApi.Parts.Game;
+
+namespace MwcModApi.Tools
+{
+	public static class Extensions
+	{
+		/// <summary>
+		/// Compares two quaternions to each other using a tolerance
+		/// </summary>
+		/// <param name="a">First Quaternion</param>
+		/// <param name="b">Second Quaternion</param>
+		/// <param name="tolerance">The acceptable tolerance</param>
+		/// <returns></returns>
+		public static bool CompareQuaternion(this Quaternion a, Quaternion b, float tolerance = 0)
+		{
+			return 1 - Mathf.Abs(Quaternion.Dot(a, b)) < tolerance;
+		}
+
+		/// <summary>
+		/// Convert a boolean value to "On" or "Off" strings
+		/// </summary>
+		/// <param name="value">The boolean value</param>
+		/// <returns>"On" or "Off"</returns>
+		public static string ToOnOff(this bool value)
+		{
+			return value.ToXY("On", "Off");
+		}
+
+		public static float Map(this float value, float from1, float to1, float from2, float to2)
+		{
+			return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+		}
+
+		/// <summary>
+		/// Convert a boolean value to a trueText or falseText
+		/// </summary>
+		/// <param name="value">The boolean value</param>
+		/// <param name="trueText">Text to return if true</param>
+		/// <param name="falseText">Text to return if false</param>
+		/// <returns>trueText or falseText parameter</returns>
+		public static string ToXY(this bool value, string trueText, string falseText)
+		{
+			return value ? trueText : falseText;
+		}
+
+		/// <summary>
+		/// Set the name and layer of a GameObject
+		/// </summary>
+		/// <param name="gameObject">The GameObject for which to set name, layer & tag</param>
+		/// <param name="name">The name to set</param>
+		/// <param name="tag">The tag to set</param>
+		/// <param name="layer">The layer to set</param>
+		public static void SetNameLayerTag(
+			this GameObject gameObject,
+			string name,
+			string tag = "PART",
+			string layer = "Parts"
+		)
+		{
+			gameObject.name = name;
+			gameObject.tag = tag;
+			gameObject.layer = LayerMask.NameToLayer(layer);
+			gameObject.FixName();
+		}
+
+		/// <summary>
+		/// Fix the name of a GameObject so it is properly displayed by the Game.
+		/// Adds (Clone) to the end of the name and removes any duplicate "(Clone").
+		/// </summary>
+		/// <param name="gameObject">The GameObject for which to fix the name</param>
+		public static void FixName(this GameObject gameObject)
+		{
+			gameObject.name = Regex.Replace(
+				gameObject.name,
+				"\\(Clone\\){1,}", "(Clone)"
+			);
+		}
+
+		/// <summary>
+		/// Compare two vector 3 using a tolerance
+		/// </summary>
+		/// <param name="vector3">First vector3</param>
+		/// <param name="other">Second vector3</param>
+		/// <param name="tolerance">The acceptable tolerance</param>
+		/// <returns></returns>
+		public static bool CompareVector3(this Vector3 vector3, Vector3 other, float tolerance = 0.05f)
+		{
+			return Math.Abs(vector3.x - other.x) < tolerance && Math.Abs(vector3.y - other.y) < tolerance &&
+			       Math.Abs(vector3.z - other.z) < tolerance;
+		}
+
+		/// <summary>
+		/// Find an PlayMakerFSM component on a GameObject
+		/// </summary>
+		/// <param name="gameObject">The GameObject to search on</param>
+		/// <param name="fsmName">The PlayMakerFSM name to find</param>
+		/// <returns></returns>
+		public static PlayMakerFSM FindFsm(this GameObject gameObject, string fsmName)
+		{
+			return gameObject.GetComponents<PlayMakerFSM>().FirstOrDefault(fsm => fsm.FsmName == fsmName);
+		}
+
+		public static GameObject FindChild(this GameObject gameObject, string childName, bool recursive = false)
+		{
+			if (!recursive) {
+				return gameObject.transform.FindChild(childName)?.gameObject;
+			}
+
+			foreach (Transform child in gameObject.transform)
+			{
+				if (child.name == childName)
+				{
+					return child.gameObject;
+				}
+
+				GameObject found = child.gameObject.FindChild(childName, true);
+				if (found != null)
+				{
+					return found;
+				}
+			}
+			return null;
+		}
+
+		public static void InvokeAll(this List<Action> actions)
+		{
+			foreach (var action in actions) {
+				action.Invoke();
+			}
+		}
+
+		public static Screw CloneToNew(this Screw screw)
+		{
+			return new Screw(screw.position, screw.rotation, screw.scale, screw.size, screw.type, screw.transformStepPerRevolution, screw.showSize);
+		}
+
+		public static Screw[] CloneToNew(this Screw[] screws)
+		{
+			var newScrews = new Screw[screws.Length];
+			for (var i = 0; i < screws.Length; i++) {
+				var screw = screws[i];
+				newScrews[i] = screw.CloneToNew();
+			}
+
+			return newScrews;
+		}
+
+		/// <summary>
+		/// Finds an fsm state by name
+		/// </summary>
+		/// <param name="fsm">The PlayMakerFSM object to search in</param>
+		/// <param name="stateName">The name of the state to find</param>
+		/// <returns>The found FsmState or null</returns>
+		public static FsmState FindState(this PlayMakerFSM fsm, string stateName)
+		{
+			foreach (var fsmState in fsm.FsmStates) {
+				if (fsmState.Name == stateName) {
+					return fsmState;
+				}
+			}
+
+			return null;
+		}
+
+		public static string ToStringOrEmpty(this object value)
+		{
+			return value == null ? "" : value.ToString();
+		}
+
+		/// <summary>
+		/// Returns if all parts in the list have the event type fulfilled
+		/// </summary>
+		/// <param name="parts">The list of parts</param>
+		/// <param name="type">The PartEvent.Type to check all parts against</param>
+		/// <returns>True if all parts in the list fulfill the type</returns>
+		public static bool AllHaveState(this List<BasicPart> parts, PartEvent.Type type)
+		{
+			switch (type) {
+				case PartEvent.Type.Install:
+					return parts.All(part => part.installed);
+				case PartEvent.Type.Uninstall:
+					return parts.All(part => !part.installed);
+				case PartEvent.Type.Bolted:
+					return parts.All(part => part.bolted);
+				case PartEvent.Type.Unbolted:
+					return parts.All(part => !part.bolted);
+				case PartEvent.Type.InstallOnCar:
+					return parts.All(part => part.installedOnCar);
+				case PartEvent.Type.UninstallFromCar:
+					return parts.All(part => !part.installedOnCar);
+				case PartEvent.Type.BoltedOnCar:
+					return parts.All(part => part.bolted && part.installedOnCar);
+				case PartEvent.Type.UnboltedOnCar:
+					return parts.All(part => !part.bolted && part.installedOnCar);
+			}
+
+			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
+		}
+
+		/// <summary>
+		/// Returns if all parts in the list have the event type fulfilled
+		/// </summary>
+		/// <param name="parts">The list of parts</param>
+		/// <param name="type">The PartEvent.Type to check all parts against</param>
+		/// <returns>True if all parts in the list fulfill the type</returns>
+		public static bool AllHaveState(this List<Part> parts, PartEvent.Type type)
+		{
+			switch (type) {
+				case PartEvent.Type.Install:
+					return parts.All(part => part.installed);
+				case PartEvent.Type.Uninstall:
+					return parts.All(part => !part.installed);
+				case PartEvent.Type.Bolted:
+					return parts.All(part => part.bolted);
+				case PartEvent.Type.Unbolted:
+					return parts.All(part => !part.bolted);
+				case PartEvent.Type.InstallOnCar:
+					return parts.All(part => part.installedOnCar);
+				case PartEvent.Type.UninstallFromCar:
+					return parts.All(part => !part.installedOnCar);
+				case PartEvent.Type.BoltedOnCar:
+					return parts.All(part => part.bolted && part.installedOnCar);
+				case PartEvent.Type.UnboltedOnCar:
+					return parts.All(part => !part.bolted && part.installedOnCar);
+			}
+
+			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
+		}
+
+		/// <summary>
+		/// Returns if all parts in the list have the event type fulfilled
+		/// </summary>
+		/// <param name="parts">The list of parts</param>
+		/// <param name="type">The PartEvent.Type to check all parts against</param>
+		/// <returns>True if all parts in the list fulfill the type</returns>
+		public static bool AllHaveState(this IEnumerable<GamePart> parts, PartEvent.Type type)
+		{
+			switch (type) {
+				case PartEvent.Type.Install:
+					return parts.All(part => part.installed);
+				case PartEvent.Type.Uninstall:
+					return parts.All(part => !part.installed);
+				case PartEvent.Type.Bolted:
+					return parts.All(part => part.bolted);
+				case PartEvent.Type.Unbolted:
+					return parts.All(part => !part.bolted);
+				case PartEvent.Type.InstallOnCar:
+					return parts.All(part => part.installedOnCar);
+				case PartEvent.Type.UninstallFromCar:
+					return parts.All(part => !part.installedOnCar);
+				case PartEvent.Type.BoltedOnCar:
+					return parts.All(part => part.bolted && part.installedOnCar);
+				case PartEvent.Type.UnboltedOnCar:
+					return parts.All(part => !part.bolted && part.installedOnCar);
+			}
+
+			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
+		}
+
+		/// <summary>
+		/// Returns if any parts in the list have the event type fulfilled
+		/// </summary>
+		/// <param name="parts">The list of parts</param>
+		/// <param name="type">The PartEvent.Type to check all parts against</param>
+		/// <returns>True if any part fulfills  the type</returns>
+		public static bool AnyHaveState(this IEnumerable<BasicPart> parts, PartEvent.Type type)
+		{
+			switch (type) {
+				case PartEvent.Type.Install:
+					return parts.Any(part => part.installed);
+				case PartEvent.Type.Uninstall:
+					return parts.Any(part => !part.installed);
+				case PartEvent.Type.Bolted:
+					return parts.Any(part => part.bolted);
+				case PartEvent.Type.Unbolted:
+					return parts.Any(part => !part.bolted);
+				case PartEvent.Type.InstallOnCar:
+					return parts.Any(part => part.installedOnCar);
+				case PartEvent.Type.UninstallFromCar:
+					return parts.Any(part => !part.installedOnCar);
+				case PartEvent.Type.BoltedOnCar:
+					return parts.Any(part => part.bolted && part.installedOnCar);
+				case PartEvent.Type.UnboltedOnCar:
+					return parts.Any(part => !part.bolted && part.installedOnCar);
+			}
+
+			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
+		}
+
+		/// <summary>
+		/// Returns if any parts in the list have the event type fulfilled
+		/// </summary>
+		/// <param name="parts">The list of parts</param>
+		/// <param name="type">The PartEvent.Type to check all parts against</param>
+		/// <returns>True if any part fulfills  the type</returns>
+		public static bool AnyHaveState(this List<Part> parts, PartEvent.Type type)
+		{
+			switch (type) {
+				case PartEvent.Type.Install:
+					return parts.Any(part => part.installed);
+				case PartEvent.Type.Uninstall:
+					return parts.Any(part => !part.installed);
+				case PartEvent.Type.Bolted:
+					return parts.Any(part => part.bolted);
+				case PartEvent.Type.Unbolted:
+					return parts.Any(part => !part.bolted);
+				case PartEvent.Type.InstallOnCar:
+					return parts.Any(part => part.installedOnCar);
+				case PartEvent.Type.UninstallFromCar:
+					return parts.Any(part => !part.installedOnCar);
+				case PartEvent.Type.BoltedOnCar:
+					return parts.Any(part => part.bolted && part.installedOnCar);
+				case PartEvent.Type.UnboltedOnCar:
+					return parts.Any(part => !part.bolted && part.installedOnCar);
+			}
+
+			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
+		}
+
+		/// <summary>
+		/// Returns if any parts in the list have the event type fulfilled
+		/// </summary>
+		/// <param name="parts">The list of parts</param>
+		/// <param name="type">The PartEvent.Type to check all parts against</param>
+		/// <returns>True if any part fulfills  the type</returns>
+		public static bool AnyHaveState(this List<GamePart> parts, PartEvent.Type type)
+		{
+			switch (type) {
+				case PartEvent.Type.Install:
+					return parts.Any(part => part.installed);
+				case PartEvent.Type.Uninstall:
+					return parts.Any(part => !part.installed);
+				case PartEvent.Type.Bolted:
+					return parts.Any(part => part.bolted);
+				case PartEvent.Type.Unbolted:
+					return parts.Any(part => !part.bolted);
+				case PartEvent.Type.InstallOnCar:
+					return parts.Any(part => part.installedOnCar);
+				case PartEvent.Type.UninstallFromCar:
+					return parts.Any(part => !part.installedOnCar);
+				case PartEvent.Type.BoltedOnCar:
+					return parts.Any(part => part.bolted && part.installedOnCar);
+				case PartEvent.Type.UnboltedOnCar:
+					return parts.Any(part => !part.bolted && part.installedOnCar);
+			}
+
+			throw new Exception($"Unsupported PartEvent.Type '{type}' used");
+		}
+
+		/// <summary>
+		/// Helper method for adding an Action to an fsmState as the first item in the actions list
+		/// </summary>
+		/// <param name="actionName">Optional name to give to the FsmAction created</paramref>
+		public static void AddActionAsFirst(this FsmState fsmState, Action action, string actionName = "")
+		{
+			if (fsmState == null) {
+				return;
+			}
+
+			var actions = new List<FsmStateAction>(fsmState.Actions);
+
+			FsmAction fsmAction = new FsmAction(action);
+			if (actionName != "") {
+				fsmAction.Name = actionName;
+			}
+
+			actions.Insert(0, fsmAction);
+			fsmState.Actions = actions.ToArray();
+		}
+
+		/// <summary>
+		/// Helper method for adding an Action to an fsmState as the last item in the actions list
+		/// </summary>
+		/// <param name="actionName">Optional name to give to the FsmAction created</paramref>
+		public static void AddActionAsLast(this FsmState fsmState, Action action, string actionName = "")
+		{
+			if (fsmState == null) {
+				return;
+			}
+
+			FsmAction fsmAction = new FsmAction(action);
+			if (actionName != "") {
+				fsmAction.Name = actionName;
+			}
+
+			var actions = new List<FsmStateAction>(fsmState.Actions) { fsmAction };
+			fsmState.Actions = actions.ToArray();
+		}
+
+		public static void RemoveActionByName(this FsmState fsmState, string actionName)
+		{
+			if (actionName == "") {
+				return;
+			}
+
+			var actions = new List<FsmStateAction>();
+
+			foreach (var fsmStateAction in fsmState.Actions) {
+				if (fsmStateAction.Name != actionName) {
+					actions.Add(fsmStateAction);
+				}
+			}
+
+			fsmState.Actions = actions.ToArray();
+		}
+
+		public static FsmStateAction GetAction(this FsmState fsmState, string actionName)
+		{
+			foreach (var action in fsmState.Actions) {
+				if (action.Name == actionName) {
+					return action;
+				}
+			}
+
+			return null;
+		}
+	}
+}

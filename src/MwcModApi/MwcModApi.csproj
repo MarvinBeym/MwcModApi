@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{897C05CD-C8B4-4F10-8A4C-25F99BFE2445}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MwcModApi</RootNamespace>
+    <AssemblyName>MwcModApi</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="cInput">
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\cInput.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\PlayMaker.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>D:\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MSCLoader">
+      <HintPath>D:\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\MSCLoader.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\..\Spiele\Steam\steamapps\common\My Winter Car\mywintercar_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Logging\LogMessageType.cs" />
+    <Compile Include="Parts\EventSystem\SupportsPartEvents.cs" />
+    <Compile Include="Parts\PartBox\Box.cs" />
+    <Compile Include="Parts\PartBox\BoxLogic.cs" />
+    <Compile Include="Parts\EventSystem\PartEvent.cs" />
+    <Compile Include="Parts\EventSystem\PartEventListener.cs" />
+    <Compile Include="Parts\EventSystem\PartEventListenerCollection.cs" />
+    <Compile Include="Parts\Game\CarGamePart.cs" />
+    <Compile Include="Parts\Game\GamePart.cs" />
+    <Compile Include="Parts\BasicPart.cs" />
+    <Compile Include="Caching\Cache.cs" />
+    <Compile Include="Caching\CarH.cs" />
+    <Compile Include="Caching\Player.cs" />
+    <Compile Include="Parts\DerivablePart.cs" />
+    <Compile Include="Parts\FsmPartData.cs" />
+    <Compile Include="PaintingSystem\PaintingStorage.cs" />
+    <Compile Include="PaintingSystem\PaintingSystem.cs" />
+    <Compile Include="PaintingSystem\PaintingSystemLogic.cs" />
+    <Compile Include="PaintingSystem\SerializableColor.cs" />
+    <Compile Include="Parts\PartBox\Kit.cs" />
+    <Compile Include="Parts\Part.cs" />
+    <Compile Include="Parts\PartBaseInfo.cs" />
+    <Compile Include="Parts\PartBox\PartBox.cs" />
+    <Compile Include="Parts\PartSave.cs" />
+    <Compile Include="Parts\Trigger\Trigger.cs" />
+    <Compile Include="Parts\Trigger\TriggerWrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Parts\Screw.cs" />
+    <Compile Include="Parts\EventSystem\SupportsPartBehaviourEvents.cs" />
+    <Compile Include="Parts\EventSystem\ISupportsPartEvents.cs" />
+    <Compile Include="Saving\GamePartSave.cs" />
+    <Compile Include="Saving\SerializableQuaternion.cs" />
+    <Compile Include="Saving\SerializableVector3.cs" />
+    <Compile Include="Shopping\CatalogData.cs" />
+    <Compile Include="Shopping\Location\Psk.cs" />
+    <Compile Include="Shopping\Location\Fleetari.cs" />
+    <Compile Include="Shopping\ModItem.cs" />
+    <Compile Include="Shopping\Shop.cs" />
+    <Compile Include="Shopping\ShopBaseInfo.cs" />
+    <Compile Include="Shopping\ShopCatalogLogic.cs" />
+    <Compile Include="Shopping\ShopInterface.cs" />
+    <Compile Include="Shopping\ShopItem.cs" />
+    <Compile Include="Shopping\ShopLocation.cs" />
+    <Compile Include="Shopping\ShopLocationOption.cs" />
+    <Compile Include="Tools\Extensions.cs" />
+    <Compile Include="Tools\FsmAction.cs" />
+    <Compile Include="Tools\Helper.cs" />
+    <Compile Include="Logging\LoggedMod.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="MwcModApi.cs" />
+    <Compile Include="Tool.cs" />
+    <Compile Include="Tools\UserInteraction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\bundle.unity3d" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <MSCMODSFOLDER>NONE</MSCMODSFOLDER>
+    <MWCMODSFOLDER>D:\Spiele\Steam\steamapps\common\My Winter Car\Mods</MWCMODSFOLDER>
+    <ABFOLDER>NONE</ABFOLDER>
+    <PostBuildEvent>if "$(ConfigurationName)" == "Debug" (
+copy "$(TargetPath)" "D:\Spiele\Steam\steamapps\common\My Winter Car\Mods" /y
+copy "$(TargetDir)$(TargetName).pdb" "D:\Spiele\Steam\steamapps\common\My Winter Car\Mods" /y
+cd "D:\Spiele\Steam\steamapps\common\My Winter Car\Mods"
+call "D:\Spiele\Steam\steamapps\common\My Winter Car\Mods\debug.bat"
+) ELSE (
+copy "$(TargetPath)" "D:\Programmierung\My Winter Car Modding\Mods\MwcModApi\project\versions/latest" /y
+copy "$(TargetPath)" "D:\Spiele\Steam\steamapps\common\My Winter Car\Mods" /y
+)</PostBuildEvent>
+  </PropertyGroup>
+</Project>
