@@ -11,6 +11,11 @@ namespace MwcModApi.Tools
 {
 	public static class Helper
 	{
+		/// <summary>
+		/// Combines several file system paths to a valid path using "/"
+		/// </summary>
+		/// <param name="paths">An array of paths/dirs</param>
+		/// <returns>The constructed path</returns>
 		public static string CombinePaths(params string[] paths)
 		{
 			if (paths == null) {
@@ -20,6 +25,12 @@ namespace MwcModApi.Tools
 			return paths.Aggregate(Path.Combine);
 		}
 
+		/// <summary>
+		/// Combines several file system paths to a valid path using "/".
+		/// Also creates the directory if it does not exist yet
+		/// </summary>
+		/// <param name="paths"></param>
+		/// <returns></returns>
 		public static string CombinePathsAndCreateIfNotExists(params string[] paths)
 		{
 			string path = CombinePaths(paths);
@@ -30,6 +41,13 @@ namespace MwcModApi.Tools
 			return path;
 		}
 
+		/// <summary>
+		/// Load an asset bundle from file.
+		/// Shows error message with option to close game on failure
+		/// </summary>
+		/// <param name="mod">Your mod instance</param>
+		/// <param name="fileName">The assetBundle file name</param>
+		/// <returns></returns>
 		public static AssetBundle LoadAssetBundle(Mod mod, string fileName)
 		{
 			try {
@@ -43,6 +61,12 @@ namespace MwcModApi.Tools
 			return null;
 		}
 
+		/// <summary>
+		/// Load an asset bundle from an embedded resource.
+		/// Shows error message with option to close game on failure.
+		/// </summary>
+		/// <param name="bundleName">The name of the bundle example: Namespace.Folder.assetBundle.unity3d</param>
+		/// <returns></returns>
 		public static AssetBundle LoadAssetBundle(string bundleName)
 		{
 			try {
@@ -63,11 +87,21 @@ namespace MwcModApi.Tools
 			return null;
 		}
 
+		/// <summary>
+		/// Force closes the game
+		/// </summary>
 		public static void ExitGame()
 		{
 			Application.Quit();
 		}
 
+		/// <summary>
+		/// Compare if two Vector3 are near each other
+		/// </summary>
+		/// <param name="positionToCheck">The first Vector3</param>
+		/// <param name="position">The second Vector3</param>
+		/// <param name="minimumDistance">The minimum distance to return true</param>
+		/// <returns></returns>
 		public static bool CheckCloseToPosition(Vector3 positionToCheck, Vector3 position, float minimumDistance)
 		{
 			try {
@@ -77,6 +111,13 @@ namespace MwcModApi.Tools
 			}
 		}
 
+		/// <summary>
+		/// Loads a save from a file or returns a new instance of the save on error
+		/// </summary>
+		/// <typeparam name="T">The save class type</typeparam>
+		/// <param name="mod">Your mod instance</param>
+		/// <param name="saveFilePath">The path where the save should be loaded from</param>
+		/// <returns>A loaded save or a new instance of your save class</returns>
 		public static T LoadSaveOrReturnNew<T>(Mod mod, string saveFilePath) where T : new()
 		{
 			var path = Path.Combine(ModLoader.GetModSettingsFolder(mod), saveFilePath);
@@ -96,6 +137,14 @@ namespace MwcModApi.Tools
 			return save;
 		}
 
+		/// <summary>
+		/// Loads a part from the supplied AssetBundle, adds the correct tag for parts and fixes the name
+		/// </summary>
+		/// <param name="assetsBundle">Your loaded AssetBundle</param>
+		/// <param name="prefabName">The name of the prefab that should be loaded from the AssetBundle</param>
+		/// <param name="name">The name the loaded part should have</param>
+		/// <param name="addClone">Adds (Clone) at the end of the part, required otherwise the name may be shown malformed when looked at.</param>
+		/// <returns></returns>
 		internal static GameObject LoadPartAndSetName(
 			AssetBundle assetsBundle,
 			string prefabName,
@@ -109,6 +158,15 @@ namespace MwcModApi.Tools
 			return gameObject;
 		}
 
+		/// <summary>
+		/// Load a new Sprite
+		/// </summary>
+		/// <param name="current">The current sprite</param>
+		/// <param name="data">The data of the new sprite</param>
+		/// <param name="pivotX">Pivot position on X-Axis</param>
+		/// <param name="pivotY">Pivot position on Y-Axis</param>
+		/// <param name="pixelsPerUnit">Pixels per unit</param>
+		/// <returns></returns>
 		public static Sprite LoadNewSprite(
 			Sprite current,
 			byte[] data,
@@ -128,6 +186,15 @@ namespace MwcModApi.Tools
 			);
 		}
 
+		/// <summary>
+		/// Load a new Sprite from file
+		/// </summary>
+		/// <param name="current">The current sprite</param>
+		/// <param name="filePath">The filepath of the Sprite to load</param>
+		/// <param name="pivotX">Pivot position on X-Axis</param>
+		/// <param name="pivotY">Pivot position on Y-Axis</param>
+		/// <param name="pixelsPerUnit">Pixels per unit</param>
+		/// <returns></returns>
 		public static Sprite LoadNewSprite(
 			Sprite current,
 			string filePath,
@@ -143,27 +210,23 @@ namespace MwcModApi.Tools
 			return current;
 		}
 
+		/// <summary>
+		/// Load a texture from a byte array
+		/// </summary>
+		/// <param name="data">The byte array containing the texture to load</param>
+		/// <returns></returns>
 		public static Texture2D LoadTexture(byte[] data)
 		{
 			var Tex2D = new Texture2D(2, 2);
 			return Tex2D.LoadImage(data) ? Tex2D : null;
 		}
 
-		public static GameObject GetGameObjectFromFsm(GameObject fsmGameObject, string fsmToUse = "Data")
-		{
-			foreach (PlayMakerFSM fsm in fsmGameObject.GetComponents<PlayMakerFSM>()) {
-				if (fsm.FsmName == fsmToUse) {
-					return fsm.FsmVariables.FindFsmGameObject("ThisPart").Value;
-				}
-			}
-
-			Logger.Warning(
-				"Unable to find base gameobject on supplied fsm gameobject",
-				fsmGameObject.name + "fsmToUse: " + fsmToUse
-			);
-			return null;
-		}
-
+		/// <summary>
+		/// Find a PlayMakerFSM component on a GameObject
+		/// </summary>
+		/// <param name="gameObject">The GameObject to search on</param>
+		/// <param name="fsmName">The name of the PlayMakerFSM component to find</param>
+		/// <returns></returns>
 		public static PlayMakerFSM FindFsmOnGameObject(GameObject gameObject, string fsmName)
 		{
 			foreach (PlayMakerFSM fSM in gameObject.GetComponents<PlayMakerFSM>()) {
