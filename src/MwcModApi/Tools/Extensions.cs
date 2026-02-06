@@ -12,11 +12,23 @@ namespace MwcModApi.Tools
 {
 	public static class Extensions
 	{
+		/// <summary>
+		/// Compares two quaternions to each other using a tolerance
+		/// </summary>
+		/// <param name="a">First Quaternion</param>
+		/// <param name="b">Second Quaternion</param>
+		/// <param name="tolerance">The acceptable tolerance</param>
+		/// <returns></returns>
 		public static bool CompareQuaternion(this Quaternion a, Quaternion b, float tolerance = 0)
 		{
 			return 1 - Mathf.Abs(Quaternion.Dot(a, b)) < tolerance;
 		}
 
+		/// <summary>
+		/// Convert a boolean value to "On" or "Off" strings
+		/// </summary>
+		/// <param name="value">The boolean value</param>
+		/// <returns>"On" or "Off"</returns>
 		public static string ToOnOff(this bool value)
 		{
 			return value.ToXY("On", "Off");
@@ -27,11 +39,25 @@ namespace MwcModApi.Tools
 			return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 		}
 
+		/// <summary>
+		/// Convert a boolean value to a trueText or falseText
+		/// </summary>
+		/// <param name="value">The boolean value</param>
+		/// <param name="trueText">Text to return if true</param>
+		/// <param name="falseText">Text to return if false</param>
+		/// <returns>trueText or falseText parameter</returns>
 		public static string ToXY(this bool value, string trueText, string falseText)
 		{
 			return value ? trueText : falseText;
 		}
 
+		/// <summary>
+		/// Set the name and layer of a GameObject
+		/// </summary>
+		/// <param name="gameObject">The GameObject for which to set name, layer & tag</param>
+		/// <param name="name">The name to set</param>
+		/// <param name="tag">The tag to set</param>
+		/// <param name="layer">The layer to set</param>
 		public static void SetNameLayerTag(
 			this GameObject gameObject,
 			string name,
@@ -45,6 +71,11 @@ namespace MwcModApi.Tools
 			gameObject.FixName();
 		}
 
+		/// <summary>
+		/// Fix the name of a GameObject so it is properly displayed by the Game.
+		/// Adds (Clone) to the end of the name and removes any duplicate "(Clone").
+		/// </summary>
+		/// <param name="gameObject">The GameObject for which to fix the name</param>
 		public static void FixName(this GameObject gameObject)
 		{
 			gameObject.name = Regex.Replace(
@@ -53,12 +84,25 @@ namespace MwcModApi.Tools
 			);
 		}
 
+		/// <summary>
+		/// Compare two vector 3 using a tolerance
+		/// </summary>
+		/// <param name="vector3">First vector3</param>
+		/// <param name="other">Second vector3</param>
+		/// <param name="tolerance">The acceptable tolerance</param>
+		/// <returns></returns>
 		public static bool CompareVector3(this Vector3 vector3, Vector3 other, float tolerance = 0.05f)
 		{
 			return Math.Abs(vector3.x - other.x) < tolerance && Math.Abs(vector3.y - other.y) < tolerance &&
 			       Math.Abs(vector3.z - other.z) < tolerance;
 		}
 
+		/// <summary>
+		/// Find an PlayMakerFSM component on a GameObject
+		/// </summary>
+		/// <param name="gameObject">The GameObject to search on</param>
+		/// <param name="fsmName">The PlayMakerFSM name to find</param>
+		/// <returns></returns>
 		public static PlayMakerFSM FindFsm(this GameObject gameObject, string fsmName)
 		{
 			return gameObject.GetComponents<PlayMakerFSM>().FirstOrDefault(fsm => fsm.FsmName == fsmName);
