@@ -1,6 +1,6 @@
 ﻿using HutongGames.PlayMaker;
 using MSCLoader;
-using MwcModApi.EventSystem;
+using MwcModApi.GlobalEvent;
 using MwcModApi.Tools;
 using UnityEngine;
 
@@ -25,12 +25,12 @@ namespace MwcModApi.Caching
 			starterFsm = Cache.Find("CORRIS/Simulation/STARTERxCorris").FindFsm("Starter");
 			starterFsm.FindState("Running").AddActionAsLast(() =>
 			{
-				GlobalEvents.GetInstance().GetEventListeners(GlobalEventType.EngineRunning).InvokeAll();
+				GlobalEventSystem.GetInstance().GetEventListeners(GlobalEventType.EngineRunning).InvokeAll();
 			});
 
 			starterFsm.FindState("Stall engine").AddActionAsLast(() =>
 			{
-				GlobalEvents.GetInstance().GetEventListeners(GlobalEventType.EngineStalled).InvokeAll();
+				GlobalEventSystem.GetInstance().GetEventListeners(GlobalEventType.EngineStalled).InvokeAll();
 			});
 		}
 

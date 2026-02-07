@@ -1,4 +1,4 @@
-﻿namespace MwcModApi.EventSystem
+﻿namespace MwcModApi.GlobalEvent
 {
 	public enum GlobalEventType
 	{

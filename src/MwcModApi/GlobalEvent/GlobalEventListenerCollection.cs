@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace MwcModApi.EventSystem
+namespace MwcModApi.GlobalEvent
 {
 	/// <summary>
 	/// Collection of EventListener objects

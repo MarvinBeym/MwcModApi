@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MwcModApi.EventSystem
+namespace MwcModApi.GlobalEvent
 {
 	public class GlobalEventListener
 	{

@@ -75,10 +75,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventSystem\GlobalEventListener.cs" />
-    <Compile Include="EventSystem\GlobalEventListenerCollection.cs" />
-    <Compile Include="EventSystem\GlobalEvents.cs" />
-    <Compile Include="EventSystem\GlobalEventType.cs" />
+    <Compile Include="GlobalEvent\GlobalEventListener.cs" />
+    <Compile Include="GlobalEvent\GlobalEventListenerCollection.cs" />
+    <Compile Include="GlobalEvent\GlobalEvents.cs" />
+    <Compile Include="GlobalEvent\GlobalEventType.cs" />
     <Compile Include="Logging\LogMessageType.cs" />
     <Compile Include="Parts\EventSystem\SupportsPartEvents.cs" />
     <Compile Include="Parts\PartBox\Box.cs" />

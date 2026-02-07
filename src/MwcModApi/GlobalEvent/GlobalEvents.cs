@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using MwcModApi.Caching;
 
-namespace MwcModApi.EventSystem
+namespace MwcModApi.GlobalEvent
 {
-	public class GlobalEvents
+	public class GlobalEventSystem
 	{
-		protected static GlobalEvents instance;
+		protected static GlobalEventSystem instance;
 
 		/// <summary>
 		/// Stores all events that a developer may have added to this part object
 		/// </summary>
 		internal Dictionary<GlobalEventType, GlobalEventListenerCollection> events = new Dictionary<GlobalEventType, GlobalEventListenerCollection>();
 
-		internal GlobalEvents()
+		internal GlobalEventSystem()
 		{
 			foreach (GlobalEventType eventType in Enum.GetValues(typeof(GlobalEventType)))
 			{
@@ -21,9 +21,9 @@ namespace MwcModApi.EventSystem
 			}
 		}
 
-		public static GlobalEvents GetInstance()
+		public static GlobalEventSystem GetInstance()
 		{
-			return instance ?? (instance = new GlobalEvents());
+			return instance ?? (instance = new GlobalEventSystem());
 		}
 
 		/// <summary>
