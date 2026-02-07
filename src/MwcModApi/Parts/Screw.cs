@@ -10,11 +10,11 @@ namespace MwcModApi.Parts
 	[JsonObject(MemberSerialization.OptIn)]
 	public class Screw
 	{
-		public const float minSize = 5;
-		public const float maxSize = 15;
-		public const int maxTightness = 8;
-		public const int rotationStep = 360 / maxTightness;
-		public const float transformStep = 0.0025f;
+		public const float MIN_SIZE = 5;
+		public const float MAX_SIZE = 15;
+		public const int MAX_TIGHTNESS = 8;
+		public const int ROTATION_STEP = 360 / MAX_TIGHTNESS;
+		public const float TRANSFORM_STEP = 0.0025f;
 
 		public enum Type
 		{
@@ -57,7 +57,7 @@ namespace MwcModApi.Parts
 			bool allowShowSize = true
 		)
 		{
-			Setup(position, rotation, 1, 10, type, transformStep, allowShowSize);
+			Setup(position, rotation, 1, 10, type, TRANSFORM_STEP, allowShowSize);
 		}
 
 		[JsonConstructor]
@@ -67,7 +67,7 @@ namespace MwcModApi.Parts
 			float scale = 1,
 			float size = 10,
 			Type type = Type.Normal,
-			float transformStepPerRevolution = transformStep,
+			float transformStepPerRevolution = TRANSFORM_STEP,
 			bool allowShowSize = true
 		)
 		{
@@ -80,7 +80,7 @@ namespace MwcModApi.Parts
 			float scale = 1,
 			float size = 10,
 			Type type = Type.Normal,
-			float transformStepPerRevolution = transformStep,
+			float transformStepPerRevolution = TRANSFORM_STEP,
 			bool allowShowSize = true
 		) 
 		{
@@ -156,9 +156,9 @@ namespace MwcModApi.Parts
 
 		internal void Verify()
 		{
-			if (tightness >= maxTightness)
+			if (tightness >= MAX_TIGHTNESS)
 			{
-				tightness = maxTightness;
+				tightness = MAX_TIGHTNESS;
 			}
 
 			if (tightness <= 0)
@@ -166,14 +166,14 @@ namespace MwcModApi.Parts
 				tightness = 0;
 			}
 
-			if (size >= maxSize)
+			if (size >= MAX_SIZE)
 			{
-				size = maxSize;
+				size = MAX_SIZE;
 			}
 
-			if (size <= minSize)
+			if (size <= MIN_SIZE)
 			{
-				size = minSize;
+				size = MIN_SIZE;
 			}
 		}
 
@@ -184,24 +184,24 @@ namespace MwcModApi.Parts
 
 		public void In(bool useAudio = true)
 		{
-			if (tightness >= maxTightness || !part.installed) return;
+			if (tightness >= MAX_TIGHTNESS || !part.installed) return;
 
 			if (useAudio)
 			{
 				AudioSource.PlayClipAtPoint(soundClip, gameObject.transform.position);
 			}
 
-			gameObject.transform.Rotate(0, 0, rotationStep);
+			gameObject.transform.Rotate(0, 0, ROTATION_STEP);
 			gameObject.transform.Translate(0f, 0f, -transformStepPerRevolution);
 
 			bool changingToFixedState = false;
-			if (tightness + 1 == maxTightness)
+			if (tightness + 1 == MAX_TIGHTNESS)
 			{
 				int screwCount = part.screws.Count;
 				int totalTightness = 0;
 				part.screws.ForEach((Screw screw) => { totalTightness += screw.tightness; });
 
-				if (totalTightness + 1 == screwCount * maxTightness)
+				if (totalTightness + 1 == screwCount * MAX_TIGHTNESS)
 				{
 					changingToFixedState = true;
 				}
@@ -253,7 +253,7 @@ namespace MwcModApi.Parts
 				AudioSource.PlayClipAtPoint(soundClip, gameObject.transform.position);
 			}
 
-			gameObject.transform.Rotate(0, 0, -rotationStep);
+			gameObject.transform.Rotate(0, 0, -ROTATION_STEP);
 			gameObject.transform.Translate(0f, 0f, transformStepPerRevolution);
 
 			bool changingToUnfixed = part.bolted;

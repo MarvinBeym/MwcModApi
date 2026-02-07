@@ -258,20 +258,20 @@ namespace MwcModApi
 					UserInteraction.GuiInteraction("Tighten all screws");
 					if (instantInstallKeybind.GetKeybindDown()) {
 						part.partSave.screws.ForEach(
-							delegate(Screw screw) { screw.InBy(Screw.maxTightness - screw.tightness); }
+							delegate(Screw screw) { screw.InBy(Screw.MAX_TIGHTNESS - screw.tightness); }
 						);
 					}
 				} else if (!part.installed) {
 					UserInteraction.GuiInteraction("Fully install part");
 					if (instantInstallKeybind.GetKeybindDown()) {
 						part.Install();
-						part.partSave.screws.ForEach(delegate(Screw screw) { screw.InBy(Screw.maxTightness); });
+						part.partSave.screws.ForEach(delegate(Screw screw) { screw.InBy(Screw.MAX_TIGHTNESS); });
 					}
 				}
 			} else if (part.screws.Count > 0) {
 				UserInteraction.GuiInteraction("Loosen all screws");
 				if (instantInstallKeybind.GetKeybindDown()) {
-					part.partSave.screws.ForEach(delegate(Screw screw) { screw.OutBy(Screw.maxTightness); });
+					part.partSave.screws.ForEach(delegate(Screw screw) { screw.OutBy(Screw.MAX_TIGHTNESS); });
 				}
 			}
 		}
