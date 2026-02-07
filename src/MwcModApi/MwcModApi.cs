@@ -105,6 +105,7 @@ namespace MwcModApi
 
 		private void PreLoad()
 		{
+			CarH.Init();
 			PaintingSystem.PaintingSystem.Init();
 			shop = new Shop();
 
