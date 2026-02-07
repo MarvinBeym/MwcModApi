@@ -1,5 +1,6 @@
 ﻿using HutongGames.PlayMaker;
 using MSCLoader;
+using MwcModApi.GlobalEvent;
 using MwcModApi.Tools;
 using UnityEngine;
 
@@ -19,20 +20,24 @@ namespace MwcModApi.Caching
 
 		private static PlayMakerFSM starterFsm;
 
+		internal static void Init()
+		{
+			starterFsm = Cache.Find("CORRIS/Simulation/STARTERxCorris").FindFsm("Starter");
+			starterFsm.FindState("Running").AddActionAsLast(() =>
+			{
+				GlobalEventSystem.GetInstance().GetEventListeners(GlobalEventType.EngineRunning).InvokeAll();
+			});
+
+			starterFsm.FindState("Stall engine").AddActionAsLast(() =>
+			{
+				GlobalEventSystem.GetInstance().GetEventListeners(GlobalEventType.EngineStalled).InvokeAll();
+			});
+		}
+
 		/// <summary>
 		/// Returns if the car is currently running (rpm above 20).
 		/// </summary>
-		public static bool running
-		{
-			get
-			{
-				if (starterFsm == null) {
-					starterFsm = Cache.Find("CORRIS/Simulation/STARTERxCorris").FindFsm("Starter");
-				}
-
-				return starterFsm?.ActiveStateName == "Running";
-			}
-		}
+		public static bool running => starterFsm?.ActiveStateName == "Running";
 
 		/// <summary>
 		/// Returns if the player is currently sitting in the car (drive mode).

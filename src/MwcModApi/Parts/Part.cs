@@ -37,11 +37,11 @@ namespace MwcModApi.Parts
 
 	public class Part : BasicPart, ISupportsPartEvents, SupportsPartBehaviourEvents
 	{
-		private const float ClampScrewHeightOffset = 0.039f;
-		private const float ClampScrewInOutOffset = 0.025f;
-		private const float ClampScrewLeftRightOffset = -0.0005f; //Clamp origin likely not centered
-		private const float ClampScrewRotationOffset = 90f;
-		private const float ClampScrewBaseScale = 0.5f;
+		private const float CLAMP_SCREW_HEIGHT_OFFSET = 0.039f;
+		private const float CLAMP_SCREW_IN_OUT_OFFSET = 0.025f;
+		private const float CLAMP_SCREW_LEFT_RIGHT_OFFSET = -0.0005f; //Clamp origin likely not centered
+		private const float CLAMP_SCREW_ROTATION_OFFSET = 90f;
+		private const float CLAMP_SCREW_BASE_SCALE = 0.5f;
 
 		private SupportsPartEvents supportsPartEvents = new SupportsPartEvents();
 
@@ -299,7 +299,7 @@ namespace MwcModApi.Parts
 
 		public override bool bolted
 		{
-			get { return (!hasBolts || screws.All(screw => screw.tightness == Screw.maxTightness)) && installed; }
+			get { return (!hasBolts || screws.All(screw => screw.tightness == Screw.MAX_TIGHTNESS)) && installed; }
 		}
 
 		/// <inheritdoc />
@@ -702,12 +702,12 @@ namespace MwcModApi.Parts
 			var clamp = AddClampModel(position, rotation, scale);
 			AddScrew(
 				new Screw(
-					new Vector3(ClampScrewInOutOffset, ClampScrewHeightOffset, ClampScrewLeftRightOffset),
-					new Vector3(0, ClampScrewRotationOffset, 0),
-					ClampScrewBaseScale,
+					new Vector3(CLAMP_SCREW_IN_OUT_OFFSET, CLAMP_SCREW_HEIGHT_OFFSET, CLAMP_SCREW_LEFT_RIGHT_OFFSET),
+					new Vector3(0, CLAMP_SCREW_ROTATION_OFFSET, 0),
+					CLAMP_SCREW_BASE_SCALE,
 					screwSize,
 					Screw.Type.Normal,
-					Screw.transformStep * scale,
+					Screw.TRANSFORM_STEP * scale,
 					true
 				), clamp
 			);

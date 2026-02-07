@@ -19,14 +19,12 @@ namespace MwcModApi
 		public override string ID => "MwcModApi";
 		public override string Name => "MwcModApi";
 		public override string Author => "DonnerPlays";
-		public override string Version => "1.0";
+		public override string Version => "1.1.0";
 
 		public override string Description =>
 			"A general modding 'help' featuring things like installable/boltable parts, shop, part boxing, utility tools & more.";
 
 		public override MSCLoader.Game SupportedGames => MSCLoader.Game.MyWinterCar;
-
-		private const string assetsFile = "msc-mod-api.unity3d";
 
 		private static SettingsCheckBox showBoltSizeSetting;
 		private static SettingsCheckBox enableInstantInstall;
@@ -105,6 +103,7 @@ namespace MwcModApi
 
 		private void PreLoad()
 		{
+			CarH.Init();
 			PaintingSystem.PaintingSystem.Init();
 			shop = new Shop();
 
@@ -259,20 +258,20 @@ namespace MwcModApi
 					UserInteraction.GuiInteraction("Tighten all screws");
 					if (instantInstallKeybind.GetKeybindDown()) {
 						part.partSave.screws.ForEach(
-							delegate(Screw screw) { screw.InBy(Screw.maxTightness - screw.tightness); }
+							delegate(Screw screw) { screw.InBy(Screw.MAX_TIGHTNESS - screw.tightness); }
 						);
 					}
 				} else if (!part.installed) {
 					UserInteraction.GuiInteraction("Fully install part");
 					if (instantInstallKeybind.GetKeybindDown()) {
 						part.Install();
-						part.partSave.screws.ForEach(delegate(Screw screw) { screw.InBy(Screw.maxTightness); });
+						part.partSave.screws.ForEach(delegate(Screw screw) { screw.InBy(Screw.MAX_TIGHTNESS); });
 					}
 				}
 			} else if (part.screws.Count > 0) {
 				UserInteraction.GuiInteraction("Loosen all screws");
 				if (instantInstallKeybind.GetKeybindDown()) {
-					part.partSave.screws.ForEach(delegate(Screw screw) { screw.OutBy(Screw.maxTightness); });
+					part.partSave.screws.ForEach(delegate(Screw screw) { screw.OutBy(Screw.MAX_TIGHTNESS); });
 				}
 			}
 		}
