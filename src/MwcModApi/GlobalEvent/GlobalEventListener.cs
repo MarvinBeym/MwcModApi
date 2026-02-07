@@ -25,7 +25,7 @@ namespace MwcModApi.GlobalEvent
 		/// </summary>
 		/// <param name="type">The type of event</param>
 		/// <param name="action">The action executed when the event triggers</param>
-		public GlobalEventListener(GlobalEventType type, Action action)
+		internal GlobalEventListener(GlobalEventType type, Action action)
 		{
 			this.type = type;
 			this.action = action;
