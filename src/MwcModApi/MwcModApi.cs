@@ -26,8 +26,6 @@ namespace MwcModApi
 
 		public override MSCLoader.Game SupportedGames => MSCLoader.Game.MyWinterCar;
 
-		private const string assetsFile = "msc-mod-api.unity3d";
-
 		private static SettingsCheckBox showBoltSizeSetting;
 		private static SettingsCheckBox enableInstantInstall;
 		public static SettingsCheckBox disableLoadingMovementLock;
