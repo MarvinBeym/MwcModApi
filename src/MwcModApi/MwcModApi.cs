@@ -19,7 +19,7 @@ namespace MwcModApi
 		public override string ID => "MwcModApi";
 		public override string Name => "MwcModApi";
 		public override string Author => "DonnerPlays";
-		public override string Version => "1.1.0";
+		public override string Version => "1.1.1";
 
 		public override string Description =>
 			"A general modding 'help' featuring things like installable/boltable parts, shop, part boxing, utility tools & more.";
