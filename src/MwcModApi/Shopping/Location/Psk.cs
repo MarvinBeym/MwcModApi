@@ -18,7 +18,7 @@ namespace MwcModApi.Shopping.Location
 
 		internal override CatalogData catalogData =>
 			new CatalogData(
-				Cache.Find("PERAPORTTI/Building/Store/PostOffice/post_table"),
+				Cache.Find("PERAPORTTI/ActiveFunctions/Store/PostOffice/post_table"),
 				new Vector3(-0.375f, -0.6f, 0.94f),
 				new Vector3(90f, 0f, 0f)
 			);

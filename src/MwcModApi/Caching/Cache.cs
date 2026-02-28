@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HutongGames.PlayMaker;
+using MwcModApi.Tools;
 using UnityEngine;
 
 namespace MwcModApi.Caching
@@ -29,7 +30,7 @@ namespace MwcModApi.Caching
 			} catch {
 				// ignored. Continues below
 			}
-
+			
 			GameObject.FindObjectOfType<GameObject>();
 
 			GameObject foundObject = GameObject.Find(name);
@@ -39,6 +40,11 @@ namespace MwcModApi.Caching
 			}
 
 			cachedGameObjects[name] = foundObject;
+
+			if (foundObject == null) {
+				Logger.Warning($"Could not find object with name '{name}' in world");
+			}
+
 			return foundObject;
 		}
 
